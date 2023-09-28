@@ -4,6 +4,7 @@ import express from "express";
 import * as firebaseAdmin from "firebase-admin";
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
+import prisma from "./prisma";
 
 import { mongo } from "./models";
 import authRouter from "./rest/authRoutes";
@@ -38,6 +39,7 @@ app.use("/users", userRouter);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 mongo.connect();
+prisma.$connect();
 
 firebaseAdmin.initializeApp({
   credential: firebaseAdmin.credential.cert({

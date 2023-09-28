@@ -61,7 +61,7 @@ authRouter.post("/register", registerRequestValidator, async (req, res) => {
     );
     const { refreshToken, ...rest } = authDTO;
 
-    await authService.sendEmailVerificationLink(req.body.email);
+    // await authService.sendEmailVerificationLink(req.body.email);
 
     res
       .cookie("refreshToken", refreshToken, cookieOptions)
