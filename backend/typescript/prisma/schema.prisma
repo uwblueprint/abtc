@@ -19,7 +19,6 @@ model users {
   firstName      String
   lastName       String
   role           String
-  kitchenRequest kitchenRequest?
 }
 
 //tina-emma/kitchen-request-model
@@ -27,12 +26,11 @@ model kitchenRequest {
   id            String   @id @default(auto()) @map("_id") @db.ObjectId
   v             Int      @map("__v")
   requestName   String
-  requester     String
+  requester     User     @relation(fields: [requesterId], references: [id])
+  requesterId   String     
   location      String
   shiftTime     DateTime
   meal          String
   cookingMethod String
   frequency     String
-  user_id       String   @unique @db.ObjectId
-  users         users?   @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
