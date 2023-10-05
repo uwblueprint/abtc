@@ -12,11 +12,19 @@ model test {
 }
 
 model users {
-   id        String @id @default(auto()) @map("_id") @db.ObjectId
-   v         Int    @map("__v")
-   authId    String
-   email     String
-   firstName String
-   lastName  String
-   role      String
- }
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  v         Int    @map("__v")
+  authId    String
+  email     String
+  firstName String
+  lastName  String
+  role      String
+}
+
+model users_signed_up {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  email     String
+  firstName String
+  lastName  String
+  adminID   String
+}
