@@ -91,6 +91,18 @@ interface IUserService {
    * @throws Error if user deletion fails
    */
   deleteUserByEmail(email: string): Promise<void>;
+  
+  /**
+   * Create a volunteer signed up \
+   * @param userId users ID
+   * @param requestId ID of request from volunteer
+   * @returns a UserDTO with the created user's information
+   * @throws Error if user creation fails
+   */
+  createSignedUpVolunteer(
+    userId: string,
+    requestId: string,
+  ): Promise<void>;
 }
 
 export default IUserService;

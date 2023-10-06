@@ -346,6 +346,26 @@ class UserService implements IUserService {
       throw error;
     }
   }
+
+  async createSignedUpVolunteer(
+    userId: string,
+    requestId: string,
+  ): Promise<void> {
+      try {
+       const newSignedUpVolunteer = await prisma.volunteers_signed_up.create({
+        data: {
+          userId,
+          requestId
+        }
+       })
+      }
+      catch (error: unknown) {
+      Logger.error(`Failed to create user. Reason = ${getErrorMessage(error)}`);
+      throw error;
+    }
+  
+  }
+
 }
 
 export default UserService;
