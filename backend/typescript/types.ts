@@ -1,6 +1,6 @@
 export type Role = "User" | "Admin";
 
-export type Status = "Pending" | "Accepted";
+export type Status = "PENDING" | "ACCEPTED";
 
 
 export type Token = {
