@@ -3,7 +3,7 @@ import mongoose, { Schema, Document } from "mongoose";
 import { Status } from "../types";
 
 export interface VolunteerSignUp extends Document {
-  uuid: string;
+  id: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -12,10 +12,6 @@ export interface VolunteerSignUp extends Document {
 }
 
 const VolunteerSignUpSchema: Schema = new Schema({
-  uuid: {
-    type: String,
-    required: true,
-  },
   firstName: {
     type: String,
     required: true,
@@ -35,7 +31,7 @@ const VolunteerSignUpSchema: Schema = new Schema({
   status: {
     type: String,
     required: true,
-    enum: ["Pending", "Accepted"],
+    enum: ["PENDING", "ACCEPTED"],
   },
 });
 
