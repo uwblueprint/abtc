@@ -20,3 +20,13 @@ model users {
    lastName  String
    role      String
  }
+
+model volunteerSignUp {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  uuid      String
+  firstName String
+  lastName  String
+  email     String
+  admin_id  String
+  status    String
+}
