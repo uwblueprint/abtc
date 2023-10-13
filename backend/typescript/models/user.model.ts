@@ -8,6 +8,7 @@ export interface User extends Document {
   lastName: string;
   authId: string;
   role: Role;
+  email: string;
 }
 
 const UserSchema: Schema = new Schema({
@@ -27,6 +28,10 @@ const UserSchema: Schema = new Schema({
     type: String,
     required: true,
     enum: ["User", "Admin"],
+  },
+  email: {
+    type: String,
+    required: true,
   },
 });
 
