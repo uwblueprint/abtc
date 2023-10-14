@@ -13,12 +13,11 @@ model test {
 
 model users {
   id              String           @id @default(auto()) @map("_id") @db.ObjectId
-  v               Int              @map("__v")
   authId          String
   email           String
   firstName       String
   lastName        String
-  role            String
+  role            Role
   kitchenRequests kitchenRequest[]
 }
 
@@ -32,4 +31,9 @@ model kitchenRequest {
   meal          String
   cookingMethod String
   frequency     String
+}
+
+enum Role {
+  VOLUNTEER
+  ADMIN
 }
