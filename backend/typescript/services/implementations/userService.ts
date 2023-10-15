@@ -354,8 +354,8 @@ class UserService implements IUserService {
       try {
        const newSignedUpVolunteer = await prisma.volunteers_signed_up.create({
         data: {
-          userId,
-          requestId
+          user_id: userId,
+          request_id: requestId
         }
        })
       }
