@@ -11,38 +11,38 @@ model test {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 }
 
-model users {
-  id                   String                 @id @default(auto()) @map("_id") @db.ObjectId
-  authId               String
-  email                String
-  firstName            String
-  lastName             String
-  role                 Role
-  requests             request[]
-  volunteers_signed_up volunteers_signed_up[]
+model user {
+  id              String                 @id @default(auto()) @map("_id") @db.ObjectId
+  authId          String
+  email           String
+  firstName       String
+  lastName        String
+  role            Role
+  serviceRequests serviceRequest[]
+  signedUp        volunteers_signed_up[]
 }
 
 model volunteers_signed_up {
   id         String  @id @default(auto()) @map("_id") @db.ObjectId
   request_id String
   //request     request     @relation(fields: [user_id], references: [id])
-  user       users   @relation(fields: [user_id], references: [id])
+  user       user    @relation(fields: [user_id], references: [id])
   user_id    String  @db.ObjectId
   complete   Boolean @default(false)
 }
 
-model request {
-  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+model serviceRequest {
+  id            String             @id @default(auto()) @map("_id") @db.ObjectId
   requestName   String
-  requester     users       @relation(fields: [requesterId], references: [id])
-  requesterId   String      @db.ObjectId
+  requester     user               @relation(fields: [requesterId], references: [id])
+  requesterId   String             @db.ObjectId
   location      String
   shiftTime     DateTime?
   description   String?
   meal          String?
   cookingMethod String?
   frequency     String?
-  requestType   RequestType
+  requestType   ServiceRequestType
 }
 
 enum Role {
@@ -50,7 +50,7 @@ enum Role {
   ADMIN
 }
 
-enum RequestType {
+enum ServiceRequestType {
   SITE
   KITCHEN
 }
