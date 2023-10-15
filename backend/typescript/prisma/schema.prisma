@@ -13,12 +13,12 @@ model test {
 
 model users {
   id                   String                 @id @default(auto()) @map("_id") @db.ObjectId
-  v                    Int                    @map("__v")
   authId               String
   email                String
   firstName            String
   lastName             String
-  role                 String
+  role                 Role
+  requests             request[]
   volunteers_signed_up volunteers_signed_up[]
 }
 
@@ -29,4 +29,28 @@ model volunteers_signed_up {
   user       users   @relation(fields: [user_id], references: [id])
   user_id    String  @db.ObjectId
   complete   Boolean @default(false)
+}
+
+model request {
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  requestName   String
+  requester     users       @relation(fields: [requesterId], references: [id])
+  requesterId   String      @db.ObjectId
+  location      String
+  shiftTime     DateTime?
+  description   String?
+  meal          String?
+  cookingMethod String?
+  frequency     String?
+  requestType   RequestType
+}
+
+enum Role {
+  VOLUNTEER
+  ADMIN
+}
+
+enum RequestType {
+  SITE
+  KITCHEN
 }
