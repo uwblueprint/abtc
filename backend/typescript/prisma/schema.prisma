@@ -11,20 +11,20 @@ model test {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 }
 
-model users {
+model user {
   id              String           @id @default(auto()) @map("_id") @db.ObjectId
   authId          String
   email           String
   firstName       String
   lastName        String
   role            Role
-  requests        request[]
+  serviceRequests serviceRequest[]
 }
 
-model request {
+model serviceRequest {
   id            String   @id @default(auto()) @map("_id") @db.ObjectId
   requestName   String
-  requester     users    @relation(fields: [requesterId], references: [id])
+  requester     user    @relation(fields: [requesterId], references: [id])
   requesterId   String   @db.ObjectId
   location      String
   shiftTime     DateTime?
@@ -32,7 +32,7 @@ model request {
   meal          String?
   cookingMethod String?
   frequency     String?
-  requestType   RequestType
+  requestType   ServiceRequestType
 }
 
 enum Role {
@@ -40,7 +40,7 @@ enum Role {
   ADMIN
 }
 
-enum RequestType {
+enum ServiceRequestType {
   SITE
   KITCHEN
 }
