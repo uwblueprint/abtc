@@ -18,22 +18,28 @@ model users {
   firstName       String
   lastName        String
   role            Role
-  kitchenRequests kitchenRequest[]
+  requests        request[]
 }
 
-model kitchenRequest {
+model request {
   id            String   @id @default(auto()) @map("_id") @db.ObjectId
   requestName   String
   requester     users    @relation(fields: [requesterId], references: [id])
   requesterId   String   @db.ObjectId
   location      String
-  shiftTime     DateTime
-  meal          String
-  cookingMethod String
-  frequency     String
+  shiftTime     DateTime?
+  meal          String?
+  cookingMethod String?
+  frequency     String?
+  requestType   RequestType
 }
 
 enum Role {
   VOLUNTEER
   ADMIN
+}
+
+enum RequestType {
+  SITE
+  KITCHEN
 }
