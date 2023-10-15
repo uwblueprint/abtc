@@ -28,6 +28,7 @@ model request {
   requesterId   String   @db.ObjectId
   location      String
   shiftTime     DateTime?
+  description   String?
   meal          String?
   cookingMethod String?
   frequency     String?
