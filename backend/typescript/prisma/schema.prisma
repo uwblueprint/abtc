@@ -12,14 +12,26 @@ model test {
 }
 
 model users {
-   id        String @id @default(auto()) @map("_id") @db.ObjectId
-   authId    String
-   email     String
-   firstName String
-   lastName  String
-   role      Role
- }
+  id              String           @id @default(auto()) @map("_id") @db.ObjectId
+  authId          String
+  email           String
+  firstName       String
+  lastName        String
+  role            Role
+  kitchenRequests kitchenRequest[]
+}
 
+model kitchenRequest {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  requestName   String
+  requester     users    @relation(fields: [requesterId], references: [id])
+  requesterId   String   @db.ObjectId
+  location      String
+  shiftTime     DateTime
+  meal          String
+  cookingMethod String
+  frequency     String
+}
 
 enum Role {
   VOLUNTEER
