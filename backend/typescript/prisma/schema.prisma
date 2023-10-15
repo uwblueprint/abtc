@@ -18,6 +18,7 @@ model users {
    firstName String
    lastName  String
    role      Role
+   site_maintenance_reqs req_site_maintenance[]
  }
 
 
@@ -25,3 +26,16 @@ enum Role {
   VOLUNTEER
   ADMIN
 }
+
+// aaon-gurshabt/site-maintenance-req-model
+ model req_site_maintenance {
+    id             String @id @default(auto()) @map("_id") @db.ObjectId
+    v              Int    @map("__v")
+    requestName    String
+    requester      users @relation(fields: [requesterId], references: [id])
+    requesterId    String @db.ObjectId
+    location       String
+    time           DateTime
+    frequency      String
+ }
+
