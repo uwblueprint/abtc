@@ -12,13 +12,14 @@ model test {
 }
 
 model user {
-  id              String           @id @default(auto()) @map("_id") @db.ObjectId
+  id              String            @id @default(auto()) @map("_id") @db.ObjectId
   authId          String
   email           String
   firstName       String
   lastName        String
   role            Role
   serviceRequests serviceRequest[]
+  volunteerSignUp volunteerSignUp[]
 }
 
 model serviceRequest {
@@ -33,6 +34,17 @@ model serviceRequest {
   cookingMethod String?
   frequency     String?
   requestType   ServiceRequestType
+}
+
+model volunteerSignUp {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  v         Int    @map("__v")
+  email     String
+  firstName String
+  lastName  String
+  admin     user   @relation(fields: [admin_id], references: [id])
+  admin_id  String @db.ObjectId
+  status    String
 }
 
 enum Role {
