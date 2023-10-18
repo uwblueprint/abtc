@@ -44,7 +44,7 @@ model volunteerSignUp {
   lastName  String
   admin     user   @relation(fields: [admin_id], references: [id])
   admin_id  String @db.ObjectId
-  status    String
+  status    Status
 }
 
 enum Role {
@@ -55,4 +55,9 @@ enum Role {
 enum ServiceRequestType {
   SITE
   KITCHEN
+}
+
+enum Status {
+  PENDING
+  ACCEPTED
 }
