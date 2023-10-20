@@ -35,3 +35,20 @@ export type NodemailerConfig = {
 };
 
 export type SignUpMethod = "PASSWORD" | "GOOGLE";
+
+export type ServiceRequestDTO = {
+  id: string;
+  requestName: string;
+  requesterId: string;
+  location: string;
+  shiftTime?: Date;
+  description?: string;
+  meal?: string;
+  cookingMethod: string;
+  frequency: string;
+  requestType: ServiceRequestType;
+};
+
+export type CreateServiceRequestDTO = Omit<ServiceRequestDTO, "id">;
+
+export type ServiceRequestType = "SITE" | "KITCHEN";
