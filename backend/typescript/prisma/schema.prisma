@@ -38,7 +38,6 @@ model serviceRequest {
 
 model volunteerSignUp {
   id        String @id @default(auto()) @map("_id") @db.ObjectId
-  v         Int    @map("__v")
   email     String
   firstName String
   lastName  String
