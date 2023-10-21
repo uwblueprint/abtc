@@ -1,4 +1,4 @@
-import { CreateServiceRequestDTO, ServiceRequestDTO } from "../../types";
+import { Prisma } from "@prisma/client";
 
 interface IServiceRequest {
   // get method here
@@ -10,7 +10,9 @@ interface IServiceRequest {
    * @returns a ServiceRequestDTO with the created serviceRequest's information
    * @throws Error if serviceRequest creation fails
    */
-  postServiceRequest(serviceRequest: CreateServiceRequestDTO): Promise<ServiceRequestDTO>;
+  postServiceRequest(
+    serviceRequest: Prisma.serviceRequestCreateInput,
+  ): Promise<Prisma.serviceRequestCreateInput>;
 
   /**
    * Delete a serviceRequest by id
