@@ -12,20 +12,21 @@ model test {
 }
 
 model user {
-  id              String           @id @default(auto()) @map("_id") @db.ObjectId
+  id              String            @id @default(auto()) @map("_id") @db.ObjectId
   authId          String
   email           String
   firstName       String
   lastName        String
   role            Role
   serviceRequests serviceRequest[]
+  volunteerSignUp volunteerPlatformSignUp[]
 }
 
 model serviceRequest {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  id            String             @id @default(auto()) @map("_id") @db.ObjectId
   requestName   String
-  requester     user    @relation(fields: [requesterId], references: [id])
-  requesterId   String   @db.ObjectId
+  requester     user               @relation(fields: [requesterId], references: [id])
+  requesterId   String             @db.ObjectId
   location      String
   shiftTime     DateTime?
   description   String?
@@ -33,6 +34,16 @@ model serviceRequest {
   cookingMethod String?
   frequency     String?
   requestType   ServiceRequestType
+}
+
+model volunteerPlatformSignUp {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  email     String
+  firstName String
+  lastName  String
+  admin     user   @relation(fields: [admin_id], references: [id])
+  admin_id  String @db.ObjectId
+  status    Status
 }
 
 enum Role {
@@ -43,4 +54,9 @@ enum Role {
 enum ServiceRequestType {
   SITE
   KITCHEN
+}
+
+enum Status {
+  PENDING
+  ACCEPTED
 }
