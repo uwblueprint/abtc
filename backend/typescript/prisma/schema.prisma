@@ -12,21 +12,32 @@ model test {
 }
 
 model user {
-  id              String                    @id @default(auto()) @map("_id") @db.ObjectId
-  authId          String
-  email           String
-  firstName       String
-  lastName        String
-  role            Role
-  serviceRequests serviceRequest[]
-  volunteerSignUp volunteerPlatformSignUp[]
+  id                      String                    @id @default(auto()) @map("_id") @db.ObjectId
+  authId                  String
+  email                   String
+  firstName               String
+  lastName                String
+  role                    Role
+  serviceRequests         serviceRequest[]
+  volunteerRequestSignUp  volunteerRequestSignUp[]
+  volunteerPlatformSignUp volunteerPlatformSignUp[]
+}
+
+model volunteerRequestSignUp {
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  user     user    @relation(fields: [userId], references: [id])
+  userId   String  @db.ObjectId
+  complete Boolean @default(false)
+
+  serviceRequest   serviceRequest @relation(fields: [serviceRequestId], references: [id])
+  serviceRequestId String         @db.ObjectId
 }
 
 model serviceRequest {
-  id            String             @id @default(auto()) @map("_id") @db.ObjectId
+  id            String                   @id @default(auto()) @map("_id") @db.ObjectId
   requestName   String
-  requester     user               @relation(fields: [requesterId], references: [id])
-  requesterId   String             @db.ObjectId
+  requester     user                     @relation(fields: [requesterId], references: [id])
+  requesterId   String                   @db.ObjectId
   location      String
   shiftTime     DateTime?
   description   String?
@@ -34,6 +45,7 @@ model serviceRequest {
   cookingMethod String?
   frequency     String?
   requestType   ServiceRequestType
+  volunteers    volunteerRequestSignUp[]
 }
 
 model volunteerPlatformSignUp {
