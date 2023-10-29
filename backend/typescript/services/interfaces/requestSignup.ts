@@ -2,9 +2,9 @@ import { Prisma, UserCreateInput, UserUpdateInput } from '@prisma/client';
 
 interface IRequestSignup {
   /**
-   * Get user information by their unique ID.
-   * @param userId - The unique identifier of the user.
-   * @returns A promise that resolves to user data or null if not found.
+   * Get information for a volunteer signup reqeust by their unique ID.
+   * @param requestId - The unique identifier of the request.
+   * @returns A promise that resolves to request data or null if not found.
    */
   getRequestSignup(userId: string): Promise<Prisma.User | null>;
 
