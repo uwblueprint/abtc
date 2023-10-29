@@ -24,7 +24,7 @@ class RequestSignup implements IRequestSignup {
       return volunteerRequestSignUpData;
     }
     catch (error: unknown) {
-      Logger.error(`Failed to get user. Reason = ${getErrorMessage(error)}`);
+      Logger.error(`Failed to get request information. Reason = ${getErrorMessage(error)}`);
       throw error;
     }
   }
