@@ -10,13 +10,23 @@ const Logger = logger(__filename);
 class RequestSignup implements IRequestSignup {
   private prisma: PrismaClient;
 
-  async getRequestSignup(userId: string): Promise<User | null> {
-    const user = await this.prisma.user.findUnique({
-      where: {
-        id: userId,
-      },
-    });
-    return user;
+  async getRequestSignup(requestId: string): Promise<Prisma.volunteerRequestSignUp | null> {
+    try {
+      const volunteerRequestSignUpData = await prisma.volunteerRequestSignUp.findUnique({
+        where: {
+          id: requestId,
+          complete: true,
+        },
+        include: {
+          user: true,
+        },
+      });
+      return volunteerRequestSignUpData;
+    }
+    catch (error: unknown) {
+      Logger.error(`Failed to get request information. Reason = ${getErrorMessage(error)}`);
+      throw error;
+    }
   }
 
   async postVolunteerRequestSignup(userId: string): Promise<Prisma.volunteerRequestSignUp> {
