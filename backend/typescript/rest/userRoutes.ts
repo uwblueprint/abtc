@@ -163,21 +163,4 @@ userRouter.delete("/", async (req, res) => {
     .json({ error: "Must supply one of userId or email as query parameter." });
 });
 
-userRouter.post("/volunteer-signed-up", createUserDtoValidator, async (req, res) => {
-  try {
-    const { requestId, userId } = req.body
-
-    const newVolunteerSignedUp = await userService.createSignedUpVolunteers(
-      requestId,
-      userId,
-    );
-
-    // await authService.sendEmailVerificationLink(req.body.email);
-    
-    res.status(201).json(newVolunteerSignedUp);
-  } catch (error: unknown) {
-    res.status(500).json({ error: getErrorMessage(error) });
-  }
-});
-
 export default userRouter;

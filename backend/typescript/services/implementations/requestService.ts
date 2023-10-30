@@ -1,5 +1,5 @@
-import { Prisma, User, PrismaClient } from '@prisma/client';
-import IRequestSignup from '../interfaces/requestSignup';
+import { Prisma, User } from '@prisma/client';
+import IRequestSignup from '../interfaces/requestService';
 import prisma from "../../prisma";
 import logger from "../../utilities/logger";
 import { getErrorMessage } from "../../utilities/errorUtils";
@@ -8,9 +8,8 @@ const Logger = logger(__filename);
 
 
 class RequestSignup implements IRequestSignup {
-  private prisma: PrismaClient;
 
-  async getRequestSignup(requestId: string): Promise<Prisma.volunteerRequestSignUp | null> {
+  async getVolunteerRequestSignup(requestId: string): Promise<Prisma.volunteerRequestSignUp | null> {
     try {
       const volunteerRequestSignUpData = await prisma.volunteerRequestSignUp.findUnique({
         where: {
@@ -46,7 +45,7 @@ class RequestSignup implements IRequestSignup {
   }
 
   async editRequestSignup(userId: string, updatedData: Prisma.UserUpdateInput): Promise<User> {
-    const updatedUser = await this.prisma.user.update({
+    const updatedUser = await prisma.user.update({
       where: {
         id: userId,
       },
