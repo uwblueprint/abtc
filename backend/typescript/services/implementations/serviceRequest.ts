@@ -10,6 +10,7 @@ class ServiceRequest implements IServiceRequest {
   /* eslint-disable class-methods-use-this */
 
   // get method here
+  async getServiceRequestByID(requestId: string): Promise<Prisma.getServiceRequestByID> {}
 
   // post method here
 
