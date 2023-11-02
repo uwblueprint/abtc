@@ -2,9 +2,7 @@ import IVolunteerSignup from "../interfaces/volunteerSignup";
 
 class VolunteerSignup implements IVolunteerSignup{
 
-    async getVolunteerSignup(): Promise<void> {
-        
-    }
+    async getVolunteerSignup(id: string): Promise<volunteerPlatformSignUp> {}
 
     async postVolunteerSignup(): Promise<void> {
         

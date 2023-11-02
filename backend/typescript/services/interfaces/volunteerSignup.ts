@@ -1,9 +1,11 @@
+import { volunteerPlatformSignUp } from "@prisma/client";
+
 interface IVolunteerSignup {
 
    /**
    * Gets volunteer signup
    */
-    getVolunteerSignup(): Promise<void>
+   getVolunteerSignup(id: string): Promise<volunteerPlatformSignUp>;
 
    /**
    * Posts volunteer signup
