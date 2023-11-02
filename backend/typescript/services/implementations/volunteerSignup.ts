@@ -1,13 +1,17 @@
-import { volunteerPlatformSignUp } from "@prisma/client";
 import IVolunteerSignup from "../interfaces/volunteerSignup";
 
-class VolunteerSignup implements IVolunteerSignup {
+class VolunteerSignup implements IVolunteerSignup{
 
-  async getVolunteerSignup(id: string): Promise<volunteerPlatformSignUp> {}
+    async getVolunteerSignup(id: string): Promise<volunteerPlatformSignUp> {}
 
-  async postVolunteerSignup(): Promise<void> {}
+    async postVolunteerSignup(): Promise<void> {
+        
+    }
 
-  async editVolunteerSignup(): Promise<void> {}
+    async editVolunteerSignup(): Promise<void> {
+        
+    }
+
 }
 
 export default VolunteerSignup;
