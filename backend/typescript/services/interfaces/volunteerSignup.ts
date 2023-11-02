@@ -1,11 +1,10 @@
-import { volunteerPlatformSignUp } from "@prisma/client";
-
 interface IVolunteerSignup {
+    // ADD PARAMETER AND RETURN TYPES IN NEXT TICKET
 
    /**
    * Gets volunteer signup
    */
-   getVolunteerSignup(id: string): Promise<volunteerPlatformSignUp>;
+   getVolunteerSignup(id: string): Promise<void>;
 
    /**
    * Posts volunteer signup
@@ -20,4 +19,3 @@ interface IVolunteerSignup {
 }
   
 export default IVolunteerSignup;
-  
