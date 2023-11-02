@@ -4,7 +4,7 @@ interface IVolunteerSignup {
    /**
    * Gets volunteer signup
    */
-   getVolunteerSignup(id: string): Promise<void>;
+   getVolunteerSignup(): Promise<void>;
 
    /**
    * Posts volunteer signup

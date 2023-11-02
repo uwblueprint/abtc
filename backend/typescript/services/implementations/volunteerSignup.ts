@@ -3,7 +3,7 @@ import IVolunteerSignup from "../interfaces/volunteerSignup";
 class VolunteerSignup implements IVolunteerSignup{
     // ADD PARAMETER AND RETURN TYPES IN NEXT TICKET
 
-    async getVolunteerSignup(id: string): Promise<void> {
+    async getVolunteerSignup(): Promise<void> {
         // Implementation to be added
     }
 
