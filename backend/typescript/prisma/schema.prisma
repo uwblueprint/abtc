@@ -19,7 +19,7 @@ model user {
   lastName        String
   role            Role
   serviceRequests serviceRequest[]
-  volunteerSignUp volunteerSignUp[]
+  volunteerSignUp volunteerPlatformSignUp[]
 }
 
 model serviceRequest {
@@ -36,7 +36,7 @@ model serviceRequest {
   requestType   ServiceRequestType
 }
 
-model volunteerSignUp {
+model volunteerPlatformSignUp {
   id        String @id @default(auto()) @map("_id") @db.ObjectId
   email     String
   firstName String
