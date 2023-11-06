@@ -1,7 +1,6 @@
 import { Prisma } from "@prisma/client";
 
 interface IServiceRequest {
-  // get method here
   /**
    * Get serviceRequest by id
    * @param requestId serviceRequest's id
@@ -9,7 +8,6 @@ interface IServiceRequest {
    */
   getServiceRequestByID(requestId: string): Promise<Prisma.getServiceRequestByID>;
 
-  // post method here
   /**
    * Create a serviceRequest
    * @param serviceRequest the serviceRequest to be created
