@@ -9,12 +9,10 @@ const Logger = logger(__filename);
 class ServiceRequest implements IServiceRequest {
   /* eslint-disable class-methods-use-this */
 
-  // get method here
   async getServiceRequestByID(
     requestId: string,
   ): Promise<Prisma.getServiceRequestByID> {}
 
-  // post method here
   async postServiceRequest(
     serviceRequest: Prisma.serviceRequestCreateInput,
   ): Promise<Prisma.serviceRequestCreateInput> {}
