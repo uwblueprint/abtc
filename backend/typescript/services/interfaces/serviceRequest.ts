@@ -16,7 +16,7 @@ interface IServiceRequest {
    */
   postServiceRequest(
     serviceRequest: Prisma.serviceRequestCreateInput,
-  ): Promise<Prisma.serviceRequestCreateInput>;
+  ): Promise<Partial<Prisma.serviceRequestCreateInput>>;
 
   /**
    * Delete a serviceRequest by id

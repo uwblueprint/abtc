@@ -15,7 +15,20 @@ class ServiceRequest implements IServiceRequest {
 
   async postServiceRequest(
     serviceRequest: Prisma.serviceRequestCreateInput,
-  ): Promise<Prisma.serviceRequestCreateInput> {}
+  ): Promise<Partial<Prisma.serviceRequestCreateInput>> {
+    let newServiceRequest: Partial<Prisma.serviceRequestCreateInput>;
+    try {
+      newServiceRequest = await prisma.serviceRequest.create({
+        data: serviceRequest,
+      });
+    } catch (error) {
+      Logger.error(
+        `Failed to create service request. Reason = ${getErrorMessage(error)}`,
+      );
+      throw error;
+    }
+    return newServiceRequest;
+  }
 
   async deleteServiceRequestByID(requestId: string): Promise<void> {}
 }
