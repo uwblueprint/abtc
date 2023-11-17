@@ -1,4 +1,6 @@
 import IVolunteerPlatformSignup from "../interfaces/volunteerSignup";
+import { Prisma } from "@prisma/client";
+import prisma from "../../prisma";
 
 class VolunteerSignup implements IVolunteerPlatformSignup{
     // ADD PARAMETER AND RETURN TYPES IN NEXT TICKET
@@ -11,8 +13,16 @@ class VolunteerSignup implements IVolunteerPlatformSignup{
         // Implementation to be added
     }
 
-    async deleteVolunteerSignup(): Promise<void> {
-        // Implementation to be added
+    async deleteVolunteerSignup(volunteerSignupId:string): Promise<void> {
+        try{
+            const entryToDelete = await prisma.volunteerPlatformSignUp.findUnique({
+                where: { id: volunteerSignupId },
+              });
+            
+        }catch (error) {
+            throw error;
+        }
+
     }
 
 }

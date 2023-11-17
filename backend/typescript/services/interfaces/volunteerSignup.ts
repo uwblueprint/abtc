@@ -14,7 +14,7 @@ interface IVolunteerSignup {
    /**
    * Deletes volunteer signup
    */
-   deleteVolunteerSignup(): Promise<void>
+   deleteVolunteerSignup(volunteerSignupId:string): Promise<void>
 
 }
   
