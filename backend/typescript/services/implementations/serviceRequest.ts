@@ -18,6 +18,19 @@ class ServiceRequest implements IServiceRequest {
   ): Promise<Partial<Prisma.serviceRequestCreateInput>> {
     let newServiceRequest: Partial<Prisma.serviceRequestCreateInput>;
     try {
+      // Verify that requester user exists
+      const requesterId = serviceRequest.requester?.connect?.id;
+      if (!requesterId) {
+        throw new Error("Only existing users can create service requests.");
+      }
+      const userExists = await prisma.user.findUnique({
+        where: {
+          id: requesterId,
+        },
+      });
+      if (!userExists) {
+        throw new Error("Only existing users can create service requests.");
+      }
       newServiceRequest = await prisma.serviceRequest.create({
         data: serviceRequest,
       });
