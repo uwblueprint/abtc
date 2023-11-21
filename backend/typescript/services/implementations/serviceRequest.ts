@@ -11,7 +11,23 @@ class ServiceRequest implements IServiceRequest {
 
   async getServiceRequestByID(
     requestId: string,
-  ): Promise<void> {}
+): Promise<serviceRequest> {
+    try {
+        const serviceRequest: serviceRequest | null = await prisma.serviceRequest.findUnique({
+            where: {
+                id: requestId,
+            },
+        });
+
+        if (!serviceRequest) {
+            throw new Error("Service request not found.")
+        }
+
+        return serviceRequest;
+    } catch (error) {
+        throw new Error("Error retrieving service request.");
+    }
+}
 
   async postServiceRequest(
     serviceRequest: Prisma.serviceRequestCreateInput,
