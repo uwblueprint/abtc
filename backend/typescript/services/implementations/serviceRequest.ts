@@ -30,7 +30,24 @@ class ServiceRequest implements IServiceRequest {
     return newServiceRequest;
   }
 
-  async deleteServiceRequestByID(requestId: string): Promise<void> {}
+  async deleteServiceRequestByID(requestId: string): Promise<void> {
+    try {
+      const deletedServiceRequest: Partial<Prisma.serviceRequestCreateInput> = await prisma.serviceRequest.delete(
+        {
+          where: { id: requestId },
+        },
+      );
+
+      if (!deletedServiceRequest) {
+        throw new Error(`requestId ${requestId} not found.`);
+      }
+    } catch (error: unknown) {
+      Logger.error(
+        `Failed to delete service request. Reason = ${getErrorMessage(error)}`,
+      );
+      throw error;
+    }
+  }
 }
 
 export default ServiceRequest;
