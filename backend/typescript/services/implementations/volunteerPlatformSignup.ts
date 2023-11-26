@@ -1,50 +1,64 @@
-import IVolunteerPlatformSignup from "../interfaces/volunteerPlatformSignup";
-import { getErrorMessage } from "../../utilities/errorUtils";
-import logger from "../../utilities/logger";
-import { Prisma } from "@prisma/client";
+import { Prisma, volunteerPlatformSignUp } from "@prisma/client";
 import prisma from "../../prisma";
+import IVolunteerPlatformSignup from "../interfaces/volunteerPlatformSignup";
+import logger from "../../utilities/logger";
+import { getErrorMessage } from "../../utilities/errorUtils";
 
 const Logger = logger(__filename);
 
-class VolunteerPlatformSignup implements IVolunteerPlatformSignup{
-    // ADD PARAMETER AND RETURN TYPES IN NEXT TICKET
-
-    async getVolunteerPlatformSignup(): Promise<void> {
-        // Implementation to be added
+class VolunteerPlatformSignup implements IVolunteerPlatformSignup {
+  async getVolunteerPlatformSignup(
+    adminId: string,
+  ): Promise<volunteerPlatformSignUp[]> {
+    let volunteerSignUps: volunteerPlatformSignUp[];
+    try {
+      volunteerSignUps = await prisma.volunteerPlatformSignUp.findMany({
+        where: {
+          adminId,
+        },
+      });
+    } catch (error) {
+      Logger.error(
+        `Failed to get volunteer platform signups. Reason = ${getErrorMessage(
+          error,
+        )}`,
+      );
+      throw error;
     }
+    return volunteerSignUps;
+  }
 
-    async postVolunteerPlatformSignup(
-        volunteerPlatform: Prisma.volunteerPlatformSignUp,
-    ): Promise<Prisma.volunteerPlatformSignUp> {
-        let newVolunteer: Prisma.volunteerPlatformSignUp;
-        try {
-            // Check for duplicate email
-            const emailUsed = await prisma.volunteerPlatformSignUp.findUnique({
-                where: {
-                  email: volunteerPlatform.email,
-                },
-            });
-            
-            if (emailUsed) {
-                throw new Error("The email provided is already in use.");
-            }
 
-            newVolunteer = await prisma.volunteerPlatformSignUp.create({
-                data: volunteerPlatform,
-            });
-        } catch (error: unknown) {
-            Logger.error(
-                `Failed to create volunteer platform. Reason = ${getErrorMessage(error)}`
-            );
-            throw error;
+  async postVolunteerPlatformSignup(
+    volunteerPlatform: Prisma.volunteerPlatformSignUp,
+  ): Promise<Prisma.volunteerPlatformSignUp> {
+      let newVolunteer: Prisma.volunteerPlatformSignUp;
+      try {
+        // Check for duplicate email
+        const emailUsed = await prisma.volunteerPlatformSignUp.findUnique({
+        where: {
+          email: volunteerPlatform.email,
+        },
+        });
+        if (emailUsed) {
+          throw new Error("The email provided is already in use.");
         }
+        newVolunteer = await prisma.volunteerPlatformSignUp.create({
+          data: volunteerPlatform,
+        });
+      } catch (error: unknown) {
+        Logger.error(
+          `Failed to create volunteer platform. Reason = ${getErrorMessage(error)}`
+        );
+        throw error;
+      }
+      
+    return newVolunteer;
+  }
 
-        return newVolunteer;
-    }
-
-    async editVolunteerPlatformSignup(): Promise<void> {
-        // Implementation to be added
-    }
+  async editVolunteerPlatformSignup(): Promise<void> {
+    // Implementation to be added
+  }
 
 }
 

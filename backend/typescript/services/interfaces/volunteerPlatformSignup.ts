@@ -1,14 +1,15 @@
-import { Prisma } from "@prisma/client";
+import { Prisma, volunteerPlatformSignUp } from "@prisma/client";
+
 
 interface IVolunteerPlatformSignup {
-    // ADD PARAMETER AND RETURN TYPES IN NEXT TICKET
-
-   /**
+  /**
    * Gets volunteer signup
    */
-   getVolunteerPlatformSignup(): Promise<void>;
+  getVolunteerPlatformSignup(
+    adminId: string,
+  ): Promise<volunteerPlatformSignUp[]>;
 
-   /**
+  /**
    * Posts volunteer signup
    * @param volunteerPlatform the volunteerPlatform to be created
    * @returns a volunteerPlatformSignUp with the provided information
@@ -18,11 +19,11 @@ interface IVolunteerPlatformSignup {
         volunteerPlatform: Prisma.volunteerPlatformSignUp,
     ): Promise<Prisma.volunteerPlatformSignUp>
 
-   /**
+
+  /**
    * Edits volunteer signup
    */
-    editVolunteerPlatformSignup(): Promise<void>
-
+  editVolunteerPlatformSignup(): Promise<void>;
 }
-  
+
 export default IVolunteerPlatformSignup;
