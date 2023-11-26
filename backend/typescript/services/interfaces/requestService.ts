@@ -16,12 +16,14 @@ interface IRequestSignup {
   postVolunteerRequestSignup(userID: string): Promise<Prisma.volunteerRequestSignUp>;
 
   /**
-   * Update user information based on their unique ID.
-   * @param userId - The unique identifier of the user to be updated.
-   * @param updatedData - The data to update the user's information.
-   * @returns A promise that resolves to the updated user.
+    * Update a volunteer shift signup request.
+    * @param serviceRequestId - The unique identifier of the request.
+    * @param userId - The unique identifier of the user associated with the request.
+    * @param newVolunteerRequestSignUp - The new request data.
+    * @returns A promise that resolves to the updated request.
    */
-  editRequestSignup(userId: string, updatedData: UserUpdateInput): Promise<Prisma.User>;
+  editRequestSignup(serviceRequestId: string,
+    userId: string, newVolunteerRequestSignUp: Prisma.volunteerRequestSignUp): Promise<Prisma.volunteerRequestSignUp>;
 }
 
 export default IRequestSignup;
