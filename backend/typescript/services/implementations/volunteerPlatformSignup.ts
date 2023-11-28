@@ -1,4 +1,4 @@
-import { Prisma, volunteerPlatformSignUp } from "@prisma/client";
+import { volunteerPlatformSignUp } from "@prisma/client";
 import prisma from "../../prisma";
 import IVolunteerPlatformSignup from "../interfaces/volunteerPlatformSignup";
 import logger from "../../utilities/logger";
@@ -14,7 +14,7 @@ class VolunteerPlatformSignup implements IVolunteerPlatformSignup {
     try {
       volunteerSignUps = await prisma.volunteerPlatformSignUp.findMany({
         where: {
-          adminId,
+          admin_id : adminId
         },
       });
     } catch (error) {
@@ -30,31 +30,34 @@ class VolunteerPlatformSignup implements IVolunteerPlatformSignup {
 
 
   async postVolunteerPlatformSignup(
-    volunteerPlatform: Prisma.volunteerPlatformSignUp,
-  ): Promise<Prisma.volunteerPlatformSignUp> {
-      let newVolunteer: Prisma.volunteerPlatformSignUp;
-      try {
+    volunteerPlatform: volunteerPlatformSignUp
+): Promise<volunteerPlatformSignUp> {
+  let newVolunteer: volunteerPlatformSignUp;
+
+    try {
         // Check for duplicate email
-        const emailUsed = await prisma.volunteerPlatformSignUp.findUnique({
-        where: {
-          email: volunteerPlatform.email,
-        },
-        });
+        const emailUsed = await prisma.volunteerPlatformSignUp.findMany({
+          where: {
+              email: volunteerPlatform.email,
+          },
+      });
+
         if (emailUsed) {
-          throw new Error("The email provided is already in use.");
+            throw new Error("The email provided is already in use.");
         }
+
         newVolunteer = await prisma.volunteerPlatformSignUp.create({
-          data: volunteerPlatform,
+            data: volunteerPlatform,
         });
-      } catch (error: unknown) {
+    } catch (error: unknown) {
         Logger.error(
-          `Failed to create volunteer platform. Reason = ${getErrorMessage(error)}`
+            `Failed to create volunteer platform. Reason = ${getErrorMessage(error)}`
         );
         throw error;
-      }
-      
+    }
+
     return newVolunteer;
-  }
+}
 
   async editVolunteerPlatformSignup(): Promise<void> {
     // Implementation to be added

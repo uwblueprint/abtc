@@ -16,8 +16,8 @@ interface IVolunteerPlatformSignup {
    * @throws Error if user creation fails
    */    
     postVolunteerPlatformSignup(
-        volunteerPlatform: Prisma.volunteerPlatformSignUp,
-    ): Promise<Prisma.volunteerPlatformSignUp>
+        volunteerPlatform: volunteerPlatformSignUp,
+    ): Promise<volunteerPlatformSignUp>
 
 
   /**
