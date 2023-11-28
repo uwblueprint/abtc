@@ -45,30 +45,46 @@ class RequestSignup implements IRequestSignup {
   }
 
   async editRequestSignup(serviceRequestId: string,
-    userId: string, newVolunteerRequestSignUp: Prisma.volunteerRequestSignUp): Promise<any> {
-    let existingRequestSignup: Prisma.volunteerRequestSignUp | null = null;
+    userId: string, newDataObject: Partial<Prisma.volunteerRequestSignUp> ): Promise<Prisma.volunteerRequestSignUp> {
+    let validVolunteerRequestSignup: Prisma.volunteerRequestSignUp | null = null;
     let updatedVolunteerRequestSignup: Prisma.volunteerRequestSignUpUpdateInput;
 
    try {
-    // Retrieve the existing request signup entry
-    existingRequestSignup = await prisma.volunteerRequestSignUp.findUnique({
+     // Check the volunteer request signup entry exists. Query through the user table.
+     validVolunteerRequestSignup = await prisma.user.findUnique({
       where: {
-        serviceRequestId: serviceRequestId,
-        userId: userId
+        id: userId,
       },
-    });
+      include: {
+        volunteerRequestSignUp: {
+          where: {
+            id: serviceRequestId,
+          },
+        },
+      },
+    }); 
 
-    if (!existingRequestSignup) {
+    if (!validVolunteerRequestSignup) {
       throw new Error('Original request signup entry not found');
     }
 
     try{
-      // Update the fields with the provided values
-      updatedVolunteerRequestSignup = await prisma.volunteerRequestSignUp.update({
+      // Update the volunteer request signup entry with new data. Query through the user table.
+      updatedVolunteerRequestSignup = await prisma.user.update({
         where: {
-          id: existingRequestSignup.id,
+          id: userId,
         },
-        data: newVolunteerRequestSignUp,
+        data: {
+          volunteerRequestSignUp: {
+            update: {
+              where: {
+                id: serviceRequestId,
+              },
+              data: {
+              ...newDataObject,}
+            },
+          },
+        },
       });
     }
     catch (error: unknown) {
