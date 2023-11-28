@@ -9,15 +9,12 @@ const Logger = logger(__filename);
 
 class RequestSignup implements IRequestSignup {
 
-  async getVolunteerRequestSignup(requestId: string): Promise<Prisma.volunteerRequestSignUp | null> {
-    try {
-      const volunteerRequestSignUpData = await prisma.volunteerRequestSignUp.findUnique({
+  async getVolunteerRequestSignup(serviceRequestId: string, userId: string): Promise<Prisma.volunteerRequestSignUp | null> {
+    try { 
+      const volunteerRequestSignUpData = await prisma.volunteerRequestSignUp.findFirst({
         where: {
-          id: requestId,
-          complete: true,
-        },
-        include: {
-          user: true,
+          id: serviceRequestId,
+          userId: userId,
         },
       });
       return volunteerRequestSignUpData;
