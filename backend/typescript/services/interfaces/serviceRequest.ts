@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Prisma, serviceRequest } from "@prisma/client";
 
 interface IServiceRequest {
   /**
@@ -6,7 +6,7 @@ interface IServiceRequest {
    * @param requestId serviceRequest's id
    * @throws Error if serviceRequest getting fails
    */
-  getServiceRequestByID(requestId: string): Promise<Prisma.getServiceRequestByID>;
+  getServiceRequestByID(requestId: string): Promise<void>;
 
   /**
    * Create a serviceRequest
@@ -16,7 +16,7 @@ interface IServiceRequest {
    */
   postServiceRequest(
     serviceRequest: Prisma.serviceRequestCreateInput,
-  ): Promise<Partial<Prisma.serviceRequestCreateInput>>;
+  ): Promise<serviceRequest>;
 
   /**
    * Delete a serviceRequest by id

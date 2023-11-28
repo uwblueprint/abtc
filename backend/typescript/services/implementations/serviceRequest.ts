@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Prisma, serviceRequest } from "@prisma/client";
 import IServiceRequest from "../interfaces/serviceRequest";
 import { getErrorMessage } from "../../utilities/errorUtils";
 import logger from "../../utilities/logger";
@@ -11,13 +11,26 @@ class ServiceRequest implements IServiceRequest {
 
   async getServiceRequestByID(
     requestId: string,
-  ): Promise<Prisma.getServiceRequestByID> {}
+  ): Promise<void> {}
 
   async postServiceRequest(
     serviceRequest: Prisma.serviceRequestCreateInput,
-  ): Promise<Partial<Prisma.serviceRequestCreateInput>> {
-    let newServiceRequest: Partial<Prisma.serviceRequestCreateInput>;
+  ): Promise<serviceRequest> {
+    let newServiceRequest: serviceRequest
     try {
+      // Verify that requester user exists
+      const requesterId = serviceRequest.requester.connect?.id
+      if (!requesterId) {
+        throw new Error("Only existing users can create service requests.");
+      }
+      const userExists = await prisma.user.findUnique({
+        where: {
+          id: requesterId,
+        },
+      });
+      if (!userExists) {
+        throw new Error("Only existing users can create service requests.");
+      }
       newServiceRequest = await prisma.serviceRequest.create({
         data: serviceRequest,
       });
