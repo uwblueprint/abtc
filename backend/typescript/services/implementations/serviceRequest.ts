@@ -61,7 +61,7 @@ class ServiceRequest implements IServiceRequest {
 
   async deleteServiceRequestByID(requestId: string): Promise<void> {
     try {
-      const deletedServiceRequest: Partial<Prisma.serviceRequestCreateInput> = await prisma.serviceRequest.delete(
+      const deletedServiceRequest: serviceRequest = await prisma.serviceRequest.delete(
         {
           where: { id: requestId },
         },
