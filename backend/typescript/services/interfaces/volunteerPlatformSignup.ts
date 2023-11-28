@@ -1,8 +1,7 @@
-import { volunteerPlatformSignUp } from "@prisma/client";
+import { Prisma, volunteerPlatformSignUp } from "@prisma/client";
+
 
 interface IVolunteerPlatformSignup {
-  // ADD PARAMETER AND RETURN TYPES IN NEXT TICKET
-
   /**
    * Gets volunteer signup
    */
@@ -12,8 +11,14 @@ interface IVolunteerPlatformSignup {
 
   /**
    * Posts volunteer signup
-   */
-  postVolunteerPlatformSignup(): Promise<void>;
+   * @param volunteerPlatform the volunteerPlatform to be created
+   * @returns a volunteerPlatformSignUp with the provided information
+   * @throws Error if user creation fails
+   */    
+    postVolunteerPlatformSignup(
+        volunteerPlatform: volunteerPlatformSignUp,
+    ): Promise<volunteerPlatformSignUp>
+
 
   /**
    * Edits volunteer signup
