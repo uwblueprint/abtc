@@ -13,7 +13,7 @@ class RequestSignup implements IRequestSignup {
     try { 
       const volunteerRequestSignUpData = await prisma.volunteerRequestSignUp.findFirst({
         where: {
-          id: serviceRequestId,
+          serviceRequestId: serviceRequestId,
           userId: userId,
         },
       });
