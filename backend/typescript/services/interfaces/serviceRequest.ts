@@ -6,7 +6,7 @@ interface IServiceRequest {
    * @param requestId serviceRequest's id
    * @throws Error if serviceRequest getting fails
    */
-  getServiceRequestByID(requestId: string): Promise<void>;
+  getServiceRequestByID(requestId: string): Promise<serviceRequest>;
 
   /**
    * Create a serviceRequest
