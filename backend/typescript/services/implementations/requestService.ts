@@ -11,12 +11,24 @@ class RequestSignup implements IRequestSignup {
 
   async getVolunteerRequestSignup(serviceRequestId: string, userId: string): Promise<Prisma.volunteerRequestSignUp | null> {
     try { 
-      const volunteerRequestSignUpData = await prisma.volunteerRequestSignUp.findFirst({
+      // Query for volunteerSignUpRequest through the user table
+      const volunteerRequestSignUpData = await prisma.users.findFirst({
         where: {
-          serviceRequestId: serviceRequestId,
-          userId: userId,
+          id: userId,
         },
-      });
+        include: {
+          volunteerRequestSignUp: {
+            where: {
+              id: serviceRequestId,
+            },
+          },
+        },
+      }); 
+
+      if (!volunteerRequestSignUpData) {
+        throw new Error('Original request signup entry not found');
+      }
+      
       return volunteerRequestSignUpData;
     }
     catch (error: unknown) {
