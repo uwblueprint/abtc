@@ -6,7 +6,7 @@ interface IRequestSignup {
    * @param requestId - The unique identifier of the request.
    * @returns A promise that resolves to request data or null if not found.
    */
-  getVolunteerRequestSignup(serviceRequestId: string, userId: string): Promise<Prisma.volunteerRequestSignUp | null>;
+  getVolunteerRequestSignup(serviceRequestId: string, userId: string): Promise<Prisma.users | null>;
 
   /**
    * Generate a volunteer shift signup request.

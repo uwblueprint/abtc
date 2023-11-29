@@ -9,10 +9,10 @@ const Logger = logger(__filename);
 
 class RequestSignup implements IRequestSignup {
 
-  async getVolunteerRequestSignup(serviceRequestId: string, userId: string): Promise<Prisma.volunteerRequestSignUp | null> {
+  async getVolunteerRequestSignup(serviceRequestId: string, userId: string): Promise<Prisma.users | null> {
     try { 
       // Query for volunteerSignUpRequest through the user table
-      const volunteerRequestSignUpData = await prisma.users.findFirst({
+      const volunteerRequestSignUpData = await prisma.users.findUnique({
         where: {
           id: userId,
         },
@@ -26,9 +26,9 @@ class RequestSignup implements IRequestSignup {
       }); 
 
       if (!volunteerRequestSignUpData) {
-        throw new Error('Original request signup entry not found');
+        throw new Error('Request signup entry not found');
       }
-      
+
       return volunteerRequestSignUpData;
     }
     catch (error: unknown) {
