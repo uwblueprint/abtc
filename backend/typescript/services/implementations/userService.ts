@@ -346,6 +346,7 @@ class UserService implements IUserService {
       throw error;
     }
   }
+
 }
 
 export default UserService;
