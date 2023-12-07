@@ -12,14 +12,14 @@ model test {
 }
 
 model user {
-  id              String            @id @default(auto()) @map("_id") @db.ObjectId
+  id              String                    @id @default(auto()) @map("_id") @db.ObjectId
   authId          String
   email           String
   firstName       String
   lastName        String
   role            Role
-  serviceRequests serviceRequest[]
-  volunteerSignUp volunteerPlatformSignUp[]
+  serviceRequests serviceRequest[] // for volunteer
+  volunteerSignUp volunteerPlatformSignUp[] //for admins
 }
 
 model serviceRequest {
