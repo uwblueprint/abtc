@@ -1,4 +1,4 @@
-import { volunteerPlatformSignUp } from "@prisma/client";
+import { volunteerPlatformSignUp, Status } from "@prisma/client";
 import prisma from "../../prisma";
 import IVolunteerPlatformSignup from "../interfaces/volunteerPlatformSignup";
 import logger from "../../utilities/logger";
@@ -40,7 +40,7 @@ class VolunteerPlatformSignup implements IVolunteerPlatformSignup {
           where: {
               email: volunteerPlatform.email,
           },
-      });
+        });
 
         if (emailUsed) {
             throw new Error("The email provided is already in use.");
@@ -61,6 +61,31 @@ class VolunteerPlatformSignup implements IVolunteerPlatformSignup {
 
   async editVolunteerPlatformSignup(): Promise<void> {
     // Implementation to be added
+  }
+
+  async acceptVolunteerById(signupRequestId: string): Promise<void> {
+    try {
+      const existingVolunteer = await prisma.volunteerPlatformSignUp.findUnique({
+        where: { id: signupRequestId },
+      });
+
+      // Check if volunteer ID is valid
+      if (!existingVolunteer) {
+        throw new Error(`Volunteer with ID ${signupRequestId} not found.`);
+      }
+
+      // Update status
+      await prisma.volunteerPlatformSignUp.update({
+        where: { id: signupRequestId },
+        data: { status: Status.ACCEPTED },
+      });
+
+    } catch(error: unknown) {
+      Logger.error(
+        `Failed to accept volunteer. Reason = ${getErrorMessage(error)}`
+      );
+      throw error;
+    }
   }
 
 }
