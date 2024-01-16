@@ -59,8 +59,26 @@ class VolunteerPlatformSignup implements IVolunteerPlatformSignup {
     return newVolunteer;
 }
 
-  async editVolunteerPlatformSignup(): Promise<void> {
+  async editVolunteerPlatformSignup(volunteerSignupId:string): Promise<void> {
     // Implementation to be added
+    try{
+          const entryToDelete = await prisma.volunteerPlatformSignUp.findUnique({
+                where: { id: volunteerSignupId },
+                });
+
+            if(entryToDelete){
+                const deleteUserResult = await prisma.volunteerPlatformSignUp.delete({
+                    where: { id: volunteerSignupId },
+                  });
+
+            } else {
+                throw new Error(`Volunteer Signup with ID ${volunteerSignupId} not found.`);
+            }
+            
+        } catch (error: unknown) {
+            console.error(`Failed to delete Volunteer Signup. Reason = ${getErrorMessage(error)}`)
+            throw error;
+        }
   }
 
   async acceptVolunteerById(signupRequestId: string): Promise<void> {
