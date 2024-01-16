@@ -23,7 +23,7 @@ interface IVolunteerPlatformSignup {
   /**
    * Edits volunteer signup
    */
-  editVolunteerPlatformSignup(): Promise<void>;
+  editVolunteerPlatformSignup(volunteerSignupId: string): Promise<void>;
 
   /**
    * Accepts volunteer signup
