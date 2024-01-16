@@ -24,6 +24,14 @@ interface IVolunteerPlatformSignup {
    * Edits volunteer signup
    */
   editVolunteerPlatformSignup(): Promise<void>;
+
+  /**
+   * Accepts volunteer signup
+   * @param signupRequestId the ID of the volunteerPlatform to be accepted
+   * @throws Error if volunteer acceptnce fails
+   */
+  acceptVolunteerById(signupRequestId: string): Promise<void>;
+
 }
 
 export default IVolunteerPlatformSignup;
