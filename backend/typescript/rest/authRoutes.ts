@@ -1,4 +1,5 @@
 import { CookieOptions, Router } from "express";
+import { Status } from "@prisma/client";
 
 import { isAuthorizedByEmail, isAuthorizedByUserId } from "../middlewares/auth";
 import {
@@ -13,11 +14,14 @@ import IAuthService from "../services/interfaces/authService";
 import IEmailService from "../services/interfaces/emailService";
 import IUserService from "../services/interfaces/userService";
 import { getErrorMessage } from "../utilities/errorUtils";
+import IPlatformSignup from "../services/interfaces/platformSignup";
+import PlatformSignup from "../services/implementations/platformSignup";
 
 const authRouter: Router = Router();
 const userService: IUserService = new UserService();
 const emailService: IEmailService = new EmailService(nodemailerConfig);
 const authService: IAuthService = new AuthService(userService, emailService);
+const platformSignup: IPlatformSignup = new PlatformSignup();
 
 const cookieOptions: CookieOptions = {
   httpOnly: true,
@@ -51,9 +55,18 @@ authRouter.post("/register", registerRequestValidator, async (req, res) => {
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email,
-      role: "User",
+      role: req.body.role,
       password: req.body.password,
     });
+
+    const newPlatformSignUp = {
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      email: req.body.email,
+      status: Status.PENDING,
+    };
+
+    await platformSignup.postPlatformSignup(newPlatformSignUp);
 
     const authDTO = await authService.generateToken(
       req.body.email,

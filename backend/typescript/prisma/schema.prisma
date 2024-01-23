@@ -12,14 +12,14 @@ model test {
 }
 
 model user {
-  id              String                    @id @default(auto()) @map("_id") @db.ObjectId
+  id              String           @id @default(auto()) @map("_id") @db.ObjectId
   authId          String
   email           String
   firstName       String
   lastName        String
   role            Role
+  isAccepted      Status
   serviceRequests serviceRequest[] // for volunteer
-  volunteerSignUp volunteerPlatformSignUp[] //for admins
 }
 
 model serviceRequest {
@@ -36,13 +36,11 @@ model serviceRequest {
   requestType   ServiceRequestType
 }
 
-model volunteerPlatformSignUp {
+model platformSignUp {
   id        String @id @default(auto()) @map("_id") @db.ObjectId
   email     String
   firstName String
   lastName  String
-  admin     user   @relation(fields: [admin_id], references: [id])
-  admin_id  String @db.ObjectId
   status    Status
 }
 

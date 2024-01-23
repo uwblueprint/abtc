@@ -40,6 +40,7 @@ type OAuthSignInResponse = {
   refreshToken: string;
   expiresIn: string;
   needConfirmation: boolean;
+  role: string;
 };
 
 type RefreshTokenResponse = {

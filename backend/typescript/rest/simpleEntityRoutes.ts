@@ -10,7 +10,7 @@ import { getErrorMessage } from "../utilities/errorUtils";
 import { sendResponseByMimeType } from "../utilities/responseUtil";
 
 const simpleEntityRouter: Router = Router();
-simpleEntityRouter.use(isAuthorizedByRole(new Set(["User", "Admin"])));
+simpleEntityRouter.use(isAuthorizedByRole(new Set(["VOLUNTEER", "ADMIN"])));
 
 const simpleEntityService: ISimpleEntityService = new SimpleEntityService();
 

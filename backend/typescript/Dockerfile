@@ -8,6 +8,9 @@ RUN echo "deb http://archive.debian.org/debian stretch main" > /etc/apt/sources.
 # libcurl3 is required for mongodb-memory-server, which is used for testing
 RUN apt-get update && apt-get install -y libcurl3
 
+RUN yarn add prisma
+RUN yarn add @prisma/client
+
 RUN yarn install
 
 COPY . ./
