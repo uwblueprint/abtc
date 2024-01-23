@@ -1,5 +1,5 @@
-import IRequestSignup from "../interfaces/requestService";
-import { Prisma } from "@prisma/client";
+import { user } from "@prisma/client";
+import IRequestSignup from "../interfaces/volunteerRequestRegisterService";
 import prisma from "../../prisma";
 import logger from "../../utilities/logger";
 import { getErrorMessage } from "../../utilities/errorUtils";
@@ -9,9 +9,8 @@ const Logger = logger(__filename);
 
 class RequestSignup implements IRequestSignup {
 
-    async removeRequestSignup(serviceRequestID: string, userID: string): Promise<Prisma.User> {
+    async removeRequestSignup(serviceRequestID: string, userID: string): Promise<user> {
         try {
-
             const existingUser = await prisma.user.findUnique({
                 where: {
                     id: userID

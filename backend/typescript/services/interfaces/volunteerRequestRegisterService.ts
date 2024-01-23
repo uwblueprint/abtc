@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { user } from '@prisma/client';
 
 interface IRequestSignup {
   /**
@@ -8,7 +8,7 @@ interface IRequestSignup {
    * @returns A promise that resolves to the updated user.
    */
   
-  removeRequestSignup(serviceRequestID: string, userID: string): Promise<Prisma.User>;
+  removeRequestSignup(serviceRequestID: string, userID: string): Promise<user>;
 }
 
 export default IRequestSignup;

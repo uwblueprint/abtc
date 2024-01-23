@@ -1,11 +1,11 @@
 import * as firebaseAdmin from "firebase-admin";
+import { Prisma, Status } from "@prisma/client";
 
 import IUserService from "../interfaces/userService";
 import MgUser, { User } from "../../models/user.model";
 import { CreateUserDTO, Role, UpdateUserDTO, UserDTO } from "../../types";
 import { getErrorMessage } from "../../utilities/errorUtils";
 import logger from "../../utilities/logger";
-import { Prisma } from "@prisma/client";
 import prisma from "../../prisma";
 
 const Logger = logger(__filename);
@@ -147,7 +147,7 @@ class UserService implements IUserService {
     authId?: string,
     signUpMethod = "PASSWORD",
   ): Promise<UserDTO> {
-    let newUser: Prisma.usersCreateInput;
+    let newUser: Prisma.userCreateInput;
     let firebaseUser: firebaseAdmin.auth.UserRecord;
 
     try {
@@ -163,21 +163,14 @@ class UserService implements IUserService {
       }
 
       try {
-        // newUser = await MgUser.create({
-        //   firstName: user.firstName,
-        //   lastName: user.lastName,
-        //   email: firebaseUser.email,
-        //   authId: firebaseUser.uid,
-        //   role: user.role,
-        // });
-        newUser = await prisma.users.create({
+        newUser = await prisma.user.create({
           data: {
-            v: 0,
             firstName: user.firstName,
             lastName: user.lastName,
             email: firebaseUser.email ?? "",
             authId: firebaseUser.uid,
             role: user.role,
+            isAccepted: Status.PENDING,
           },
         });
       } catch (mongoDbError) {

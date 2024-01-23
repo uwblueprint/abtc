@@ -58,12 +58,19 @@ class AuthService implements IAuthService {
         /* eslint-disable-next-line no-empty */
       } catch (error) {}
 
+      let role: Role;
+      if (googleUser.role === "VOLUNTEER") {
+        role = "VOLUNTEER";
+      } else {
+        role = "ADMIN";
+      }
+
       const user = await this.userService.createUser(
         {
           firstName: googleUser.firstName,
           lastName: googleUser.lastName,
           email: googleUser.email,
-          role: "User",
+          role,
           password: "",
         },
         googleUser.localId,
