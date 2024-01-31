@@ -1,6 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useState, useReducer } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import {ChakraProvider} from "@chakra-ui/react";
 
 import Login from "./components/auth/Login";
 import Signup from "./components/auth/Signup";
@@ -52,6 +53,7 @@ const App = (): React.ReactElement => {
         <AuthContext.Provider
           value={{ authenticatedUser, setAuthenticatedUser }}
         >
+          <ChakraProvider>
           <Router>
             <Switch>
               <Route exact path={Routes.LOGIN_PAGE} component={Login} />
@@ -100,6 +102,7 @@ const App = (): React.ReactElement => {
               <Route exact path="*" component={NotFound} />
             </Switch>
           </Router>
+          </ChakraProvider>
         </AuthContext.Provider>
       </SampleContextDispatcherContext.Provider>
     </SampleContext.Provider>
