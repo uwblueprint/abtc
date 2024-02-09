@@ -1,5 +1,5 @@
 export const validatePhoneNumber = (value: string): string | null => {
-  const phoneNumberRegex = /^\d+$/;
+  const phoneNumberRegex = /^\d{10}$/;
   return phoneNumberRegex.test(value) ? null : "Invalid number";
 };
 
