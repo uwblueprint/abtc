@@ -1,59 +1,36 @@
-import { Prisma, PrismaClient, ServiceRequestType } from "@prisma/client";
+import { Prisma, PrismaClient, Status } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const serviceRequestPromises: Promise<any>[] = [];
+  const platformSignupPromises: Promise<Prisma.platformSignUpCreateInput>[] = [];
 
   const users = await prisma.user.findMany();
 
-  // Check if there are users to associate with service requests
+  // Check if there are users to associate with platform signups
   if (users.length === 0) {
-    throw new Error("No users found for seeding service requests");
+    throw new Error("No users found for seeding platform signups");
   }
 
-  const serviceRequests: Prisma.serviceRequestCreateInput[] = [];
+  const platformSignups: Prisma.platformSignUpCreateInput[] = [];
   users.forEach((user, idx) => {
-    serviceRequests.push({
-      requestName: `Site Service Request ${idx}`,
-      requester: {
-        connect: { id: user.id },
-      },
-      location: `Location ${idx}`,
-      shiftTime: new Date(new Date().setDate(new Date().getDate() - idx)),
-      description: `Description for Service Request ${idx}`,
-      meal: `Meal ${idx}`,
-      cookingMethod: `Cooking Method ${idx}`,
-      frequency: `Frequency ${idx}`,
-      requestType: ServiceRequestType.SITE,
+    platformSignups.push({
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      status: Status.PENDING,
     });
   });
 
-  users.forEach((user, idx) => {
-    serviceRequests.push({
-      requestName: `Kitchen Service Request ${idx}`,
-      requester: {
-        connect: { id: user.id },
-      },
-      location: `Location ${idx}`,
-      shiftTime: new Date(new Date().setDate(new Date().getDate() - idx)),
-      description: `Description for Service Request ${idx}`,
-      meal: `Meal ${idx}`,
-      cookingMethod: `Cooking Method ${idx}`,
-      frequency: `Frequency ${idx}`,
-      requestType: ServiceRequestType.KITCHEN,
-    });
-  });
-
-  serviceRequests.forEach((request) => {
-    serviceRequestPromises.push(
-      prisma.serviceRequest.create({
-        data: request,
+  platformSignups.forEach((signupRequest) => {
+    platformSignupPromises.push(
+      prisma.platformSignUp.create({
+        data: signupRequest,
       }),
     );
   });
 
-  await Promise.all(serviceRequestPromises);
+  await Promise.all(platformSignupPromises);
 }
 
 main()
