@@ -4,6 +4,10 @@ export const LOGIN_PAGE = "/login";
 
 export const SIGNUP_PAGE = "/signup";
 
+export const SIGNUP_SECONDARY = "/signup/more-info";
+
+export const SIGNUP_EMERGENCY_CONTACT = "/signup/emergency-contact";
+
 export const EDIT_TEAM_PAGE = "/edit-team";
 
 export const DISPLAY_ENTITY_PAGE = "/entity";
