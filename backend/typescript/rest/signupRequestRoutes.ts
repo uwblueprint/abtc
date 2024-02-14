@@ -17,4 +17,7 @@ platformSignupRouter.get('/getPlatformSignup', isAuthorizedByRole(new Set(["ADMI
         res.status(500).json({ error: getErrorMessage(error) });
     }
 });
-  
+
+platformSignupRouter.delete('/deletePlatformSignup/:id', isAuthorizedByRole(new Set(["ADMIN"])), async (req, res) => {
+    const signupId = req.params.id;
+});
