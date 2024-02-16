@@ -9,33 +9,45 @@ const Logger = logger(__filename);
 class ServiceRequest implements IServiceRequest {
   /* eslint-disable class-methods-use-this */
 
-  async getServiceRequestByID(
-    requestId: string,
-): Promise<serviceRequest> {
+  async getServiceRequests(): Promise<serviceRequest[]> {
     try {
-        const serviceRequest: serviceRequest | null = await prisma.serviceRequest.findUnique({
-            where: {
-                id: requestId,
-            },
-        });
-
-        if (!serviceRequest) {
-            throw new Error("Service request not found.")
-        }
-
-        return serviceRequest;
+      const serviceRequests: serviceRequest[] = await prisma.serviceRequest.findMany();
+      if (serviceRequests.length === 0) {
+        throw new Error("Service requests not found.");
+      }
+      return serviceRequests;
     } catch (error) {
-        throw new Error("Error retrieving service request.");
+      throw new Error("Error retrieving service requests.");
     }
-}
+  }
+
+  async getServiceRequestByID(requestId: string): Promise<serviceRequest> {
+    try {
+      const serviceRequest: serviceRequest | null = await prisma.serviceRequest.findUnique(
+        {
+          where: {
+            id: requestId,
+          },
+        },
+      );
+
+      if (!serviceRequest) {
+        throw new Error("Service request not found.");
+      }
+
+      return serviceRequest;
+    } catch (error) {
+      throw new Error("Error retrieving service request.");
+    }
+  }
 
   async postServiceRequest(
     serviceRequest: Prisma.serviceRequestCreateInput,
   ): Promise<serviceRequest> {
-    let newServiceRequest: serviceRequest
+    let newServiceRequest: serviceRequest;
     try {
       // Verify that requester user exists
-      const requesterId = serviceRequest.requester.connect?.id
+      const requesterId = serviceRequest.requester.connect?.id;
       if (!requesterId) {
         throw new Error("Only existing users can create service requests.");
       }
