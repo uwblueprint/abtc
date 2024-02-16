@@ -20,4 +20,7 @@ platformSignupRouter.get('/getPlatformSignup', isAuthorizedByRole(new Set(["ADMI
 
 platformSignupRouter.delete('/deletePlatformSignup/:id', isAuthorizedByRole(new Set(["ADMIN"])), async (req, res) => {
     const signupId = req.params.id;
+    
+    const platformSignup = new PlatformSignup();
+    await platformSignup.editPlatformSignup(signupId);
 });
