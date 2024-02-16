@@ -13,7 +13,7 @@ async function main() {
   }
 
   const platformSignups: Prisma.platformSignUpCreateInput[] = [];
-  users.forEach((user, idx) => {
+  users.forEach((user) => {
     platformSignups.push({
       email: user.email,
       firstName: user.firstName,
