@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useHistory, Link as ReactRouterLink } from "react-router-dom";
+import { Link as ReactRouterLink } from "react-router-dom";
 import {
   Flex,
   Box,
@@ -18,17 +18,12 @@ import {
   validatePassword,
   validatePhoneNumber,
 } from "../../utils/ValidationUtils";
-import { SIGNUP_PAGE, SIGNUP_EMERGENCY_CONTACT } from "../../constants/Routes";
+import { SignupFormStepComponentType, SignupFormStepProps } from "../../types/SignupFormStepTypes";
 
-const SignupSecondary = (): React.ReactElement => {
-  const [email, setEmail] = useState("");
+const SignupSecondary: SignupFormStepComponentType = ({ back, onSubmit, updateFields, data, errors, updateErrorFields }: SignupFormStepProps): React.ReactElement => {
+  const { email, phoneNumber, password } = data;
+  const { emailError, phoneNumberError, passwordError } = errors;
   const [confirmEmail, setConfirmEmail] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [password, setPassword] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [phoneNumberError, setPhoneNumberError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const history = useHistory();
 
   const isButtonDisabled =
     !email ||
@@ -39,38 +34,22 @@ const SignupSecondary = (): React.ReactElement => {
     !!phoneNumberError ||
     !!passwordError;
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-  };
-
-  const onNextClick = () => {
-    console.log("Signup Info:", {
-      email,
-      phoneNumber,
-    });
-    history.push(SIGNUP_EMERGENCY_CONTACT);
-  };
-
-  const onBackClick = () => {
-    history.push(SIGNUP_PAGE);
-  };
-
   const handleEmailChange = (value: string) => {
-    setEmail(value);
+    updateFields({ email: value });
     const error = validateEmail(value);
-    setEmailError(error || "");
+    updateErrorFields({ emailError: error || "" });
   };
 
   const handlePhoneNumberChange = (value: string) => {
-    setPhoneNumber(value);
+    updateFields({ phoneNumber: value });
     const error = validatePhoneNumber(value);
-    setPhoneNumberError(error || "");
+    updateErrorFields({ phoneNumberError: error || "" });
   };
 
   const handlePasswordChange = (value: string) => {
-    setPassword(value);
+    updateFields({ password: value });
     const error = validatePassword(value);
-    setPasswordError(error || "");
+    updateErrorFields({ passwordError: error || "" });
   };
 
   return (
@@ -95,7 +74,7 @@ const SignupSecondary = (): React.ReactElement => {
           <Heading size="lg">Create an Account</Heading>
         </Box>
         <Box my={4} textAlign="left">
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={onSubmit}>
             <FormControl
               border={2}
               borderColor={emailError ? "red.500" : "#0B0B0B"}
@@ -106,7 +85,7 @@ const SignupSecondary = (): React.ReactElement => {
                 type="email"
                 placeholder="E-mail"
                 value={email}
-                onChange={(e: { target: { value: string } }) =>
+                onChange={(e: { target: { value: string; }; }) =>
                   handleEmailChange(e.target.value)
                 }
               />
@@ -128,7 +107,7 @@ const SignupSecondary = (): React.ReactElement => {
                 placeholder="E-mail"
                 value={confirmEmail}
                 onChange={(event: {
-                  target: { value: React.SetStateAction<string> };
+                  target: { value: React.SetStateAction<string>; };
                 }) => setConfirmEmail(event.target.value)}
               />
               {confirmEmail !== email && (
@@ -148,7 +127,7 @@ const SignupSecondary = (): React.ReactElement => {
                 type="tel"
                 placeholder="Number"
                 value={phoneNumber}
-                onChange={(e: { target: { value: string } }) =>
+                onChange={(e: { target: { value: string; }; }) =>
                   handlePhoneNumberChange(e.target.value)
                 }
               />
@@ -169,7 +148,7 @@ const SignupSecondary = (): React.ReactElement => {
                 type="password"
                 placeholder="Password"
                 value={password}
-                onChange={(e: { target: { value: string } }) =>
+                onChange={(e: { target: { value: string; }; }) =>
                   handlePasswordChange(e.target.value)
                 }
               />
@@ -189,8 +168,7 @@ const SignupSecondary = (): React.ReactElement => {
                 w="35%"
                 color="white"
                 background="#28214C"
-                type="submit"
-                onClick={onBackClick}
+                onClick={back}
               >
                 Back
               </Button>
@@ -201,7 +179,6 @@ const SignupSecondary = (): React.ReactElement => {
                 background="#28214C"
                 isDisabled={isButtonDisabled}
                 type="submit"
-                onClick={onNextClick}
               >
                 Next
               </Button>

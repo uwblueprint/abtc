@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useHistory, Link as ReactRouterLink } from "react-router-dom";
+import React from "react";
+import { Link as ReactRouterLink } from "react-router-dom";
 import {
   Flex,
   Box,
@@ -14,36 +14,16 @@ import {
   Link as ChakraLink,
 } from "@chakra-ui/react";
 import { validatePhoneNumber } from "../../utils/ValidationUtils";
-import { SIGNUP_SECONDARY } from "../../constants/Routes";
+import { SignupFormStepComponentType, SignupFormStepProps } from "../../types/SignupFormStepTypes";
 
-const SignupEmergencyContact = () => {
-  const [emergencyFirstName, setEmergencyFisrtName] = useState("");
-  const [emergencyLastName, setEmergencyLastName] = useState("");
-  const [emergencyPhoneNumber, setEmergencyPhoneNumber] = useState("");
-  const [phoneNumberError, setPhoneNumberError] = useState("");
-
-  const history = useHistory();
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-  };
-
-  const onClickCreate = () => {
-    console.log("Emergency contact data:", {
-      emergencyFirstName,
-      emergencyLastName,
-      emergencyPhoneNumber,
-    });
-  };
-
-  const onBackClick = () => {
-    history.push(SIGNUP_SECONDARY);
-  };
+const SignupEmergencyContact: SignupFormStepComponentType = ({ back, onSubmit, updateFields, data, errors, updateErrorFields }: SignupFormStepProps): React.ReactElement => {
+  const { emergencyFirstName, emergencyLastName, emergencyPhoneNumber } = data;
+  const { phoneNumberError } = errors;
 
   const handlePhoneNumberChange = (value: string) => {
-    setEmergencyPhoneNumber(value);
+    updateFields({ emergencyPhoneNumber: value });
     const error = validatePhoneNumber(value);
-    setPhoneNumberError(error || "");
+    updateErrorFields({ phoneNumberError: error || "" });
   };
 
   const isButtonDisabled =
@@ -74,15 +54,13 @@ const SignupEmergencyContact = () => {
           <Heading size="lg">Create an Account</Heading>
         </Box>
         <Box my={4} textAlign="left">
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={onSubmit}>
             <FormControl mt={6} border={2} borderColor="#0B0B0B" isRequired>
               <FormLabel>Emergency Contact First Name</FormLabel>
               <Input
                 placeholder="First Name"
                 value={emergencyFirstName}
-                onChange={(event: {
-                  target: { value: React.SetStateAction<string> };
-                }) => setEmergencyFisrtName(event.target.value)}
+                onChange={event => updateFields({ emergencyFirstName: event.target.value })}
               />
             </FormControl>
             <FormControl mt={6} border={2} isRequired>
@@ -90,9 +68,7 @@ const SignupEmergencyContact = () => {
               <Input
                 placeholder="Last Name"
                 value={emergencyLastName}
-                onChange={(event: {
-                  target: { value: React.SetStateAction<string> };
-                }) => setEmergencyLastName(event.target.value)}
+                onChange={event => updateFields({ emergencyLastName: event.target.value })}
               />
             </FormControl>
             <FormControl
@@ -105,7 +81,7 @@ const SignupEmergencyContact = () => {
               <Input
                 placeholder="Number"
                 value={emergencyPhoneNumber}
-                onChange={(e: { target: { value: string } }) =>
+                onChange={(e: { target: { value: string; }; }) =>
                   handlePhoneNumberChange(e.target.value)
                 }
               />
@@ -123,8 +99,7 @@ const SignupEmergencyContact = () => {
                 w="35%"
                 color="white"
                 background="#28214C"
-                type="submit"
-                onClick={onBackClick}
+                onClick={back}
               >
                 Back
               </Button>
@@ -135,7 +110,6 @@ const SignupEmergencyContact = () => {
                 background="#28214C"
                 isDisabled={isButtonDisabled}
                 type="submit"
-                onClick={onClickCreate}
               >
                 Create
               </Button>
