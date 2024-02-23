@@ -138,6 +138,16 @@ TypeScript backend and frontend:
 docker exec -it scv2_ts_backend /bin/bash -c "yarn test"
 ```
 
+### Seeding the Database
+1. Make sure your seeding script is named "seed.ts" and under backend/typescript/prisma
+2. Go into our scv2_ts_backend docker container
+3. Go to "Files" - ".env"
+4. Open file editor
+5. Change the "test" in the database URL to "development" to populate the development collection
+6. Run the container
+7. Go to "Exec"
+8. Type in npx prisma db seed -- --environment development
+
 ## Updating Documentation
 
 To update documentation, checkout the `gh-pages` branch:
