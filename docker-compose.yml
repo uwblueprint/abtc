@@ -26,7 +26,7 @@ services:
       - ./backend/typescript:/app
       - /app/node_modules
     ports:
-      - 5001:5001
+      - 5000:5000
     dns:
       - 8.8.8.8
     env_file:

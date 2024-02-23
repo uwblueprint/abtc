@@ -10,6 +10,7 @@ import {
   getLocalStorageObjProperty,
   setLocalStorageObjProperty,
 } from "../utils/LocalStorageUtils";
+import { SignupRequest } from "../types/SignupFormStepTypes";
 
 
 const login = async (
@@ -61,16 +62,29 @@ const logout = async (userId: string | undefined): Promise<boolean> => {
   }
 };
 
-const register = async (
-  firstName: string,
-  lastName: string,
-  email: string,
-  password: string,
-): Promise<AuthenticatedUser> => {
+export const register = async (
+  { firstName,
+    lastName,
+    email,
+    phoneNumber,
+    password,
+    emergencyFirstName,
+    emergencyLastName,
+    emergencyPhoneNumber
+  }: SignupRequest): Promise<AuthenticatedUser> => {
   try {
     const { data } = await baseAPIClient.post(
       "/auth/register",
-      { firstName, lastName, email, password },
+      {
+        firstName,
+        lastName,
+        email,
+        phoneNumber,
+        password,
+        emergencyFirstName,
+        emergencyLastName,
+        emergencyPhoneNumber
+      },
       { withCredentials: true },
     );
     localStorage.setItem(AUTHENTICATED_USER_KEY, JSON.stringify(data));

@@ -4,6 +4,7 @@ import SignupMain from './SignupMain';
 import SignupSecondary from './SignupSecondary';
 import { SignupFormStepComponentType, SignupRequest, SignupRequestErrors } from '../../types/SignupFormStepTypes';
 import SignupEmergencyContact from './SignupEmergencyContact';
+import { register } from '../../APIClients/AuthAPIClient';
 
 const INITIAL_DATA: SignupRequest = {
   firstName: "",
@@ -60,6 +61,7 @@ const Signup = (): React.ReactElement => {
     // TODO: send POST request to sign up user
     alert("Successful Signup");
     console.log("Signup Info:", data);
+    // register({ ...data }); // TODO: fix CORS error
     return true;
   }
 
