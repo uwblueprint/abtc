@@ -1,13 +1,11 @@
 import { Router } from "express";
 
 const platformSignupRouter: Router = Router();
-import { isAuthorizedByRole } from "../middlewares/auth";
 import PlatformSignup from "../services/implementations/platformSignup";
-import IPlatformSignup from "../services/interfaces/platformSignup";
 import { getErrorMessage } from "../utilities/errorUtils";
 
 
-platformSignupRouter.get('/getPlatformSignup', async (req, res) => {
+platformSignupRouter.get('/', async (req, res) => {
     try {
         const platformSignup = new PlatformSignup();
         const signups = await platformSignup.getPlatformSignups();
@@ -18,7 +16,7 @@ platformSignupRouter.get('/getPlatformSignup', async (req, res) => {
     }
 });
 
-platformSignupRouter.delete('/deletePlatformSignup/:id', async (req, res) => {
+platformSignupRouter.delete('/delete/:id', async (req, res) => {
     try {    
         const signupId = req.params.id;
         
@@ -30,3 +28,5 @@ platformSignupRouter.delete('/deletePlatformSignup/:id', async (req, res) => {
         res.status(500).json({ error: getErrorMessage(error) });
     }
 });
+
+export default platformSignupRouter;
