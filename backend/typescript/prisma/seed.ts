@@ -1,9 +1,10 @@
-import { Prisma, PrismaClient, Status } from "@prisma/client";
+import { Prisma, PrismaClient, Status, ServiceRequestType } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
 async function main() {
   const userPromises = [];
+  const serviceRequestPromises = [];
 
   for (let i = 1; i <= 4; i++) {
     const userNumber = i;
@@ -73,7 +74,28 @@ async function main() {
     userPromises.push(userCreationPromise);
   }
 
-  await Promise.all(userPromises);
+  // Seed service requests
+  for (let i = 1; i <= 8; i++) {
+    const randomUser = userPromises[i - 1];
+    const serviceRequest: Prisma.serviceRequestCreateInput = {
+      requestName: `ServiceRequest${i}`,
+      requesterId: (await randomUser).id,
+      location: `Location${i}`,
+      shiftTime: new Date(),
+      description: `Description${i}`,
+      meal: `Meal${i}`,
+      cookingMethod: `CookingMethod${i}`,
+      frequency: `Frequency${i}`,
+      requestType: i % 2 === 0 ? ServiceRequestType.YUMMY : ServiceRequestType.NOTYUMMY,
+    };
+
+    const serviceRequestCreationPromise = prisma.serviceRequest.create({
+      data: serviceRequest,
+    });
+    serviceRequestPromises.push(serviceRequestCreationPromise);
+  }
+
+  await Promise.all([...userPromises, ...serviceRequestPromises]);
 }
 
 main()
