@@ -11,6 +11,7 @@ import authRouter from "./rest/authRoutes";
 import entityRouter from "./rest/entityRoutes";
 import simpleEntityRouter from "./rest/simpleEntityRoutes";
 import userRouter from "./rest/userRoutes";
+import platformSignupRouter from "./rest/signupRequestRoutes";
 
 const CORS_ALLOW_LIST = [
   "http://localhost:3000",
@@ -36,6 +37,7 @@ app.use("/auth", authRouter);
 app.use("/entities", entityRouter);
 app.use("/simple-entities", simpleEntityRouter);
 app.use("/users", userRouter);
+app.use("/platformSignups", platformSignupRouter);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 mongo.connect();
