@@ -2,8 +2,10 @@ import { Router } from "express";
 import IServiceRequest from "../services/interfaces/serviceRequest";
 import ServiceRequest from "../services/implementations/serviceRequest";
 import { getErrorMessage } from "../utilities/errorUtils";
+import { isAuthorizedByRole } from "../middlewares/auth";
 
 const serviceRequestRouter: Router = Router();
+serviceRequestRouter.use(isAuthorizedByRole(new Set(["VOLUNTEER", "ADMIN"])));
 const serviceRequestService: IServiceRequest = new ServiceRequest();
 
 /* Get service request by ID if requestId is specified; otherwise, return all service requests. */
