@@ -7,7 +7,7 @@ import IPlatformSignup from "../services/interfaces/platformSignup";
 import { getErrorMessage } from "../utilities/errorUtils";
 
 
-platformSignupRouter.get('/getPlatformSignup', isAuthorizedByRole(new Set(["ADMIN"])), async (req, res) => {
+platformSignupRouter.get('/getPlatformSignup', async (req, res) => {
     try {
         const platformSignup = new PlatformSignup();
         const signups = await platformSignup.getPlatformSignups();
@@ -18,7 +18,7 @@ platformSignupRouter.get('/getPlatformSignup', isAuthorizedByRole(new Set(["ADMI
     }
 });
 
-platformSignupRouter.delete('/deletePlatformSignup/:id', isAuthorizedByRole(new Set(["ADMIN"])), async (req, res) => {
+platformSignupRouter.delete('/deletePlatformSignup/:id', async (req, res) => {
     try {    
         const signupId = req.params.id;
         
