@@ -4,7 +4,7 @@ const platformSignupRouter: Router = Router();
 import PlatformSignup from "../services/implementations/platformSignup";
 import { getErrorMessage } from "../utilities/errorUtils";
 
-
+/* Return all PlatformSignups */
 platformSignupRouter.get('/', async (req, res) => {
     try {
         const platformSignup = new PlatformSignup();
@@ -16,6 +16,7 @@ platformSignupRouter.get('/', async (req, res) => {
     }
 });
 
+/* Delete a PlatformSignup given an id */
 platformSignupRouter.delete('/delete/:id', async (req, res) => {
     try {    
         const signupId = req.params.id;
