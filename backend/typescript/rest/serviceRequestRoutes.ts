@@ -37,11 +37,15 @@ serviceRequestRouter.get("/", async (req, res) => {
 });
 
 serviceRequestRouter.delete('/delete/:id', async (req, res) => {
-  const requestId = req.params.id;
+  try {
+    const requestId = req.params.id;
 
-  await serviceRequestService.deleteServiceRequestByID(requestId);
-  res.status(200).json({ message: `Platform signup deleted successfully.` });
-
+    await serviceRequestService.deleteServiceRequestByID(requestId);
+    res.status(200).json({ message: `Service Request deleted successfully.` });
+    
+  } catch (error: unknown) {
+    res.status(500).json({ error: getErrorMessage(error) });
+  }
 });
 
 
