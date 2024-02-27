@@ -36,13 +36,14 @@ serviceRequestRouter.get("/", async (req, res) => {
   }
 });
 
+/* Delete a ServiceRequest given an id */
 serviceRequestRouter.delete('/delete/:id', async (req, res) => {
   try {
     const requestId = req.params.id;
 
     await serviceRequestService.deleteServiceRequestByID(requestId);
     res.status(200).json({ message: `Service Request deleted successfully.` });
-    
+
   } catch (error: unknown) {
     res.status(500).json({ error: getErrorMessage(error) });
   }
