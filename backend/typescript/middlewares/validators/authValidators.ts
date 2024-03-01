@@ -41,13 +41,19 @@ export const registerRequestValidator = async (
     return res.status(400).send(getApiValidationError("phoneNumber", "string"));
   }
   if (!validatePrimitive(req.body.emergencyFirstName, "string")) {
-    return res.status(400).send(getApiValidationError("emergencyFirstName", "string"));
+    return res
+      .status(400)
+      .send(getApiValidationError("emergencyFirstName", "string"));
   }
   if (!validatePrimitive(req.body.emergencyLastName, "string")) {
-    return res.status(400).send(getApiValidationError("emergencyLastName", "string"));
+    return res
+      .status(400)
+      .send(getApiValidationError("emergencyLastName", "string"));
   }
   if (!validatePrimitive(req.body.emergencyPhoneNumber, "string")) {
-    return res.status(400).send(getApiValidationError("emergencyPhoneNumber", "string"));
+    return res
+      .status(400)
+      .send(getApiValidationError("emergencyPhoneNumber", "string"));
   }
   if (!validatePrimitive(req.body.password, "string")) {
     return res.status(400).send(getApiValidationError("password", "string"));

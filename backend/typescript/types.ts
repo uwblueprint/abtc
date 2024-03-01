@@ -17,7 +17,7 @@ export type UserDTO = {
   role: Role;
 };
 
-export type CreateUserDTO = Omit<UserDTO, "id"> & { password: string; };
+export type CreateUserDTO = Omit<UserDTO, "id"> & { password: string };
 
 export type UpdateUserDTO = Omit<UserDTO, "id">;
 
