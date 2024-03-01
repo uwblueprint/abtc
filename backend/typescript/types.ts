@@ -10,10 +10,14 @@ export type UserDTO = {
   firstName: string;
   lastName: string;
   email: string;
+  phoneNumber: string;
+  emergencyFirstName: string;
+  emergencyLastName: string;
+  emergencyPhoneNumber: string;
   role: Role;
 };
 
-export type CreateUserDTO = Omit<UserDTO, "id"> & { password: string };
+export type CreateUserDTO = Omit<UserDTO, "id"> & { password: string; };
 
 export type UpdateUserDTO = Omit<UserDTO, "id">;
 

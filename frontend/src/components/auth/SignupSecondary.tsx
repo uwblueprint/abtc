@@ -18,7 +18,7 @@ import {
   validatePassword,
   validatePhoneNumber,
 } from "../../utils/ValidationUtils";
-import { SignupFormStepComponentType, SignupFormStepProps } from "../../types/SignupFormStepTypes";
+import { SignupFormStepComponentType, SignupFormStepProps } from "../../types/SignupFormTypes";
 
 const SignupSecondary: SignupFormStepComponentType = ({ back, onSubmit, updateFields, data, errors, updateErrorFields }: SignupFormStepProps): React.ReactElement => {
   const { email, phoneNumber, password } = data;
@@ -192,7 +192,7 @@ const SignupSecondary: SignupFormStepComponentType = ({ back, onSubmit, updateFi
                   to="/login"
                   textDecoration="underline"
                 >
-                  Login
+                  Log In
                 </ChakraLink>
               </Text>
             </Center>

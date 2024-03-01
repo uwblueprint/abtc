@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import useMultistepForm from '../../hooks/useMultistepForm';
 import SignupMain from './SignupMain';
 import SignupSecondary from './SignupSecondary';
-import { SignupFormStepComponentType, SignupRequest, SignupRequestErrors } from '../../types/SignupFormStepTypes';
+import { SignupFormStepComponentType, SignupRequest, SignupRequestErrors } from '../../types/SignupFormTypes';
 import SignupEmergencyContact from './SignupEmergencyContact';
 import { register } from '../../APIClients/AuthAPIClient';
+import { AuthenticatedUser } from '../../types/AuthTypes';
 
 const INITIAL_DATA: SignupRequest = {
   firstName: "",
@@ -55,13 +56,15 @@ const Signup = (): React.ReactElement => {
     setSignupErrors(newSignupErrors);
   };
 
-  function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!isLastStep) return next();
-    // TODO: send POST request to sign up user
-    alert("Successful Signup");
-    console.log("Signup Info:", data);
-    // register({ ...data }); // TODO: fix CORS error
+    const user: AuthenticatedUser = await register({ ...data });
+    if (user) {
+      alert("Successful sign up!");
+    } else {
+      alert("There was an error in sign up");
+    }
     return true;
   }
 

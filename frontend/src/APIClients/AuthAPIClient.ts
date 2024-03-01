@@ -4,13 +4,13 @@ import {
   OperationVariables,
 } from "@apollo/client";
 import AUTHENTICATED_USER_KEY from "../constants/AuthConstants";
-import { AuthenticatedUser } from "../types/AuthTypes";
+import { AuthenticatedUser, Role } from "../types/AuthTypes";
 import baseAPIClient from "./BaseAPIClient";
 import {
   getLocalStorageObjProperty,
   setLocalStorageObjProperty,
 } from "../utils/LocalStorageUtils";
-import { SignupRequest } from "../types/SignupFormStepTypes";
+import { SignupRequest } from "../types/SignupFormTypes";
 
 
 const login = async (
@@ -73,6 +73,7 @@ export const register = async (
     emergencyPhoneNumber
   }: SignupRequest): Promise<AuthenticatedUser> => {
   try {
+    const role: Role = "VOLUNTEER";
     const { data } = await baseAPIClient.post(
       "/auth/register",
       {
@@ -83,7 +84,8 @@ export const register = async (
         password,
         emergencyFirstName,
         emergencyLastName,
-        emergencyPhoneNumber
+        emergencyPhoneNumber,
+        role,
       },
       { withCredentials: true },
     );

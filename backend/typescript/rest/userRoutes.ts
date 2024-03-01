@@ -90,6 +90,10 @@ userRouter.post("/", createUserDtoValidator, async (req, res) => {
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email,
+      phoneNumber: req.body.phoneNumber,
+      emergencyFirstName: req.body.emergencyFirstName,
+      emergencyLastName: req.body.emergencyLastName,
+      emergencyPhoneNumber: req.body.emergencyPhoneNumber,
       role: req.body.role,
       password: req.body.password,
     });
@@ -109,6 +113,10 @@ userRouter.put("/:userId", updateUserDtoValidator, async (req, res) => {
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email,
+      phoneNumber: req.body.phoneNumber,
+      emergencyFirstName: req.body.emergencyFirstName,
+      emergencyLastName: req.body.emergencyLastName,
+      emergencyPhoneNumber: req.body.emergencyPhoneNumber,
       role: req.body.role,
     });
     res.status(200).json(updatedUser);

@@ -14,7 +14,7 @@ import {
   Link as ChakraLink,
 } from "@chakra-ui/react";
 import { validatePhoneNumber } from "../../utils/ValidationUtils";
-import { SignupFormStepComponentType, SignupFormStepProps } from "../../types/SignupFormStepTypes";
+import { SignupFormStepComponentType, SignupFormStepProps } from "../../types/SignupFormTypes";
 
 const SignupEmergencyContact: SignupFormStepComponentType = ({ back, onSubmit, updateFields, data, errors, updateErrorFields }: SignupFormStepProps): React.ReactElement => {
   const { emergencyFirstName, emergencyLastName, emergencyPhoneNumber } = data;
@@ -123,7 +123,7 @@ const SignupEmergencyContact: SignupFormStepComponentType = ({ back, onSubmit, u
                   to="/login"
                   textDecoration="underline"
                 >
-                  Login
+                  Log In
                 </ChakraLink>
               </Text>
             </Center>

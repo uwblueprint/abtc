@@ -2,7 +2,7 @@ import React from 'react';
 import { Flex, Box, Center, Heading, FormControl, FormLabel, Input, Button, Text, Link as ChakraLink } from '@chakra-ui/react';
 import { Link as ReactRouterLink } from "react-router-dom";
 import { LOGIN_PAGE } from "../../constants/Routes";
-import { SignupFormStepComponentType, SignupFormStepProps } from "../../types/SignupFormStepTypes";
+import { SignupFormStepComponentType, SignupFormStepProps } from "../../types/SignupFormTypes";
 
 const SignupMain: SignupFormStepComponentType = ({ back, onSubmit, updateFields, data }: SignupFormStepProps): React.ReactElement => {
   const { firstName, lastName } = data;
