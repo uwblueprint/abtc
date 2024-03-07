@@ -22,7 +22,7 @@ interface IServiceRequest {
    * @throws Error if serviceRequest creation fails
    */
   postServiceRequest(
-    serviceRequest: Prisma.serviceRequestCreateInput,
+    inputServiceRequest: any,
   ): Promise<serviceRequest>;
 
   /**
