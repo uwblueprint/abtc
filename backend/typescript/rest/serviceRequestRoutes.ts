@@ -38,7 +38,7 @@ serviceRequestRouter.get("/", async (req, res) => {
   }
 });
 
-
+/* Post ServiceRequest route. Requires ADMIN role to perform this action. */
 serviceRequestRouter.post("/post", async (req, res) => {
   try {
       const newServiceRequest = await serviceRequestService.postServiceRequest(req.body);
