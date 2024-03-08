@@ -30,7 +30,7 @@ class PlatformSignup implements IPlatformSignup {
 
     try {
         // Check for duplicate email
-        const emailUsed = await prisma.platformSignUp.findMany({
+        const emailUsed = await prisma.platformSignUp.findFirst({
           where: {
               email: platform.email,
           },
