@@ -42,25 +42,32 @@ class ServiceRequest implements IServiceRequest {
   }
 
   async postServiceRequest(
-    serviceRequest: Prisma.serviceRequestCreateInput,
+    inputServiceRequest: any,
   ): Promise<serviceRequest> {
     let newServiceRequest: serviceRequest;
     try {
-      // Verify that requester user exists
-      const requesterId = serviceRequest.requester.connect?.id;
+      
+      const requesterId = inputServiceRequest.requesterId;
+
       if (!requesterId) {
         throw new Error("Only existing users can create service requests.");
       }
+
       const userExists = await prisma.user.findUnique({
         where: {
           id: requesterId,
         },
       });
+      
       if (!userExists) {
         throw new Error("Only existing users can create service requests.");
+      } else if (userExists.role != "ADMIN" || userExists.isAccepted != "ACCEPTED") {
+        throw new Error("Only admins can create service requests.");
       }
+
+      const requestData: Prisma.serviceRequestCreateInput = inputServiceRequest;
       newServiceRequest = await prisma.serviceRequest.create({
-        data: serviceRequest,
+        data: requestData,
       });
     } catch (error) {
       Logger.error(
