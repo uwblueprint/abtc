@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Redirect, useHistory, Link as ReactRouterLink } from "react-router-dom";
 import { Box, Heading, FormControl, Text, Input, Flex, FormLabel, Center, Link, Button } from "@chakra-ui/react";
 
@@ -11,15 +11,20 @@ const Login = (): React.ReactElement => {
   const { authenticatedUser, setAuthenticatedUser } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const history = useHistory();
+  const [error, setError] = useState<string | null>(null);
 
-  const onLogInClick = async () => {
-    const user: AuthenticatedUser = await authAPIClient.login(email, password);
-    setAuthenticatedUser(user);
-  };
+  useEffect(() => {
+    if (error) { setError(null) }
+  }, [email, password])
 
-  const onSignUpClick = () => {
-    history.push(SIGNUP_PAGE);
+  const onLogInClick = async (event: React.FormEvent) => {
+    event.preventDefault();
+    try {
+      const user: AuthenticatedUser = await authAPIClient.login(email, password);
+      setAuthenticatedUser(user);
+    } catch (_error) {
+      setError("Invalid email or password");
+    }
   };
 
   if (authenticatedUser) {
@@ -36,11 +41,17 @@ const Login = (): React.ReactElement => {
           <form onSubmit={onLogInClick}>
             <FormControl border={2} borderColor="#0B0B0B">
               <FormLabel>E-mail</FormLabel>
-              <Input onChange={event => setEmail(event.currentTarget.value)} />
+              <Input onChange={event => setEmail(event.currentTarget.value)}
+                borderColor={error ? "red.500" : "black"}
+              />
+              {error && <Text color="red.500" fontSize="sm" textAlign="right">{error}</Text>}
             </FormControl>
             <FormControl mt={6} border={2}>
               <FormLabel>Password</FormLabel>
-              <Input type="password" onChange={event => setPassword(event.currentTarget.value)} />
+              <Input type="password" onChange={event => setPassword(event.currentTarget.value)}
+                borderColor={error ? "red.500" : "black"}
+              />
+              {error && <Text color="red.500" fontSize="sm" textAlign="right">{error}</Text>}
               <Box textAlign="right">
                 <Link as={ReactRouterLink} to="/forgot-password" textDecoration="underline" fontSize="sm" _hover={{color: "#28214C"}}>
                   Forgot Password?
