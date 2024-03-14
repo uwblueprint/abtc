@@ -33,7 +33,7 @@ const Signup = (): React.ReactElement => {
   const allErrors = [SignupMainErrors, SignupSecondaryErrors, SignupEmergencyContactErrors];
   const steps: SignupFormStepComponentType[] = [SignupMain, SignupSecondary, SignupEmergencyContact];
 
-  const { StepComponent, currentStepIndex, isFirstStep, isLastStep, back, next } = useMultistepForm(steps);
+  const { StepComponent, currentStepIndex, isLastStep, back, next } = useMultistepForm(steps);
 
   const [data, setData] = useState(INITIAL_DATA);
   const [signupErrors, setSignupErrors] = useState(allErrors);
@@ -44,7 +44,7 @@ const Signup = (): React.ReactElement => {
   const errorsExists = !!errors;
 
   const updateFields = (fields: Partial<SignupRequest>) => {
-    setData(prev => {
+    setData((prev: SignupRequest) => {
       return { ...prev, ...fields };
     });
   };

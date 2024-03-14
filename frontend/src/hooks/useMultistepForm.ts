@@ -24,7 +24,6 @@ const useMultistepForm = (steps: any[]) => {
     return {
         currentStepIndex,
         StepComponent: steps[currentStepIndex],
-        isFirstStep: currentStepIndex === 0,
         isLastStep: currentStepIndex === steps.length - 1,
         goTo,
         back,
