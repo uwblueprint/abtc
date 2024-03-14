@@ -25,7 +25,7 @@ const login = async (
     localStorage.setItem(AUTHENTICATED_USER_KEY, JSON.stringify(data));
     return data;
   } catch (error) {
-    return null;
+    throw new Error("Login failed");
   }
 };
 
@@ -39,7 +39,7 @@ const loginWithGoogle = async (idToken: string): Promise<AuthenticatedUser> => {
     localStorage.setItem(AUTHENTICATED_USER_KEY, JSON.stringify(data));
     return data;
   } catch (error) {
-    return null;
+    throw new Error("Login failed");
   }
 };
 
