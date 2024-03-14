@@ -25,6 +25,7 @@ import sampleContextReducer from "./reducers/SampleContextReducer";
 import SampleContextDispatcherContext from "./contexts/SampleContextDispatcherContext";
 import EditTeamInfoPage from "./components/pages/EditTeamPage";
 import HooksDemo from "./components/pages/HooksDemo";
+import Shifts from "./components/pages/Shifts";
 
 import { AuthenticatedUser } from "./types/AuthTypes";
 import SignupEmergencyContact from "./components/auth/SignupEmergencyContact";
@@ -115,6 +116,7 @@ const App = (): React.ReactElement => {
                   path={Routes.HOOKS_PAGE}
                   component={HooksDemo}
                 />
+                <PrivateRoute exact path={Routes.SHIFTS_PAGE} component={Shifts} />
                 <Route exact path="*" component={NotFound} />
               </Switch>
             </Router>
