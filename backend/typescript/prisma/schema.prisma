@@ -12,14 +12,18 @@ model test {
 }
 
 model user {
-  id              String           @id @default(auto()) @map("_id") @db.ObjectId
-  authId          String
-  email           String
-  firstName       String
-  lastName        String
-  role            Role
-  isAccepted      Status
-  serviceRequests serviceRequest[] // for volunteer
+  id                   String           @id @default(auto()) @map("_id") @db.ObjectId
+  authId               String
+  email                String
+  firstName            String
+  lastName             String
+  phoneNumber          String
+  emergencyFirstName   String
+  emergencyLastName    String
+  emergencyPhoneNumber String
+  role                 Role
+  isAccepted           Status
+  serviceRequests      serviceRequest[] // for volunteer
 }
 
 model serviceRequest {

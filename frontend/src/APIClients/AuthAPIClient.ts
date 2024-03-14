@@ -4,12 +4,13 @@ import {
   OperationVariables,
 } from "@apollo/client";
 import AUTHENTICATED_USER_KEY from "../constants/AuthConstants";
-import { AuthenticatedUser } from "../types/AuthTypes";
+import { AuthenticatedUser, Role } from "../types/AuthTypes";
 import baseAPIClient from "./BaseAPIClient";
 import {
   getLocalStorageObjProperty,
   setLocalStorageObjProperty,
 } from "../utils/LocalStorageUtils";
+import { SignupRequest } from "../types/SignupFormTypes";
 
 
 const login = async (
@@ -61,16 +62,31 @@ const logout = async (userId: string | undefined): Promise<boolean> => {
   }
 };
 
-const register = async (
-  firstName: string,
-  lastName: string,
-  email: string,
-  password: string,
-): Promise<AuthenticatedUser> => {
+export const register = async (
+  { firstName,
+    lastName,
+    email,
+    phoneNumber,
+    password,
+    emergencyFirstName,
+    emergencyLastName,
+    emergencyPhoneNumber
+  }: SignupRequest): Promise<AuthenticatedUser> => {
   try {
+    const role: Role = "VOLUNTEER";
     const { data } = await baseAPIClient.post(
       "/auth/register",
-      { firstName, lastName, email, password },
+      {
+        firstName,
+        lastName,
+        email,
+        phoneNumber,
+        password,
+        emergencyFirstName,
+        emergencyLastName,
+        emergencyPhoneNumber,
+        role,
+      },
       { withCredentials: true },
     );
     localStorage.setItem(AUTHENTICATED_USER_KEY, JSON.stringify(data));

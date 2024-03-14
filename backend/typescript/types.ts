@@ -10,6 +10,10 @@ export type UserDTO = {
   firstName: string;
   lastName: string;
   email: string;
+  phoneNumber: string;
+  emergencyFirstName: string;
+  emergencyLastName: string;
+  emergencyPhoneNumber: string;
   role: Role;
 };
 

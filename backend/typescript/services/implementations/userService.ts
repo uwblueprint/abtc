@@ -49,6 +49,10 @@ class UserService implements IUserService {
       firstName: user.firstName,
       lastName: user.lastName,
       email: firebaseUser.email ?? "",
+      phoneNumber: user.phoneNumber,
+      emergencyFirstName: user.emergencyFirstName,
+      emergencyLastName: user.emergencyLastName,
+      emergencyPhoneNumber: user.emergencyPhoneNumber,
       role: user.role,
     };
   }
@@ -77,6 +81,10 @@ class UserService implements IUserService {
       firstName: user.firstName,
       lastName: user.lastName,
       email: firebaseUser.email ?? "",
+      phoneNumber: user.phoneNumber,
+      emergencyFirstName: user.emergencyFirstName,
+      emergencyLastName: user.emergencyLastName,
+      emergencyPhoneNumber: user.emergencyPhoneNumber,
       role: user.role,
     };
   }
@@ -146,6 +154,10 @@ class UserService implements IUserService {
             lastName: user.lastName,
             email: firebaseUser.email ?? "",
             role: user.role,
+            phoneNumber: user.phoneNumber,
+            emergencyFirstName: user.emergencyFirstName,
+            emergencyLastName: user.emergencyLastName,
+            emergencyPhoneNumber: user.emergencyPhoneNumber,
           };
         }) ?? [],
       );
@@ -184,6 +196,10 @@ class UserService implements IUserService {
             lastName: user.lastName,
             email: firebaseUser.email ?? "",
             authId: firebaseUser.uid,
+            phoneNumber: user.phoneNumber,
+            emergencyFirstName: user.emergencyFirstName,
+            emergencyLastName: user.emergencyLastName,
+            emergencyPhoneNumber: user.emergencyPhoneNumber,
             role: user.role,
             isAccepted: Status.PENDING,
           },
@@ -214,6 +230,10 @@ class UserService implements IUserService {
       firstName: newUser.firstName,
       lastName: newUser.lastName,
       email: firebaseUser.email ?? "",
+      phoneNumber: newUser.phoneNumber,
+      emergencyFirstName: newUser.emergencyFirstName,
+      emergencyLastName: newUser.emergencyLastName,
+      emergencyPhoneNumber: newUser.emergencyPhoneNumber,
       role: newUser.role as Role,
     };
   }
@@ -230,6 +250,10 @@ class UserService implements IUserService {
         data: {
           firstName: user.firstName,
           lastName: user.lastName,
+          phoneNumber: user.phoneNumber,
+          emergencyFirstName: user.emergencyFirstName,
+          emergencyLastName: user.emergencyLastName,
+          emergencyPhoneNumber: user.emergencyPhoneNumber,
           role: user.role,
         },
       });
@@ -252,6 +276,10 @@ class UserService implements IUserService {
             data: {
               firstName: oldUser.firstName,
               lastName: oldUser.lastName,
+              phoneNumber: oldUser.phoneNumber,
+              emergencyFirstName: oldUser.emergencyFirstName,
+              emergencyLastName: oldUser.emergencyLastName,
+              emergencyPhoneNumber: oldUser.emergencyPhoneNumber,
               role: oldUser.role,
             },
           });
@@ -277,6 +305,10 @@ class UserService implements IUserService {
       firstName: user.firstName,
       lastName: user.lastName,
       email: updatedFirebaseUser.email ?? "",
+      phoneNumber: user.phoneNumber,
+      emergencyFirstName: user.emergencyFirstName,
+      emergencyLastName: user.emergencyLastName,
+      emergencyPhoneNumber: user.emergencyPhoneNumber,
       role: user.role,
     };
   }
@@ -304,6 +336,10 @@ class UserService implements IUserService {
               lastName: deletedUser.lastName,
               email: deletedUser.email ?? "",
               authId: deletedUser.authId,
+              phoneNumber: deletedUser.phoneNumber,
+              emergencyFirstName: deletedUser.emergencyFirstName,
+              emergencyLastName: deletedUser.emergencyLastName,
+              emergencyPhoneNumber: deletedUser.emergencyPhoneNumber,
               role: deletedUser.role,
               isAccepted: Status.PENDING,
             },
@@ -360,6 +396,10 @@ class UserService implements IUserService {
               lastName: userToDelete.lastName,
               email: userToDelete.email ?? "",
               authId: userToDelete.authId,
+              phoneNumber: userToDelete.phoneNumber,
+              emergencyFirstName: userToDelete.emergencyFirstName,
+              emergencyLastName: userToDelete.emergencyLastName,
+              emergencyPhoneNumber: userToDelete.emergencyPhoneNumber,
               role: userToDelete.role,
               isAccepted: Status.PENDING,
             },
