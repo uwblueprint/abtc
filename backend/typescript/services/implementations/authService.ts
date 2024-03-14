@@ -7,6 +7,7 @@ import { AuthDTO, Role, Token } from "../../types";
 import { getErrorMessage } from "../../utilities/errorUtils";
 import FirebaseRestClient from "../../utilities/firebaseRestClient";
 import logger from "../../utilities/logger";
+import { log } from "console";
 
 const Logger = logger(__filename);
 
@@ -208,9 +209,12 @@ class AuthService implements IAuthService {
         .auth()
         .getUser(decodedIdToken.uid);
 
-      return (
-        firebaseUser.emailVerified && String(tokenUserId) === requestedUserId
-      );
+      if (!firebaseUser.emailVerified) {
+        // TODO: Verify that the user is a valid firebase user
+        log("Warning: User email not verified");
+      }
+
+      return String(tokenUserId) === requestedUserId;
     } catch (error) {
       return false;
     }
