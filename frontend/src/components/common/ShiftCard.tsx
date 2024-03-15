@@ -1,12 +1,31 @@
 import React from "react";
+import { Text, Box } from "@chakra-ui/react";
+import { ServiceRequest } from "../../types/ServiceRequestTypes";
 
-const ShiftCard = (): React.ReactElement => {
+type ShiftCardProps = {
+    shift: ServiceRequest;
+};
+
+const ShiftCard: React.FC<ShiftCardProps> = ({ shift }) => {
+    const { requestName, shiftTime, description } = shift;
+    
+    const formatTime = (dateStr: string | null) => {
+        if (!dateStr) return "";
+        const date = new Date(dateStr);
+        let hours = date.getHours();
+        const minutes = date.getMinutes();
+        const ampm = hours >= 12 ? 'pm' : 'am';
+        hours %= 12 || 12;
+        return `${hours}:${minutes.toString().padStart(2, '0')}${ampm}`;
+    };
+
     return (
-        <div>
-            <h1>Your Shifts</h1>
-            
-        </div>
+        <Box width="full" my="5" p="5" minH="180px" border="0.5px" borderStyle="solid" borderColor="#0B0B0B" borderRadius="lg">
+            <Text fontSize="xl" fontWeight="bold">{requestName}</Text>
+            <Text fontSize="md" color="#969696">{formatTime(shiftTime)}</Text>
+            <Text fontSize="md" mt="10px">{description}</Text>
+        </Box>
     );
-}
+};
 
 export default ShiftCard;
