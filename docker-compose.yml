@@ -31,4 +31,3 @@ services:
       - 8.8.8.8
     env_file:
       - ./.env
-

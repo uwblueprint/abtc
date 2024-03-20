@@ -1,45 +1,75 @@
 import React, { useState } from 'react';
-import { Flex, Box, Center, Heading, FormControl, FormLabel, Input, Button, Text, Link as ChakraLink } from '@chakra-ui/react';
-import { Link as ReactRouterLink } from "react-router-dom";
-import { LOGIN_PAGE } from "../../constants/Routes";
+import useMultistepForm from '../../hooks/useMultistepForm';
+import SignupMain from './SignupMain';
+import SignupSecondary from './SignupSecondary';
+import { SignupFormStepComponentType, SignupRequest, SignupRequestErrors } from '../../types/SignupFormTypes';
+import SignupEmergencyContact from './SignupEmergencyContact';
+import { register } from '../../APIClients/AuthAPIClient';
+import { AuthenticatedUser } from '../../types/AuthTypes';
+
+const INITIAL_DATA: SignupRequest = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  phoneNumber: "",
+  password: "",
+  emergencyFirstName: "",
+  emergencyLastName: "",
+  emergencyPhoneNumber: "",
+};
+const SignupMainErrors: Partial<SignupRequestErrors> = {};
+
+const SignupSecondaryErrors: Partial<SignupRequestErrors> = {
+  emailError: "",
+  phoneNumberError: "",
+  passwordError: "",
+};
+
+const SignupEmergencyContactErrors: Partial<SignupRequestErrors> = {
+  phoneNumberError: "",
+};
 
 const Signup = (): React.ReactElement => {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const allErrors = [SignupMainErrors, SignupSecondaryErrors, SignupEmergencyContactErrors];
+  const steps: SignupFormStepComponentType[] = [SignupMain, SignupSecondary, SignupEmergencyContact];
 
-  const onSubmit = (event: { preventDefault: () => void; }) => {
+  const { StepComponent, currentStepIndex, isLastStep, back, next } = useMultistepForm(steps);
+
+  const [data, setData] = useState(INITIAL_DATA);
+  const [signupErrors, setSignupErrors] = useState(allErrors);
+
+  const errors = signupErrors[currentStepIndex];
+
+  const stepExists = !!StepComponent;
+  const errorsExists = !!errors;
+
+  const updateFields = (fields: Partial<SignupRequest>) => {
+    setData((prev: SignupRequest) => {
+      return { ...prev, ...fields };
+    });
+  };
+
+  const updateErrorFields = (fields: Partial<SignupRequestErrors>) => {
+    if (!errorsExists) return;
+    const newSignupErrors = [...signupErrors];
+    newSignupErrors[currentStepIndex] = { ...newSignupErrors[currentStepIndex], ...fields };
+    setSignupErrors(newSignupErrors);
+  };
+
+  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    console.log(`firstName: ${firstName} lastName: ${lastName}`);
+    if (!isLastStep) return next();
+    const user: AuthenticatedUser = await register({ ...data });
+    if (user) {
+      alert("Successful sign up!");
+    } else {
+      alert("There was an error in sign up");
+    }
+    return true;
   }
 
-  return (
-    <Flex width="100vw" height="100vh" align="center" justify="center" background="#404040">
-      <Box width="md" pt={16} pr={16} pl={16} pb={10} m={5} background="white" rounded={20}>
-        <Box pb={4} textAlign="left">
-          <Heading size="lg">Create an Account</Heading>
-        </Box>
-        <Box my={4} textAlign="left">
-          <form onSubmit={onSubmit}>
-            <FormControl border={2} borderColor="#0B0B0B" isRequired>
-              <FormLabel>First Name</FormLabel>
-              <Input onChange={event => setFirstName(event.currentTarget.value)} />
-            </FormControl>
-            <FormControl mt={6} border={2} isRequired>
-              <FormLabel>Last Name</FormLabel>
-              <Input onChange={event => setLastName(event.currentTarget.value)} />
-            </FormControl>
-            <Center mt={4} mb={4}>
-              <Button type="submit" isDisabled={firstName === "" || lastName === ""} width="full" mt={4} color="white" background="#28214C">
-                Next
-              </Button>
-            </Center>
-            <Center>
-              <Text fontSize="sm">Already have an account? <ChakraLink as={ReactRouterLink} to={LOGIN_PAGE} textDecoration="underline">Log In</ChakraLink></Text>
-            </Center>
-          </form>
-        </Box>
-      </Box>
-    </Flex>
+  return (<>{!!stepExists && !!errorsExists &&
+    <StepComponent back={back} onSubmit={onSubmit} updateFields={updateFields} data={data} errors={errors} updateErrorFields={updateErrorFields} />}</>
   );
 };
 
