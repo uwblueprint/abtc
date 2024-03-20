@@ -1,22 +1,28 @@
 import React, { useContext, useState } from "react";
 import { Redirect, useHistory } from "react-router-dom";
-import {
-  GoogleLogin,
-  GoogleLoginResponse,
-  GoogleLoginResponseOffline,
-} from "react-google-login";
+// import {
+//   GoogleLogin,
+//   GoogleLoginResponse,
+//   GoogleLoginResponseOffline,
+// } from "react-google-login";
+
+import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 
 import authAPIClient from "../../APIClients/AuthAPIClient";
 import { HOME_PAGE, SIGNUP_PAGE } from "../../constants/Routes";
 import AuthContext from "../../contexts/AuthContext";
 import { AuthenticatedUser } from "../../types/AuthTypes";
 
-type GoogleResponse = GoogleLoginResponse | GoogleLoginResponseOffline;
+// type GoogleResponse = GoogleLoginResponse | GoogleLoginResponseOffline;
 
-type GoogleErrorResponse = {
-  error: string;
-  details: string;
-};
+<GoogleOAuthProvider clientId={process.env.REACT_APP_OAUTH_CLIENT_ID || ""}>
+  ...
+</GoogleOAuthProvider>;
+
+// type GoogleErrorResponse = {
+//   error: string;
+//   details: string;
+// };
 
 const Login = (): React.ReactElement => {
   const { authenticatedUser, setAuthenticatedUser } = useContext(AuthContext);
@@ -74,20 +80,14 @@ const Login = (): React.ReactElement => {
           </button>
         </div>
         <GoogleLogin
-          clientId={process.env.REACT_APP_OAUTH_CLIENT_ID || ""}
-          buttonText="Login with Google"
-          onSuccess={(response: GoogleResponse): void => {
-            if ("tokenId" in response) {
-              onGoogleLoginSuccess(response.tokenId);
-            } else {
-              // eslint-disable-next-line no-alert
-              window.alert(response);
-            }
+          size="medium"
+          width="20"
+          onSuccess={(credentialResponse) => {
+            console.log(credentialResponse);
           }}
-          onFailure={(error: GoogleErrorResponse) =>
-            // eslint-disable-next-line no-alert
-            window.alert(JSON.stringify(error))
-          }
+          onError={() => {
+            console.log("Login Failed");
+          }}
         />
       </form>
       <div>
