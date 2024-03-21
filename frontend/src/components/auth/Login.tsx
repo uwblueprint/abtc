@@ -3,7 +3,7 @@ import { Redirect, useHistory, Link as ReactRouterLink } from "react-router-dom"
 import { Box, Heading, FormControl, Text, Input, Flex, FormLabel, Center, Link, Button } from "@chakra-ui/react";
 
 import authAPIClient from "../../APIClients/AuthAPIClient";
-import { HOME_PAGE, SIGNUP_PAGE } from "../../constants/Routes";
+import { HOME_PAGE, SIGNUP_PAGE, VOLUNTEER_DASHBOARD_PAGE } from "../../constants/Routes";
 import AuthContext from "../../contexts/AuthContext";
 import { AuthenticatedUser } from "../../types/AuthTypes";
 
@@ -28,6 +28,9 @@ const Login = (): React.ReactElement => {
   };
 
   if (authenticatedUser) {
+    if (authenticatedUser.role === "VOLUNTEER") {
+      return <Redirect to={VOLUNTEER_DASHBOARD_PAGE} />;
+    }
     return <Redirect to={HOME_PAGE} />;
   }
 
