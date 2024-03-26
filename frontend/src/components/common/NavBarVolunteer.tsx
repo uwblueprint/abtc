@@ -13,27 +13,29 @@ import {
   Icon,
 } from '@chakra-ui/react';
 import { Link as ReactRouterLink, useLocation } from 'react-router-dom';
-import { BsPerson } from 'react-icons/bs';
 import { RxChevronDown } from "react-icons/rx";
 import { PiBell } from "react-icons/pi";
 import { GoHome } from "react-icons/go";
+import { LuNavigation } from "react-icons/lu";
+import { FiPhone } from "react-icons/fi";
+import abtc_logo from '../../images/abtc_logo.png';
 
-const NavBar: React.FC = () => {
+const NavBarVolunteer: React.FC = () => {
   const location = useLocation();
 
   return (
     <Flex bg="white" p={4} alignItems="center">
       <Box ml={4}>
-        <Image src="https://placehold.co/80x40" alt="Company Logo" />
+      <Image src={abtc_logo} alt="ABTC Logo" maxWidth="180px" height="auto"/>
       </Box >
       <ChakraLink
         as={ReactRouterLink}
         to="/"
-        color={location.pathname === '/login' ? '#3F3575' : "#444750"}
+        color={location.pathname === '/' ? '#3F3575' : "#444750"}
         fontWeight='500'
         _hover={{ color: "black", textDecoration: "none" }}
         ml={6}
-        backgroundColor={location.pathname === '/login' ? '#D9D7E3' : 'none'}
+        backgroundColor={location.pathname === '/' ? '#D9D7E3' : 'none'}
         paddingLeft={4}
         paddingRight={4}
         paddingTop={1}
@@ -45,48 +47,44 @@ const NavBar: React.FC = () => {
           Home
         </Flex>
       </ChakraLink>
-      <Box ml={3}>
-        <Menu>
-          <MenuButton
-            as={Box}
-            color={location.pathname.startsWith('/manage-accounts') ? '#3F3575' : "#444750"}
-            fontWeight="500"
-            _hover={{ color: "black", textDecoration: "none" }}
-            backgroundColor={location.pathname.startsWith('/manage-accounts') ? '#D9D7E3' : 'none'}
-            paddingLeft={4}
-            paddingRight={4}
-            paddingTop={1}
-            paddingBottom={1}
-            borderRadius={8}
-          >
-            <Flex align="center">
-              <Icon as={BsPerson} boxSize={5} mr={2} />
-                Manage Accounts
-              <Icon as={RxChevronDown} boxSize={6} ml={2}/>
-            </Flex>
-          </MenuButton>
-          <MenuList bg="white" border="none">
-            <MenuItem
-              as={ReactRouterLink}
-              to="/manage-accounts/volunteers"
-              color="#444750"
-              fontWeight="500"
-              _hover={{ color: "black", textDecoration: "none" }}
-            >
-              Volunteers
-            </MenuItem>
-            <MenuItem
-              as={ReactRouterLink}
-              to="/manage-accounts/admin"
-              color="#444750"
-              fontWeight="500"
-              _hover={{ color: "black", textDecoration: "none" }}
-            >
-              Admin
-            </MenuItem>
-          </MenuList>
-        </Menu>
-      </Box>
+      <ChakraLink
+        as={ReactRouterLink}
+        to="/about"
+        color={location.pathname === '/about' ? '#3F3575' : "#444750"}
+        fontWeight='500'
+        _hover={{ color: "black", textDecoration: "none" }}
+        ml={6}
+        backgroundColor={location.pathname === '/about' ? '#D9D7E3' : 'none'}
+        paddingLeft={4}
+        paddingRight={4}
+        paddingTop={1}
+        paddingBottom={1}
+        borderRadius={8}
+      >
+        <Flex align="center">
+          <Icon as={LuNavigation} boxSize={5} mr={3}/>
+          About
+        </Flex>
+      </ChakraLink>
+      <ChakraLink
+        as={ReactRouterLink}
+        to="/contact-us"
+        color={location.pathname === '/contact-us' ? '#3F3575' : "#444750"}
+        fontWeight='500'
+        _hover={{ color: "black", textDecoration: "none" }}
+        ml={6}
+        backgroundColor={location.pathname === '/contact-us' ? '#D9D7E3' : 'none'}
+        paddingLeft={4}
+        paddingRight={4}
+        paddingTop={1}
+        paddingBottom={1}
+        borderRadius={8}
+      >
+        <Flex align="center">
+          <Icon as={FiPhone} boxSize={5} mr={3}/>
+          Contact Us
+        </Flex>
+      </ChakraLink>
       <Spacer />
        {/*  TODO: add logic behind notification button */}
       <ChakraLink
@@ -144,4 +142,4 @@ const NavBar: React.FC = () => {
   );
 };
 
-export default NavBar;
+export default NavBarVolunteer;
