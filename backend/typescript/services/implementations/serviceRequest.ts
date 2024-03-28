@@ -1,8 +1,9 @@
-import { Prisma, serviceRequest } from "@prisma/client";
+import { Prisma, serviceRequest, user } from "@prisma/client";
 import IServiceRequest from "../interfaces/serviceRequest";
 import { getErrorMessage } from "../../utilities/errorUtils";
 import logger from "../../utilities/logger";
 import prisma from "../../prisma";
+import { log } from "console";
 
 const Logger = logger(__filename);
 
@@ -19,6 +20,68 @@ class ServiceRequest implements IServiceRequest {
     } catch (error) {
       throw new Error("Error retrieving service requests.");
     }
+  }
+
+  async getServiceRequestsByUserId(userId: string): Promise<serviceRequest[]> {
+    try {
+      log("userId: ", userId);
+      const currUser = (await prisma.user.findUnique({
+        where: {
+          id: userId,
+        },
+        include: {
+          serviceRequests: true,
+        },
+      })) as user & { serviceRequests: serviceRequest[] };
+      log("currUser: ", currUser);
+      if (!currUser) {
+        throw new Error("User not found.");
+      }
+      return currUser.serviceRequests;
+    } catch (error) {
+      throw new Error("Error retrieving service requests.");
+    }
+  }
+
+  async postServiceRequestByUserId(
+    userId: string,
+    serviceRequestId: string,
+  ): Promise<void> {
+    try {
+      log("userId: ", userId);
+      const newServiceRequest = await prisma.serviceRequest.findUnique({
+        where: {
+          id: serviceRequestId,
+        },
+      });
+      log("newServiceRequest: ", newServiceRequest);
+      if (!newServiceRequest) {
+        throw new Error("Service request not found.");
+      }
+      const existingUser = await prisma.user.findUnique({
+        where: {
+          id: userId,
+        },
+        include: {
+          serviceRequests: true,
+        },
+      });
+      log("existingUser: ", existingUser);
+      const updatedUser = await prisma.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          serviceRequests: {
+            connect: [{ id: serviceRequestId }],
+          },
+        },
+      });
+      log("updatedUser: ", updatedUser);
+    } catch (error) {
+      throw new Error("Error creating service request.");
+    }
+    return Promise.resolve();
   }
 
   async getServiceRequestByID(requestId: string): Promise<serviceRequest> {
@@ -41,12 +104,9 @@ class ServiceRequest implements IServiceRequest {
     }
   }
 
-  async postServiceRequest(
-    inputServiceRequest: any,
-  ): Promise<serviceRequest> {
+  async postServiceRequest(inputServiceRequest: any): Promise<serviceRequest> {
     let newServiceRequest: serviceRequest;
     try {
-      
       const requesterId = inputServiceRequest.requesterId;
 
       if (!requesterId) {
@@ -58,10 +118,13 @@ class ServiceRequest implements IServiceRequest {
           id: requesterId,
         },
       });
-      
+
       if (!userExists) {
         throw new Error("Only existing users can create service requests.");
-      } else if (userExists.role != "ADMIN" || userExists.isAccepted != "ACCEPTED") {
+      } else if (
+        userExists.role != "ADMIN" ||
+        userExists.isAccepted != "ACCEPTED"
+      ) {
         throw new Error("Only admins can create service requests.");
       }
 
