@@ -29,6 +29,7 @@ import HooksDemo from "./components/pages/HooksDemo";
 import { AuthenticatedUser } from "./types/AuthTypes";
 import SignupEmergencyContact from "./components/auth/SignupEmergencyContact";
 import SignupSecondary from "./components/auth/SignupSecondary";
+import CustomizedCalendar from "./components/pages/Calendar/CustomizedCalendar";
 
 const App = (): React.ReactElement => {
   const currentUser: AuthenticatedUser = getLocalStorageObj<AuthenticatedUser>(
@@ -104,6 +105,11 @@ const App = (): React.ReactElement => {
                   exact
                   path={Routes.DISPLAY_SIMPLE_ENTITY_PAGE}
                   component={SimpleEntityDisplayPage}
+                />
+                <PrivateRoute
+                  exact
+                  path={Routes.CALENDAR_PAGE}
+                  component={CustomizedCalendar}
                 />
                 <PrivateRoute
                   exact
