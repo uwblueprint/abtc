@@ -5,7 +5,7 @@ export type AuthenticatedUser = {
   firstName: string;
   lastName: string;
   email: string;
-  role: "Admin" | "User"; // TODO: change to type Role when ready
+  role: Role; // TODO: change to type Role when ready
   accessToken: string;
 } | null;
 
