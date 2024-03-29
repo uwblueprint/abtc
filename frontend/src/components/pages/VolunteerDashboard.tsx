@@ -10,7 +10,7 @@ const VolunteerDashboard = (): React.ReactElement => {
 
     if (userData) {
       const parsedUserData = JSON.parse(userData);
-      console.log(parsedUserData);
+      console.log(parsedUserData); // Remove this later
 
       setUserInfo(userData);
     }
