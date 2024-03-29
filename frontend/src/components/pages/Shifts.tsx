@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from "react";
 import { Box, Heading, Text } from "@chakra-ui/react";
 import ShiftCard from "../common/ShiftCard";
-import baseAPIClient from "../../APIClients/BaseAPIClient";
 import { ServiceRequest, ServiceRequestType } from "../../types/ServiceRequestTypes";
+import ServiceRequestAPIClient from "../../APIClients/ServiceRequestAPIClient";
 
 type DateShifts = {
     date: string;
@@ -44,7 +44,8 @@ const Shifts = (): React.ReactElement => {
 
     useEffect(() => {
         const fetchShifts = async () => {
-            const { data } = await baseAPIClient.get<ServiceRequest[]>("/serviceRequests");
+            const data = await ServiceRequestAPIClient.get();
+            console.log(data);
             setShiftsByDate(groupByDate(data));
         }
         fetchShifts();
