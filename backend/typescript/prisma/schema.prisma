@@ -23,18 +23,18 @@ model user {
   emergencyPhoneNumber String
   role                 Role
   isAccepted           Status
-  assignedServiceRequestIds String[] @db.ObjectId
+  assignedServiceRequestIds String[] @db.ObjectId // For volunteers
   assignedServiceRequests serviceRequest[] @relation(name: "assignee", fields: [assignedServiceRequestIds], references: [id])
-  requestedServiceRequests serviceRequest[] @relation(name: "requester")
+  requestedServiceRequests serviceRequest[] @relation(name: "requester") // For admins
 }
 
 model serviceRequest {
   id            String             @id @default(auto()) @map("_id") @db.ObjectId
   requestName   String
   requesterId   String             @db.ObjectId
-  requester     user               @relation(name: "requester", fields: [requesterId], references: [id])
+  requester     user               @relation(name: "requester", fields: [requesterId], references: [id]) // Admin requester
   assigneeIds   String[]           @db.ObjectId
-  assignees     user[]             @relation(name: "assignee", fields: [assigneeIds], references: [id])
+  assignees     user[]             @relation(name: "assignee", fields: [assigneeIds], references: [id]) // Volunteers
   location      String
   shiftTime     DateTime?
   description   String?
