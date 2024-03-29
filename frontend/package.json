@@ -7,6 +7,7 @@
     "@chakra-ui/react": "1.8.8",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
+    "@react-oauth/google": "^0.12.1",
     "@rjsf/bootstrap-4": "^2.5.1",
     "@rjsf/core": "^2.5.1",
     "@testing-library/jest-dom": "^5.11.4",

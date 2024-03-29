@@ -131,4 +131,24 @@ authRouter.post(
   },
 );
 
+authRouter.get("/checkEmail", async (req, res) => {
+  const { email } = req.query;
+  const contentType = req.headers["content-type"];
+
+  if (email) {
+    if (typeof email !== "string") {
+      res
+        .status(400)
+        .json({ error: "email query parameter must be a string." });
+    } else {
+      try {
+        const user = await userService.getUserByEmail(email);
+        res.json({ exists: true });
+      } catch (error: unknown) {
+        res.json({ exists: false });
+      }
+    }
+  }
+});
+
 export default authRouter;
