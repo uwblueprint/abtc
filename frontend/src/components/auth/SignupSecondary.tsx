@@ -18,12 +18,24 @@ import {
   validatePassword,
   validatePhoneNumber,
 } from "../../utils/ValidationUtils";
-import { SignupFormStepComponentType, SignupFormStepProps } from "../../types/SignupFormTypes";
+import {
+  SignupFormStepComponentType,
+  SignupFormStepProps,
+} from "../../types/SignupFormTypes";
+import { checkEmailExists } from '../../APIClients/AuthAPIClient';
 
-const SignupSecondary: SignupFormStepComponentType = ({ back, onSubmit, updateFields, data, errors, updateErrorFields }: SignupFormStepProps): React.ReactElement => {
+const SignupSecondary: SignupFormStepComponentType = ({
+  back,
+  onSubmit,
+  updateFields,
+  data,
+  errors,
+  updateErrorFields,
+}: SignupFormStepProps): React.ReactElement => {
   const { email, phoneNumber, password } = data;
   const { emailError, phoneNumberError, passwordError } = errors;
   const [confirmEmail, setConfirmEmail] = useState("");
+  const [emailExistsError, setEmailExistsError] = useState("");
 
   const isButtonDisabled =
     !email ||
@@ -38,6 +50,7 @@ const SignupSecondary: SignupFormStepComponentType = ({ back, onSubmit, updateFi
     updateFields({ email: value });
     const error = validateEmail(value);
     updateErrorFields({ emailError: error || "" });
+    setEmailExistsError("");
   };
 
   const handlePhoneNumberChange = (value: string) => {
@@ -50,6 +63,17 @@ const SignupSecondary: SignupFormStepComponentType = ({ back, onSubmit, updateFi
     updateFields({ password: value });
     const error = validatePassword(value);
     updateErrorFields({ passwordError: error || "" });
+  };
+
+  const handleNextClick = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const exists: boolean = await checkEmailExists(email);
+    if (exists) {
+      setEmailExistsError("Email already exists, try logging in");
+    } else {
+      setEmailExistsError("");
+      onSubmit(event);
+    }
   };
 
   return (
@@ -74,10 +98,10 @@ const SignupSecondary: SignupFormStepComponentType = ({ back, onSubmit, updateFi
           <Heading size="lg">Create an Account</Heading>
         </Box>
         <Box my={4} textAlign="left">
-          <form onSubmit={onSubmit}>
+          <form onSubmit={handleNextClick}>
             <FormControl
               border={2}
-              borderColor={emailError ? "red.500" : "#0B0B0B"}
+              borderColor={emailError || emailExistsError ? "red.500" : "#0B0B0B"}
               isRequired
             >
               <FormLabel>E-mail</FormLabel>
@@ -85,7 +109,7 @@ const SignupSecondary: SignupFormStepComponentType = ({ back, onSubmit, updateFi
                 type="email"
                 placeholder="E-mail"
                 value={email}
-                onChange={(e: { target: { value: string; }; }) =>
+                onChange={(e: { target: { value: string } }) =>
                   handleEmailChange(e.target.value)
                 }
               />
@@ -98,7 +122,7 @@ const SignupSecondary: SignupFormStepComponentType = ({ back, onSubmit, updateFi
             <FormControl
               mt={4}
               border={2}
-              borderColor={confirmEmail !== email ? "red.500" : "#0B0B0B"}
+              borderColor={confirmEmail !== email || emailExistsError ? "red.500" : "#0B0B0B"}
               isRequired
             >
               <FormLabel>Confirm E-mail</FormLabel>
@@ -107,7 +131,7 @@ const SignupSecondary: SignupFormStepComponentType = ({ back, onSubmit, updateFi
                 placeholder="E-mail"
                 value={confirmEmail}
                 onChange={(event: {
-                  target: { value: React.SetStateAction<string>; };
+                  target: { value: React.SetStateAction<string> };
                 }) => setConfirmEmail(event.target.value)}
               />
               {confirmEmail !== email && (
@@ -127,7 +151,7 @@ const SignupSecondary: SignupFormStepComponentType = ({ back, onSubmit, updateFi
                 type="tel"
                 placeholder="Number"
                 value={phoneNumber}
-                onChange={(e: { target: { value: string; }; }) =>
+                onChange={(e: { target: { value: string } }) =>
                   handlePhoneNumberChange(e.target.value)
                 }
               />
@@ -148,7 +172,7 @@ const SignupSecondary: SignupFormStepComponentType = ({ back, onSubmit, updateFi
                 type="password"
                 placeholder="Password"
                 value={password}
-                onChange={(e: { target: { value: string; }; }) =>
+                onChange={(e: { target: { value: string } }) =>
                   handlePasswordChange(e.target.value)
                 }
               />
@@ -183,7 +207,11 @@ const SignupSecondary: SignupFormStepComponentType = ({ back, onSubmit, updateFi
                 Next
               </Button>
             </Flex>
-
+            {emailExistsError && (
+              <Text fontSize="sm" textAlign="center" color="red.500" mb={2}>
+                {emailExistsError}
+              </Text>
+            )}
             <Center>
               <Text fontSize="sm">
                 Already have an account?{" "}
