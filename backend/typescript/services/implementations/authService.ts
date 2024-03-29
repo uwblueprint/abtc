@@ -240,6 +240,20 @@ class AuthService implements IAuthService {
       return false;
     }
   }
+
+  async getCurrentUserId(accessToken: string): Promise<string> {
+    try {
+      const decodedIdToken: firebaseAdmin.auth.DecodedIdToken = await firebaseAdmin
+        .auth()
+        .verifyIdToken(accessToken, true);
+      
+      const userId = await this.userService.getUserIdByAuthId(decodedIdToken.uid);
+      return userId;
+    } catch (error) {
+      Logger.error("Failed to get current user ID");
+      throw error;
+    }
+  }
 }
 
 export default AuthService;

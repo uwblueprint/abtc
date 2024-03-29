@@ -119,9 +119,11 @@ class ServiceRequest implements IServiceRequest {
           id: serviceRequestId,
         },
       });
+
       if (!newServiceRequest) {
         throw new Error("Service request not found.");
       }
+
       const existingUser = await prisma.user.findUnique({
         where: {
           id: userId,
@@ -130,6 +132,11 @@ class ServiceRequest implements IServiceRequest {
           assignedServiceRequests: true,
         },
       }) as user & { assignedServiceRequests: serviceRequest[] };
+
+      if (!existingUser) {
+        throw new Error("User not found.");
+      }
+
       const updatedUser = await prisma.user.update({
         where: {
           id: userId,
@@ -140,10 +147,10 @@ class ServiceRequest implements IServiceRequest {
           },
         },
       }) as user & { assignedServiceRequests: serviceRequest[] };
+      return Promise.resolve();
     } catch (error) {
       throw new Error("Error creating service request.");
     }
-    return Promise.resolve();
   }
 
   async getServiceRequestByID(requestId: string): Promise<serviceRequest> {
