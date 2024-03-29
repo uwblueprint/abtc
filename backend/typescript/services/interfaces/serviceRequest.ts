@@ -9,6 +9,25 @@ interface IServiceRequest {
   getServiceRequests(): Promise<serviceRequest[]>;
 
   /**
+   * Get serviceRequests by requesterId
+   * @param requesterId requester's id
+   * @returns an array of serviceRequests
+   * @throws Error if serviceRequest getting fails
+   */
+  getServiceRequestsByRequesterId(requesterId: string): Promise<serviceRequest[]>;
+
+  /**
+   * Add serviceRequest to a requester
+   * @param requesterId requester's id
+   * @param serviceRequestId the serviceRequest's id to be added
+   * @throws Error if serviceRequest addition fails
+   */
+  postServiceRequestByRequesterId(
+    requesterId: string,
+    serviceRequestId: string,
+  ): Promise<serviceRequest>;
+
+  /**
    * Get serviceRequests by userId
    * @param userId user's id
    * @returns an array of serviceRequests

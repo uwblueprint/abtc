@@ -3,6 +3,7 @@ import IServiceRequest from "../services/interfaces/serviceRequest";
 import ServiceRequest from "../services/implementations/serviceRequest";
 import { getErrorMessage } from "../utilities/errorUtils";
 import { Prisma } from "@prisma/client";
+import { log } from "console";
 
 const serviceRequestRouter: Router = Router();
 const serviceRequestService: IServiceRequest = new ServiceRequest();
@@ -33,6 +34,36 @@ serviceRequestRouter.get("/", async (req, res) => {
     } catch (error: unknown) {
       res.status(500).json({ error: getErrorMessage(error) });
     }
+  }
+});
+
+/* Get service requests by requester ID */
+serviceRequestRouter.get("/requester/:requesterId", async (req, res) => {
+  const { requesterId }= req.params;
+  try {
+    const serviceRequests = await serviceRequestService.getServiceRequestsByRequesterId(
+      requesterId,
+    );
+    res.status(200).json(serviceRequests);
+  } catch (error: unknown) {
+    res.status(500).json({ error: getErrorMessage(error) });
+  }
+});
+
+/* Post service request by requester ID */
+serviceRequestRouter.post("/requester/:requesterId", async (req, res) => {
+  const { requesterId } = req.params;
+  const { serviceRequestId } = req.body;
+  try {
+    await serviceRequestService.postServiceRequestByRequesterId(
+      requesterId,
+      serviceRequestId,
+    );
+    res
+      .status(200)
+      .json({ message: `Service Request added to user successfully.` });
+  } catch (error: unknown) {
+    res.status(500).json({ error: getErrorMessage(error) });
   }
 });
 

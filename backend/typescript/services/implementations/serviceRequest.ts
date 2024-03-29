@@ -22,22 +22,87 @@ class ServiceRequest implements IServiceRequest {
     }
   }
 
-  async getServiceRequestsByUserId(userId: string): Promise<serviceRequest[]> {
+  async getServiceRequestsByRequesterId(
+    requesterId: string,
+  ): Promise<serviceRequest[]> {
     try {
-      log("userId: ", userId);
-      const currUser = (await prisma.user.findUnique({
+      log("requesterId: ", requesterId);
+      const serviceRequests = await prisma.serviceRequest.findMany({
         where: {
-          id: userId,
+          requesterId,
+        },
+      });
+      return serviceRequests;
+    } catch (error) {
+      throw new Error("Error retrieving service requests.");
+    }
+  }
+
+  async postServiceRequestByRequesterId(
+    requesterId: string,
+    serviceRequestId: string,
+  ): Promise<serviceRequest> {
+    let newServiceRequest: serviceRequest;
+    try {
+      const userExists = await prisma.user.findUnique({
+        where: {
+          id: requesterId,
+        },
+      });
+
+      if (!userExists) {
+        throw new Error("Only existing users can create service requests.");
+      }
+
+      const newServiceRequest = await prisma.serviceRequest.findUnique({
+        where: {
+          id: serviceRequestId,
+        },
+      });
+
+      if (!newServiceRequest) {
+        throw new Error("Service request not found.");
+      }
+
+      const updatedUser = await prisma.user.update({
+        where: {
+          id: requesterId,
+        },
+        data: {
+          requestedServiceRequests: {
+            connect: [{ id: serviceRequestId }],
+          },
         },
         include: {
-          serviceRequests: true,
+          requestedServiceRequests: true,
         },
-      })) as user & { serviceRequests: serviceRequest[] };
-      log("currUser: ", currUser);
-      if (!currUser) {
-        throw new Error("User not found.");
-      }
-      return currUser.serviceRequests;
+      });
+      return newServiceRequest;
+    } catch (error) {
+      Logger.error(
+        `Failed to create service request. Reason = ${getErrorMessage(error)}`,
+      );
+      throw error;
+    }
+  }
+
+  async getServiceRequestsByUserId(userId: string): Promise<serviceRequest[]> {
+    try {
+      // const userWithAssignedRequests = await prisma.user.findUnique({
+      //   where: {
+      //     id: userId,
+      //   },
+      //   include: {
+      //     assignedServiceRequests: true, // Include the related service requests
+      //   },
+      // });
+
+      // if (!userWithAssignedRequests) {
+      //   throw new Error("User not found.");
+      // }
+
+      // return userWithAssignedRequests.assignedServiceRequests;
+      return [];
     } catch (error) {
       throw new Error("Error retrieving service requests.");
     }
@@ -48,36 +113,36 @@ class ServiceRequest implements IServiceRequest {
     serviceRequestId: string,
   ): Promise<void> {
     try {
-      log("userId: ", userId);
-      const newServiceRequest = await prisma.serviceRequest.findUnique({
-        where: {
-          id: serviceRequestId,
-        },
-      });
-      log("newServiceRequest: ", newServiceRequest);
-      if (!newServiceRequest) {
-        throw new Error("Service request not found.");
-      }
-      const existingUser = await prisma.user.findUnique({
-        where: {
-          id: userId,
-        },
-        include: {
-          serviceRequests: true,
-        },
-      });
-      log("existingUser: ", existingUser);
-      const updatedUser = await prisma.user.update({
-        where: {
-          id: userId,
-        },
-        data: {
-          serviceRequests: {
-            connect: [{ id: serviceRequestId }],
-          },
-        },
-      });
-      log("updatedUser: ", updatedUser);
+      // log("userId: ", userId);
+      // const newServiceRequest = await prisma.serviceRequest.findUnique({
+      //   where: {
+      //     id: serviceRequestId,
+      //   },
+      // });
+      // log("newServiceRequest: ", newServiceRequest);
+      // if (!newServiceRequest) {
+      //   throw new Error("Service request not found.");
+      // }
+      // const existingUser = await prisma.user.findUnique({
+      //   where: {
+      //     id: userId,
+      //   },
+      //   include: {
+      //     serviceRequests: true,
+      //   },
+      // });
+      // log("existingUser: ", existingUser);
+      // const updatedUser = await prisma.user.update({
+      //   where: {
+      //     id: userId,
+      //   },
+      //   data: {
+      //     serviceRequests: {
+      //       connect: [{ id: serviceRequestId }],
+      //     },
+      //   },
+      // });
+      // log("updatedUser: ", updatedUser);
     } catch (error) {
       throw new Error("Error creating service request.");
     }
