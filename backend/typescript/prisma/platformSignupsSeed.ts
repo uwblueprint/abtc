@@ -19,6 +19,7 @@ async function main() {
       firstName: user.firstName,
       lastName: user.lastName,
       status: Status.PENDING,
+      createdAt: new Date().toISOString(),
     });
   });
 
