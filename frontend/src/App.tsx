@@ -14,6 +14,7 @@ import SimpleEntityDisplayPage from "./components/pages/SimpleEntityDisplayPage"
 import NotFound from "./components/pages/NotFound";
 import UpdatePage from "./components/pages/UpdatePage";
 import SimpleEntityUpdatePage from "./components/pages/SimpleEntityUpdatePage";
+import VolunteerDashboard from "./components/pages/VolunteerDashboard";
 import * as Routes from "./constants/Routes";
 import AUTHENTICATED_USER_KEY from "./constants/AuthConstants";
 import AuthContext from "./contexts/AuthContext";
@@ -72,7 +73,6 @@ const App = (): React.ReactElement => {
                     path={Routes.SIGNUP_EMERGENCY_CONTACT}
                     component={SignupEmergencyContact}
                   />
-
                   <PrivateRoute
                     exact
                     path={Routes.HOME_PAGE}
@@ -122,6 +122,11 @@ const App = (): React.ReactElement => {
                     exact
                     path={Routes.HOOKS_PAGE}
                     component={HooksDemo}
+                  />
+                  <PrivateRoute
+                    exact
+                    path={Routes.VOLUNTEER_DASHBOARD_PAGE}
+                    component={VolunteerDashboard}
                   />
                   <Route exact path="*" component={NotFound} />
                 </Switch>
