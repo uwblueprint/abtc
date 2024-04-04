@@ -8,6 +8,8 @@ export const SIGNUP_SECONDARY = "/signup/more-info";
 
 export const SIGNUP_EMERGENCY_CONTACT = "/signup/emergency-contact";
 
+export const CALENDAR_PAGE = "/calendar";
+
 export const EDIT_TEAM_PAGE = "/edit-team";
 
 export const DISPLAY_ENTITY_PAGE = "/entity";
