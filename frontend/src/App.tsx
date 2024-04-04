@@ -124,7 +124,11 @@ const App = (): React.ReactElement => {
                     path={Routes.HOOKS_PAGE}
                     component={HooksDemo}
                   />
-                <PrivateRoute exact path={Routes.SHIFTS_PAGE} component={Shifts} />
+                  <PrivateRoute
+                    exact
+                    path={Routes.SHIFTS_PAGE}
+                    component={Shifts}
+                  />
                   <Route exact path="*" component={NotFound} />
                 </Switch>
               </Router>
