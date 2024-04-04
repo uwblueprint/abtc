@@ -3,7 +3,6 @@ import IServiceRequest from "../interfaces/serviceRequest";
 import { getErrorMessage } from "../../utilities/errorUtils";
 import logger from "../../utilities/logger";
 import prisma from "../../prisma";
-import { log } from "console";
 
 const Logger = logger(__filename);
 

@@ -10,7 +10,6 @@ import UserService from "../services/implementations/userService";
 import IEmailService from "../services/interfaces/emailService";
 import EmailService from "../services/implementations/emailService";
 import nodemailerConfig from "../nodemailer.config";
-import { log } from "console";
 
 const serviceRequestRouter: Router = Router();
 const serviceRequestService: IServiceRequest = new ServiceRequest();
