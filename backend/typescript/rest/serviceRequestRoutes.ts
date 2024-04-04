@@ -25,10 +25,8 @@ serviceRequestRouter.get("/", async (req, res) => {
     return res.status(401).json({ error: "Unauthorized" });
   }
   const userId = await authService.getCurrentUserId(accessToken);
-  log(`User ID: ${userId}`);
   try {
     const serviceRequests = await serviceRequestService.getServiceRequestsByUserId(userId);
-    log(`Service requests: ${serviceRequests}`);
     res.status(200).json(serviceRequests);
   } catch (error: unknown) {
     res.status(500).json({ error: getErrorMessage(error) });

@@ -37,6 +37,7 @@ model serviceRequest {
   assignees     user[]             @relation(name: "assignee", fields: [assigneeIds], references: [id]) // Volunteers
   location      String
   shiftTime     DateTime?
+  shiftEndTime  DateTime?
   description   String?
   meal          String?
   cookingMethod String?
