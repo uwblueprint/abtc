@@ -41,13 +41,10 @@ class ServiceRequest implements IServiceRequest {
     }
   }
 
-  async postServiceRequest(
-    inputServiceRequest: any,
-  ): Promise<serviceRequest> {
+  async postServiceRequest(inputServiceRequest: any): Promise<serviceRequest> {
     let newServiceRequest: serviceRequest;
     try {
-      
-      const requesterId = inputServiceRequest.requesterId;
+      const { requesterId } = inputServiceRequest;
 
       if (!requesterId) {
         throw new Error("Only existing users can create service requests.");
@@ -58,10 +55,13 @@ class ServiceRequest implements IServiceRequest {
           id: requesterId,
         },
       });
-      
+
       if (!userExists) {
         throw new Error("Only existing users can create service requests.");
-      } else if (userExists.role != "ADMIN" || userExists.isAccepted != "ACCEPTED") {
+      } else if (
+        userExists.role != "ADMIN" ||
+        userExists.isAccepted != "ACCEPTED"
+      ) {
         throw new Error("Only admins can create service requests.");
       }
 

@@ -12,7 +12,7 @@ const Logger = logger(__filename);
 const getPrismaUserByAuthId = async (authId: string): Promise<user> => {
   const user = await prisma.user.findFirst({
     where: {
-      authId: authId,
+      authId,
     },
   });
   if (!user) {
