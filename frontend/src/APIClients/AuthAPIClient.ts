@@ -12,7 +12,6 @@ import {
 } from "../utils/LocalStorageUtils";
 import { SignupRequest } from "../types/SignupFormTypes";
 
-
 const login = async (
   email: string,
   password: string,
@@ -62,16 +61,16 @@ const logout = async (userId: string | undefined): Promise<boolean> => {
   }
 };
 
-export const register = async (
-  { firstName,
-    lastName,
-    email,
-    phoneNumber,
-    password,
-    emergencyFirstName,
-    emergencyLastName,
-    emergencyPhoneNumber
-  }: SignupRequest): Promise<AuthenticatedUser> => {
+export const register = async ({
+  firstName,
+  lastName,
+  email,
+  phoneNumber,
+  password,
+  emergencyFirstName,
+  emergencyLastName,
+  emergencyPhoneNumber,
+}: SignupRequest): Promise<AuthenticatedUser> => {
   try {
     const role: Role = "VOLUNTEER";
     const { data } = await baseAPIClient.post(
@@ -132,4 +131,23 @@ const refresh = async (): Promise<boolean> => {
   }
 };
 
-export default { login, logout, loginWithGoogle, register, resetPassword, refresh };
+export const checkEmailExists = async (email: string): Promise<boolean> => {
+  try {
+    const {
+      data: { exists },
+    } = await baseAPIClient.get(`/auth/checkEmail?email=${email}`);
+    return exists;
+  } catch (error) {
+    return false;
+  }
+};
+
+export default {
+  login,
+  logout,
+  loginWithGoogle,
+  register,
+  resetPassword,
+  refresh,
+  checkEmailExists,
+};
