@@ -9,7 +9,7 @@ const serviceRequestService: IServiceRequest = new ServiceRequest();
 
 /* Get service request by ID if requestId is specified; otherwise, return all service requests. */
 serviceRequestRouter.get("/", async (req, res) => {
-  const { requestId } = req.query;
+  const { requestId, fromDate, toDate } = req.body;
 
   if (requestId) {
     if (typeof requestId !== "string") {
@@ -28,7 +28,32 @@ serviceRequestRouter.get("/", async (req, res) => {
     }
   } else {
     try {
-      const serviceRequests = await serviceRequestService.getServiceRequests();
+
+      let serviceRequests;
+
+      if (fromDate && toDate) {
+        const fromDateFormatted = new Date(fromDate as string).toISOString();
+        const toDateFormatted = new Date(toDate as string).toISOString();
+
+        if (isNaN(new Date(fromDateFormatted).getTime()) || isNaN(new Date(toDateFormatted).getTime())) {
+          res
+            .status(400)
+            .json({ error: "fromDate and toDate query parameters must be valid dates in ISO format." });
+          return;
+        }
+
+        serviceRequests = await serviceRequestService.getServiceRequests();
+        serviceRequests = serviceRequests.filter(request => {
+          const requestDate = request.shiftTime ? new Date(request.shiftTime).toISOString() : null;
+          if (requestDate) {
+            return requestDate >= fromDateFormatted && requestDate <= toDateFormatted;
+          }
+          return false;
+        });
+      } else {
+        serviceRequests = await serviceRequestService.getServiceRequests();
+      }
+
       res.status(200).json(serviceRequests);
     } catch (error: unknown) {
       res.status(500).json({ error: getErrorMessage(error) });
