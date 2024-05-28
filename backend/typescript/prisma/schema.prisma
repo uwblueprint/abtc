@@ -12,22 +12,21 @@ model test {
 }
 
 model user {
-  id                   String           @id @default(auto()) @map("_id") @db.ObjectId
-  authId               String
-  email                String
-  firstName            String
-  lastName             String
-  phoneNumber          String
-  emergencyFirstName   String
-  emergencyLastName    String
-  emergencyPhoneNumber String
-  role                 Role
-  isAccepted           Status
-  serviceRequests      serviceRequest[] // for volunteer
-  createdAt            String?
-  assignedServiceRequestIds String[] @db.ObjectId // For volunteers
-  assignedServiceRequests serviceRequest[] @relation(name: "assignee", fields: [assignedServiceRequestIds], references: [id])
-  requestedServiceRequests serviceRequest[] @relation(name: "requester") // For admins
+  id                        String           @id @default(auto()) @map("_id") @db.ObjectId
+  authId                    String
+  email                     String
+  firstName                 String
+  lastName                  String
+  phoneNumber               String
+  emergencyFirstName        String
+  emergencyLastName         String
+  emergencyPhoneNumber      String
+  role                      Role
+  isAccepted                Status
+  createdAt                 String?
+  assignedServiceRequestIds String[]         @db.ObjectId // For volunteers
+  assignedServiceRequests   serviceRequest[] @relation(name: "assignee", fields: [assignedServiceRequestIds], references: [id])
+  requestedServiceRequests  serviceRequest[] @relation(name: "requester") // For admins
 }
 
 model serviceRequest {
@@ -49,7 +48,7 @@ model serviceRequest {
 }
 
 model platformSignUp {
-  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
   email     String
   firstName String
   lastName  String

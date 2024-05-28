@@ -28,9 +28,8 @@ serviceRequestRouter.get("/", async (req, res) => {
         .json({ error: "requestId query parameter must be a string." });
     } else {
       try {
-        const serviceRequest = await serviceRequestService.getServiceRequestByID(
-          requestId,
-        );
+        const serviceRequest =
+          await serviceRequestService.getServiceRequestByID(requestId);
         res.status(200).json(serviceRequest);
       } catch (error: unknown) {
         res.status(500).json({ error: getErrorMessage(error) });
@@ -38,25 +37,34 @@ serviceRequestRouter.get("/", async (req, res) => {
     }
   } else {
     try {
-
       let serviceRequests;
 
       if (fromDate && toDate) {
         const fromDateFormatted = new Date(fromDate as string).toISOString();
         const toDateFormatted = new Date(toDate as string).toISOString();
 
-        if (isNaN(new Date(fromDateFormatted).getTime()) || isNaN(new Date(toDateFormatted).getTime())) {
+        if (
+          isNaN(new Date(fromDateFormatted).getTime()) ||
+          isNaN(new Date(toDateFormatted).getTime())
+        ) {
           res
             .status(400)
-            .json({ error: "fromDate and toDate query parameters must be valid dates in ISO format." });
+            .json({
+              error:
+                "fromDate and toDate query parameters must be valid dates in ISO format.",
+            });
           return;
         }
 
         serviceRequests = await serviceRequestService.getServiceRequests();
-        serviceRequests = serviceRequests.filter(request => {
-          const requestDate = request.shiftTime ? new Date(request.shiftTime).toISOString() : null;
+        serviceRequests = serviceRequests.filter((request) => {
+          const requestDate = request.shiftTime
+            ? new Date(request.shiftTime).toISOString()
+            : null;
           if (requestDate) {
-            return requestDate >= fromDateFormatted && requestDate <= toDateFormatted;
+            return (
+              requestDate >= fromDateFormatted && requestDate <= toDateFormatted
+            );
           }
           return false;
         });
@@ -68,15 +76,15 @@ serviceRequestRouter.get("/", async (req, res) => {
     } catch (error: unknown) {
       res.status(500).json({ error: getErrorMessage(error) });
     }
+  }
 });
 
 /* Get service requests by requester ID */
 serviceRequestRouter.get("/requester/:requesterId", async (req, res) => {
-  const { requesterId }= req.params;
+  const { requesterId } = req.params;
   try {
-    const serviceRequests = await serviceRequestService.getServiceRequestsByRequesterId(
-      requesterId,
-    );
+    const serviceRequests =
+      await serviceRequestService.getServiceRequestsByRequesterId(requesterId);
     res.status(200).json(serviceRequests);
   } catch (error: unknown) {
     res.status(500).json({ error: getErrorMessage(error) });
@@ -104,9 +112,8 @@ serviceRequestRouter.post("/requester/:requesterId", async (req, res) => {
 serviceRequestRouter.get("/user/:id", async (req, res) => {
   const userId = req.params.id;
   try {
-    const serviceRequests = await serviceRequestService.getServiceRequestsByUserId(
-      userId,
-    );
+    const serviceRequests =
+      await serviceRequestService.getServiceRequestsByUserId(userId);
     res.status(200).json(serviceRequests);
   } catch (error: unknown) {
     res.status(500).json({ error: getErrorMessage(error) });
