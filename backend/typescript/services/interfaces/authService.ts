@@ -82,6 +82,13 @@ interface IAuthService {
     accessToken: string,
     requestedEmail: string,
   ): Promise<boolean>;
+
+  /**
+   * Get the userId of the user associated with the provided access token
+   * @param accessToken user's access token
+   * @returns userId of user
+   */
+  getCurrentUserId(accessToken: string): Promise<string>;
 }
 
 export default IAuthService;

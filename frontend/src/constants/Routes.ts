@@ -25,3 +25,7 @@ export const CREATE_SIMPLE_ENTITY_PAGE = "/simpleEntity/create";
 export const UPDATE_SIMPLE_ENTITY_PAGE = "/simpleEntity/update";
 
 export const HOOKS_PAGE = "/hooks";
+
+export const SHIFTS_PAGE = "/shifts";
+
+export const VOLUNTEER_DASHBOARD_PAGE = "/volunteer-dashboard"
