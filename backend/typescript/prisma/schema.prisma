@@ -23,6 +23,8 @@ model user {
   emergencyPhoneNumber String
   role                 Role
   isAccepted           Status
+  serviceRequests      serviceRequest[] // for volunteer
+  createdAt            String?
   assignedServiceRequestIds String[] @db.ObjectId // For volunteers
   assignedServiceRequests serviceRequest[] @relation(name: "assignee", fields: [assignedServiceRequestIds], references: [id])
   requestedServiceRequests serviceRequest[] @relation(name: "requester") // For admins
@@ -43,6 +45,7 @@ model serviceRequest {
   cookingMethod String?
   frequency     String?
   requestType   ServiceRequestType
+  createdAt     String?
 }
 
 model platformSignUp {
@@ -51,6 +54,7 @@ model platformSignUp {
   firstName String
   lastName  String
   status    Status
+  createdAt String?
 }
 
 enum Role {

@@ -12,7 +12,7 @@ const Logger = logger(__filename);
 const getPrismaUserByAuthId = async (authId: string): Promise<user> => {
   const user = await prisma.user.findFirst({
     where: {
-      authId: authId,
+      authId,
     },
   });
   if (!user) {
@@ -202,6 +202,7 @@ class UserService implements IUserService {
             emergencyPhoneNumber: user.emergencyPhoneNumber,
             role: user.role,
             isAccepted: Status.PENDING,
+            createdAt: new Date().toISOString(),
           },
         });
       } catch (prismaError) {
@@ -342,6 +343,7 @@ class UserService implements IUserService {
               emergencyPhoneNumber: deletedUser.emergencyPhoneNumber,
               role: deletedUser.role,
               isAccepted: Status.PENDING,
+              createdAt: deletedUser.createdAt,
             },
           });
         } catch (prismaError: unknown) {
@@ -402,6 +404,7 @@ class UserService implements IUserService {
               emergencyPhoneNumber: userToDelete.emergencyPhoneNumber,
               role: userToDelete.role,
               isAccepted: Status.PENDING,
+              createdAt: userToDelete.createdAt,
             },
           });
         } catch (prismaError: unknown) {

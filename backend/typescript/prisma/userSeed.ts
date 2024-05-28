@@ -31,6 +31,7 @@ async function main() {
       lastName: `testVolunteerLast${userNumber}`,
       role: "VOLUNTEER",
       isAccepted: Status.PENDING,
+      createdAt: new Date().toISOString(),
     };
 
     const userCreationPromise = prisma.user.create({
@@ -54,6 +55,7 @@ async function main() {
       lastName: `testAdminLast${userNumber}`,
       role: "ADMIN",
       isAccepted: Status.PENDING,
+      createdAt: new Date().toISOString(),
     };
 
     const userCreationPromise = prisma.user.create({
@@ -77,6 +79,7 @@ async function main() {
       lastName: `testVolunteerLast${userNumber}Accepted`,
       role: "VOLUNTEER",
       isAccepted: Status.ACCEPTED,
+      createdAt: new Date().toISOString(),
     };
 
     const userCreationPromise = prisma.user.create({
@@ -100,6 +103,7 @@ async function main() {
       lastName: `testAdminLast${userNumber}Accepted`,
       role: "ADMIN",
       isAccepted: Status.ACCEPTED,
+      createdAt: new Date().toISOString(),
     };
 
     const userCreationPromise = prisma.user.create({

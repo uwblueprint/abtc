@@ -175,7 +175,7 @@ class ServiceRequest implements IServiceRequest {
   async postServiceRequest(inputServiceRequest: any): Promise<serviceRequest> {
     let newServiceRequest: serviceRequest;
     try {
-      const requesterId = inputServiceRequest.requesterId;
+      const { requesterId } = inputServiceRequest;
 
       if (!requesterId) {
         throw new Error("Only existing users can create service requests.");
@@ -196,7 +196,10 @@ class ServiceRequest implements IServiceRequest {
         throw new Error("Only admins can create service requests.");
       }
 
-      const requestData: Prisma.serviceRequestCreateInput = inputServiceRequest;
+      const requestData: Prisma.serviceRequestCreateInput = {
+        ...inputServiceRequest,
+        createdAt: new Date().toISOString(),
+      };
       newServiceRequest = await prisma.serviceRequest.create({
         data: requestData,
       });
