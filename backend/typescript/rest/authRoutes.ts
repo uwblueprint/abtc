@@ -68,6 +68,7 @@ authRouter.post("/register", registerRequestValidator, async (req, res) => {
       lastName: req.body.lastName,
       email: req.body.email,
       status: Status.PENDING,
+      createdAt: new Date().toISOString(),
     };
 
     await platformSignup.postPlatformSignup(newPlatformSignUp);

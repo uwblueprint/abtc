@@ -24,20 +24,28 @@ model user {
   role                 Role
   isAccepted           Status
   serviceRequests      serviceRequest[] // for volunteer
+  createdAt            String?
+  assignedServiceRequestIds String[] @db.ObjectId // For volunteers
+  assignedServiceRequests serviceRequest[] @relation(name: "assignee", fields: [assignedServiceRequestIds], references: [id])
+  requestedServiceRequests serviceRequest[] @relation(name: "requester") // For admins
 }
 
 model serviceRequest {
   id            String             @id @default(auto()) @map("_id") @db.ObjectId
   requestName   String
-  requester     user               @relation(fields: [requesterId], references: [id])
   requesterId   String             @db.ObjectId
+  requester     user               @relation(name: "requester", fields: [requesterId], references: [id]) // Admin requester
+  assigneeIds   String[]           @db.ObjectId
+  assignees     user[]             @relation(name: "assignee", fields: [assigneeIds], references: [id]) // Volunteers
   location      String
   shiftTime     DateTime?
+  shiftEndTime  DateTime?
   description   String?
   meal          String?
   cookingMethod String?
   frequency     String?
   requestType   ServiceRequestType
+  createdAt     String?
 }
 
 model platformSignUp {
@@ -46,6 +54,7 @@ model platformSignUp {
   firstName String
   lastName  String
   status    Status
+  createdAt String?
 }
 
 enum Role {
