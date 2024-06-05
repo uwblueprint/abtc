@@ -28,7 +28,7 @@ const Shifts = (): React.ReactElement => {
     );
 
     shifts.forEach((shift: ServiceRequest) => {
-      if (!shift.shiftTime) return;
+      if (!shift.shiftTime || !shift.shiftEndTime) return;
       const shiftTime = new Date(shift.shiftTime);
       const date = new Date(
         shiftTime.getFullYear(),
