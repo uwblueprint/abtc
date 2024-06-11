@@ -1,11 +1,13 @@
+/* eslint-disable prettier/prettier */
 import { Router } from "express";
 import PlatformSignup from "../services/implementations/platformSignup";
 import { getErrorMessage } from "../utilities/errorUtils";
+import { isAuthorizedByRole } from "../middlewares/auth";
+import { Role } from "../types";
 
 const platformSignupRouter: Router = Router();
-
 /* Return all PlatformSignups */
-platformSignupRouter.get("/", async (req, res) => {
+platformSignupRouter.get("/",isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])), async (req, res) => {
   try {
     const platformSignup = new PlatformSignup();
     const signups = await platformSignup.getPlatformSignups();
@@ -17,7 +19,7 @@ platformSignupRouter.get("/", async (req, res) => {
 });
 
 /* Delete a PlatformSignup given an id */
-platformSignupRouter.delete("/delete/:id", async (req, res) => {
+platformSignupRouter.delete("/delete/:id",isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])), async (req, res) => {
   try {
     const signupId = req.params.id;
 

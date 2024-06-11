@@ -2,7 +2,7 @@ import { Router } from "express";
 import IServiceRequest from "../services/interfaces/serviceRequest";
 import ServiceRequest from "../services/implementations/serviceRequest";
 import { getErrorMessage } from "../utilities/errorUtils";
-import { getAccessToken } from "../middlewares/auth";
+import { getAccessToken, isAuthorizedByRole} from "../middlewares/auth";
 import AuthService from "../services/implementations/authService";
 import IAuthService from "../services/interfaces/authService";
 import IUserService from "../services/interfaces/userService";
@@ -18,7 +18,7 @@ const emailService: IEmailService = new EmailService(nodemailerConfig);
 const authService: IAuthService = new AuthService(userService, emailService);
 
 /* Get service request by ID if requestId is specified; otherwise, return all service requests. */
-serviceRequestRouter.get("/", async (req, res) => {
+serviceRequestRouter.get("/", isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])),async (req, res) => {
   const { requestId, fromDate, toDate } = req.body;
 
   if (requestId) {
@@ -80,7 +80,7 @@ serviceRequestRouter.get("/", async (req, res) => {
 });
 
 /* Get service requests by requester ID */
-serviceRequestRouter.get("/requester/:requesterId", async (req, res) => {
+serviceRequestRouter.get("/requester/:requesterId",isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])), async (req, res) => {
   const { requesterId } = req.params;
   try {
     const serviceRequests =
@@ -92,7 +92,7 @@ serviceRequestRouter.get("/requester/:requesterId", async (req, res) => {
 });
 
 /* Post service request by requester ID */
-serviceRequestRouter.post("/requester/:requesterId", async (req, res) => {
+serviceRequestRouter.post("/requester/:requesterId",isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])), async (req, res) => {
   const { requesterId } = req.params;
   const { serviceRequestId } = req.body;
   try {
@@ -109,7 +109,7 @@ serviceRequestRouter.post("/requester/:requesterId", async (req, res) => {
 });
 
 /* Get service requests by user ID */
-serviceRequestRouter.get("/user/:id", async (req, res) => {
+serviceRequestRouter.get("/user/:id",isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])), async (req, res) => {
   const userId = req.params.id;
   try {
     const serviceRequests =
@@ -121,7 +121,7 @@ serviceRequestRouter.get("/user/:id", async (req, res) => {
 });
 
 /* Post service request by user ID */
-serviceRequestRouter.post("/user/:userId", async (req, res) => {
+serviceRequestRouter.post("/user/:userId",isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])), async (req, res) => {
   const { userId } = req.params;
   const { serviceRequestId } = req.body;
   try {
@@ -138,7 +138,7 @@ serviceRequestRouter.post("/user/:userId", async (req, res) => {
 });
 
 /* Post ServiceRequest route. Requires ADMIN role to perform this action. */
-serviceRequestRouter.post("/post", async (req, res) => {
+serviceRequestRouter.post("/post",isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])), async (req, res) => {
   try {
     const newServiceRequest = await serviceRequestService.postServiceRequest(
       req.body,
@@ -150,7 +150,7 @@ serviceRequestRouter.post("/post", async (req, res) => {
 });
 
 /* Delete a ServiceRequest given an id */
-serviceRequestRouter.delete("/delete/:id", async (req, res) => {
+serviceRequestRouter.delete("/delete/:id", isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])),async (req, res) => {
   try {
     const requestId = req.params.id;
     await serviceRequestService.deleteServiceRequestByID(requestId);

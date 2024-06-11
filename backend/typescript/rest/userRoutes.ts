@@ -24,7 +24,7 @@ const emailService: IEmailService = new EmailService(nodemailerConfig);
 const authService: IAuthService = new AuthService(userService, emailService);
 
 /* Get all users, optionally filter by a userId or email query parameter to retrieve a single user */
-userRouter.get("/", async (req, res) => {
+userRouter.get("/",isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])), async (req, res) => {
   const { userId, email } = req.query;
   const contentType = req.headers["content-type"];
 
@@ -84,7 +84,7 @@ userRouter.get("/", async (req, res) => {
 });
 
 /* Create a user */
-userRouter.post("/", createUserDtoValidator, async (req, res) => {
+userRouter.post("/", createUserDtoValidator,isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])), async (req, res) => {
   try {
     const newUser = await userService.createUser({
       firstName: req.body.firstName,
@@ -107,7 +107,7 @@ userRouter.post("/", createUserDtoValidator, async (req, res) => {
 });
 
 /* Update the user with the specified userId */
-userRouter.put("/:userId", updateUserDtoValidator, async (req, res) => {
+userRouter.put("/:userId", updateUserDtoValidator,isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])), async (req, res) => {
   try {
     const updatedUser = await userService.updateUserById(req.params.userId, {
       firstName: req.body.firstName,
@@ -126,7 +126,7 @@ userRouter.put("/:userId", updateUserDtoValidator, async (req, res) => {
 });
 
 /* Delete a user by userId or email, specified through a query parameter */
-userRouter.delete("/", async (req, res) => {
+userRouter.delete("/",isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])), async (req, res) => {
   const { userId, email } = req.query;
 
   if (userId && email) {
