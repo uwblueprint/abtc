@@ -41,7 +41,7 @@ class PlatformSignup implements IPlatformSignup {
       }
 
       newPlatformSignup = await prisma.platformSignUp.create({
-        data: platform,
+        data: { ...platform, createdAt: new Date().toISOString() },
       });
     } catch (error: unknown) {
       Logger.error(

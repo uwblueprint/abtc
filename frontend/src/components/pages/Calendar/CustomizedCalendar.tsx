@@ -1,19 +1,42 @@
 import "./styles.css";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import moment from "moment";
 import { Text, Box, Flex, Icon, IconButton, Select } from "@chakra-ui/react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
-import { Views, DateRange } from "react-big-calendar";
+import { Views, DateRange, Event } from "react-big-calendar";
 
 import Calendar from "../Calendar";
-import events from "./eventSeed";
+import ServiceRequestAPIClient from "../../../APIClients/ServiceRequestAPIClient";
+import { ServiceRequest, ServiceRequestType } from "../../../types/ServiceRequestTypes";
 
 type Keys = keyof typeof Views;
 
 export default function CustomizedCalendar() {
+  const [shifts, setShifts] = useState<Event[]>([]);
   const [selectedRequestType, setSelectedRequestType] = useState('');
   const [view, setView] = useState<(typeof Views)[Keys]>(Views.MONTH);
   const [date, setDate] = useState<Date>(moment(new Date()).toDate());
+
+  useEffect(() => {
+    const getAndTransformRequests = async () => {
+      const serviceRequests: ServiceRequest[] = await ServiceRequestAPIClient.get();
+      const events: Event[] = [];
+      serviceRequests.forEach((shift) => {
+        if (!shift.shiftTime || !shift.shiftEndTime) return;
+        events.push({
+          title: shift.requestName,
+          start: new Date(shift.shiftTime),
+          end: new Date(shift.shiftEndTime),
+          resource: {
+            requestType: shift.requestType,
+          }
+        });
+      });
+      setShifts(events);
+    };
+
+    getAndTransformRequests();
+  }, []);
 
   const onNavigate = useCallback((newDate: Date) => setDate(newDate), [setDate]);
   const onView = useCallback((newView: (typeof Views)[Keys]) => setView(newView), [setView]);
@@ -78,25 +101,25 @@ export default function CustomizedCalendar() {
   const eventPropGetter = useCallback(
     (event: any, _start: Date, _end: Date, _isSelected: boolean) => {
       switch (event.resource.requestType) {
-        case "kitchen":
+        case ServiceRequestType.KITCHEN:
           return {
             style: {
-              backgroundColor: '#FAE7E7', // pale red
-              color: "#D10000",
+              backgroundColor: '#E1EEFA', // pale blue
+              color: "#004E97", // dark blue
             },
           };
-        case "site":
+        case ServiceRequestType.SITE:
           return {
             style: {
               backgroundColor: '#E1F4E6', // pale green
-              color: "#00701F",
+              color: "#00701F", // dark green
             },
           };
         default:
           return {
             style: {
               backgroundColor: '#E8E8E8', // pale gray
-              color: "#A0A0A0",
+              color: "#A0A0A0", // cold gray
             },
           };
       }
@@ -157,7 +180,7 @@ export default function CustomizedCalendar() {
       position="relative"
     >
       <Calendar
-        events={selectedRequestType === '' ? events : events.filter((event) => event.resource.requestType === selectedRequestType)}
+        events={selectedRequestType === '' ? shifts : shifts.filter((shift) => shift.resource.requestType === selectedRequestType.toUpperCase())}
         eventPropGetter={eventPropGetter}
         defaultView={Views.MONTH}
         toolbar={false}
