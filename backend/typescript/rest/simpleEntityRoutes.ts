@@ -17,6 +17,7 @@ const simpleEntityService: ISimpleEntityService = new SimpleEntityService();
 /* Create SimpleEntity */
 simpleEntityRouter.post(
   "/",
+  isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])),
   simpleEntityRequestDtoValidator,
   async (req, res) => {
     try {
@@ -36,27 +37,31 @@ simpleEntityRouter.post(
 );
 
 /* Get all SimpleEntities */
-simpleEntityRouter.get("/", async (req, res) => {
-  const contentType = req.headers["content-type"];
-  try {
-    const entities = await simpleEntityService.getEntities();
-    await sendResponseByMimeType<SimpleEntityResponseDTO>(
-      res,
-      200,
-      contentType,
-      entities,
-    );
-  } catch (e: unknown) {
-    await sendResponseByMimeType(res, 500, contentType, [
-      {
-        error: getErrorMessage(e),
-      },
-    ]);
-  }
-});
+simpleEntityRouter.get(
+  "/",
+  isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])),
+  async (req, res) => {
+    const contentType = req.headers["content-type"];
+    try {
+      const entities = await simpleEntityService.getEntities();
+      await sendResponseByMimeType<SimpleEntityResponseDTO>(
+        res,
+        200,
+        contentType,
+        entities,
+      );
+    } catch (e: unknown) {
+      await sendResponseByMimeType(res, 500, contentType, [
+        {
+          error: getErrorMessage(e),
+        },
+      ]);
+    }
+  },
+);
 
 /* Get SimpleEntity by id */
-simpleEntityRouter.get("/:id", async (req, res) => {
+simpleEntityRouter.get("/:id", isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])),async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -69,7 +74,7 @@ simpleEntityRouter.get("/:id", async (req, res) => {
 
 /* Update SimpleEntity by id */
 simpleEntityRouter.put(
-  "/:id",
+  "/:id",isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])),
   simpleEntityRequestDtoValidator,
   async (req, res) => {
     const { id } = req.params;
@@ -90,7 +95,7 @@ simpleEntityRouter.put(
 );
 
 /* Delete SimpleEntity by id */
-simpleEntityRouter.delete("/:id", async (req, res) => {
+simpleEntityRouter.delete("/:id",isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])), async (req, res) => {
   const { id } = req.params;
 
   try {
