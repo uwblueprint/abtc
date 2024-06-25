@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Box, Heading, Text } from "@chakra-ui/react";
 import ShiftCard from "../common/ShiftCard";
-import { ServiceRequest } from "../../types/ServiceRequestTypes";
+import {
+  ServiceRequest,
+  ServiceRequestType,
+} from "../../types/ServiceRequestTypes";
 import ServiceRequestAPIClient from "../../APIClients/ServiceRequestAPIClient";
 
 type DateShifts = {
@@ -64,11 +67,59 @@ const Shifts = (): React.ReactElement => {
   };
 
   useEffect(() => {
-    const fetchShifts = async () => {
-      const data = await ServiceRequestAPIClient.get();
-      setShiftsByDate(groupByDate(data));
-    };
-    fetchShifts();
+    const mockData: ServiceRequest[] = [
+      {
+        id: "1",
+        requestName: "Morning Shift",
+        requesterId: "req1",
+        location: "Site A",
+        shiftTime: new Date().toISOString(),
+        shiftEndTime: new Date(
+          new Date().getTime() + 2 * 60 * 60 * 1000,
+        ).toISOString(),
+        description: "This is a morning shift at Site A.",
+        meal: "Breakfast",
+        cookingMethod: "Grill",
+        frequency: "Daily",
+        requestType: ServiceRequestType.SITE,
+      },
+      {
+        id: "2",
+        requestName: "Afternoon Shift",
+        requesterId: "req2",
+        location: "Kitchen B",
+        shiftTime: new Date(
+          new Date().getTime() + 4 * 60 * 60 * 1000,
+        ).toISOString(),
+        shiftEndTime: new Date(
+          new Date().getTime() + 6 * 60 * 60 * 1000,
+        ).toISOString(),
+        description: "This is an afternoon shift at Kitchen B.",
+        meal: "Lunch",
+        cookingMethod: "Boil",
+        frequency: "Weekly",
+        requestType: ServiceRequestType.KITCHEN,
+      },
+      {
+        id: "3",
+        requestName: "Evening Shift",
+        requesterId: "req3",
+        location: "Site C",
+        shiftTime: new Date(
+          new Date().getTime() + 8 * 60 * 60 * 1000,
+        ).toISOString(),
+        shiftEndTime: new Date(
+          new Date().getTime() + 10 * 60 * 60 * 1000,
+        ).toISOString(),
+        description: "This is an evening shift at Site C.",
+        meal: "Dinner",
+        cookingMethod: "Bake",
+        frequency: "Monthly",
+        requestType: ServiceRequestType.SITE,
+      },
+    ];
+
+    setShiftsByDate(groupByDate(mockData));
   }, []);
 
   return (
