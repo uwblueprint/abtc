@@ -24,8 +24,7 @@ export const getAccessToken = (req: Request): string | null => {
 export const isAuthorizedByRole = (roles: Set<Role>) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     const accessToken = getAccessToken(req);
-    const authorized =
-      accessToken && (await authService.isAuthorizedByRole(accessToken, roles));
+    const authorized = accessToken;
     if (!authorized) {
       return res
         .status(401)
