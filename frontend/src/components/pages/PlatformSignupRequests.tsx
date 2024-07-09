@@ -75,7 +75,29 @@ const PlatformSignupRequests = (): React.ReactElement => {
         return 'black';
     };
 
-    // ... (keep other handler functions)
+    const handleApproveClick = () => {
+        console.log("Approve icon clicked");
+    };
+
+    const handleRejectClick = () => {
+        console.log("Reject icon clicked");
+    };
+
+    const handleSearchClick = () => {
+        console.log("Search icon clicked");
+    };
+
+    const handleRefreshClick = () => {
+        console.log("Refresh icon clicked");
+    };
+
+    const handleFilterClick = () => {
+        console.log("Filter icon clicked");
+    };
+
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
+    };
 
     const totalPages = Math.ceil(userInfo.length / itemsPerPage);
     const currentItems = userInfo.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
@@ -90,7 +112,72 @@ const PlatformSignupRequests = (): React.ReactElement => {
             <TableContainer mt='5' border='1px' borderColor='gray.200' borderRadius='20'>
                 <Table variant='simple'>
                     <Thead>
-                        {/* ... (keep the header row) */}
+                    <Tr mt='3'>
+                            <Th><Checkbox size='md' isChecked={selectAll} onChange={handleSelectAllChange} /></Th>
+                            <Th>
+                                <IconButton
+                                    aria-label="Approve"
+                                    size="sm"
+                                    icon={<Icon as={FaCheck} />}
+                                    variant='ghost'
+                                    onClick={handleApproveClick}
+                                />
+                                <IconButton
+                                    aria-label="Reject"
+                                    size="sm"
+                                    icon={<Icon as={FaXmark} />}
+                                    variant='ghost'
+                                    onClick={handleRejectClick}
+                                />
+                                <IconButton
+                                    aria-label="Search"
+                                    size="sm"
+                                    icon={<Icon as={FaSistrix} />}
+                                    variant='ghost'
+                                    onClick={handleSearchClick}
+                                />
+                                <IconButton
+                                    aria-label="Refresh"
+                                    size="sm"
+                                    icon={<Icon as={FaArrowsRotate} />}
+                                    variant='ghost'
+                                    onClick={handleRefreshClick}
+                                />
+                                <IconButton
+                                    aria-label="Filter"
+                                    size="sm"
+                                    icon={<Icon as={FaBars} />}
+                                    variant='ghost'
+                                    onClick={handleFilterClick}
+                                />
+                            </Th>
+                            <Th> </Th>
+                            <Th> </Th>
+                            <Th> </Th>
+                            <Th>
+                                <Flex justifyContent="space-between" alignItems="center">
+                                    <Flex alignItems="center">
+                                        <Text>{itemCountStart}-{itemCountEnd} of {userInfo.length}</Text>
+                                        <IconButton
+                                            aria-label="Previous Page"
+                                            size="sm"
+                                            icon={<FaAngleLeft />}
+                                            variant='ghost'
+                                            onClick={() => handlePageChange(currentPage - 1)}
+                                            disabled={currentPage === 1}
+                                        />
+                                        <IconButton
+                                            aria-label="Next Page"
+                                            size="sm"
+                                            icon={<FaAngleRight />}
+                                            variant='ghost'
+                                            onClick={() => handlePageChange(currentPage + 1)}
+                                            disabled={currentPage === totalPages}
+                                        />
+                                    </Flex>
+                                </Flex>
+                            </Th>
+                        </Tr>
                     </Thead>
                     <Tbody>
                         {currentItems.map((user, index) => (
