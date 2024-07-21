@@ -34,4 +34,43 @@ const getPlatformSignups = async (): Promise<any[]> => {
   }
 };
 
-export default { get, getPlatformSignups };
+const post = async ({
+  requestName,
+  requesterId,
+  location,
+  shiftTime,
+  shiftEndTime,
+  description,
+  meal,
+  cookingMethod,
+  frequency,
+  requestType,
+}: ServiceRequest): Promise<ServiceRequest | null> => {
+  const bearerToken = `Bearer ${getLocalStorageObjProperty(
+    AUTHENTICATED_USER_KEY,
+    "accessToken",
+  )}`;
+  try {
+    const { data } = await baseAPIClient.post(
+      "/serviceRequests/post",
+      {
+        requestName,
+        requesterId,
+        location,
+        shiftTime,
+        shiftEndTime,
+        description,
+        meal,
+        cookingMethod,
+        frequency,
+        requestType,
+      },
+      { headers: { Authorization: bearerToken } },
+    );
+    return data;
+  } catch (error) {
+    return null;
+  }
+};
+
+export default { get, getPlatformSignups, post };
