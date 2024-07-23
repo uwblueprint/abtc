@@ -178,7 +178,7 @@ class ServiceRequest implements IServiceRequest {
       const { requesterId } = inputServiceRequest;
 
       if (!requesterId) {
-        throw new Error("Only existing users can create service requests.");
+        throw new Error("No requester ID.");
       }
 
       const userExists = await prisma.user.findUnique({
