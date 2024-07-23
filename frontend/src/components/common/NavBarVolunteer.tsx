@@ -48,8 +48,6 @@ const NavBarVolunteer: React.FC = () => {
         </Flex>
       </ChakraLink>
       <ChakraLink
-        as={ReactRouterLink}
-        to="/about"
         color={location.pathname === '/about' ? '#3F3575' : "#444750"}
         fontWeight='500'
         _hover={{ color: "black", textDecoration: "none" }}
@@ -60,6 +58,7 @@ const NavBarVolunteer: React.FC = () => {
         paddingTop={1}
         paddingBottom={1}
         borderRadius={8}
+        href="https://www.abettertentcity.org"
       >
         <Flex align="center">
           <Icon as={LuNavigation} boxSize={5} mr={3}/>
@@ -67,8 +66,6 @@ const NavBarVolunteer: React.FC = () => {
         </Flex>
       </ChakraLink>
       <ChakraLink
-        as={ReactRouterLink}
-        to="/contact-us"
         color={location.pathname === '/contact-us' ? '#3F3575' : "#444750"}
         fontWeight='500'
         _hover={{ color: "black", textDecoration: "none" }}
@@ -79,6 +76,7 @@ const NavBarVolunteer: React.FC = () => {
         paddingTop={1}
         paddingBottom={1}
         borderRadius={8}
+        href="mailto:abtc@waterlooregion.org"
       >
         <Flex align="center">
           <Icon as={FiPhone} boxSize={5} mr={3}/>
