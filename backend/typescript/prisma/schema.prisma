@@ -41,8 +41,8 @@ model serviceRequest {
   shiftEndTime  DateTime?
   description   String?
   meal          String?
-  cookingMethod String?
-  frequency     String?
+  cookingMethod CookingMethod?
+  frequency     Frequency?
   requestType   ServiceRequestType
   createdAt     String?
 }
@@ -64,6 +64,22 @@ enum Role {
 enum ServiceRequestType {
   SITE
   KITCHEN
+}
+
+enum CookingMethod {
+  BAKE
+  BOIL
+  FRY
+  GRILL
+  ROAST
+  STEAM
+}
+
+enum Frequency {
+  NEVER
+  DAILY
+  WEEKLY
+  MONTHLY
 }
 
 enum Status {

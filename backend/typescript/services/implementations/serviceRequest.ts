@@ -25,14 +25,14 @@ class ServiceRequest implements IServiceRequest {
     requesterId: string,
   ): Promise<serviceRequest[]> {
     try {
-      const user = await prisma.user.findUnique({
+      const user = (await prisma.user.findUnique({
         where: {
           id: requesterId,
         },
         include: {
           requestedServiceRequests: true,
         },
-      }) as user & { requestedServiceRequests: serviceRequest[] };
+      })) as user & { requestedServiceRequests: serviceRequest[] };
       return user.requestedServiceRequests;
     } catch (error) {
       throw new Error("Error retrieving service requests.");
@@ -89,14 +89,14 @@ class ServiceRequest implements IServiceRequest {
 
   async getServiceRequestsByUserId(userId: string): Promise<serviceRequest[]> {
     try {
-      const userWithAssignedRequests = await prisma.user.findUnique({
+      const userWithAssignedRequests = (await prisma.user.findUnique({
         where: {
           id: userId,
         },
         include: {
           assignedServiceRequests: true,
         },
-      }) as user & { assignedServiceRequests: serviceRequest[] };
+      })) as user & { assignedServiceRequests: serviceRequest[] };
 
       if (!userWithAssignedRequests) {
         throw new Error("User not found.");
@@ -123,20 +123,20 @@ class ServiceRequest implements IServiceRequest {
         throw new Error("Service request not found.");
       }
 
-      const existingUser = await prisma.user.findUnique({
+      const existingUser = (await prisma.user.findUnique({
         where: {
           id: userId,
         },
         include: {
           assignedServiceRequests: true,
         },
-      }) as user & { assignedServiceRequests: serviceRequest[] };
+      })) as user & { assignedServiceRequests: serviceRequest[] };
 
       if (!existingUser) {
         throw new Error("User not found.");
       }
 
-      const updatedUser = await prisma.user.update({
+      const updatedUser = (await prisma.user.update({
         where: {
           id: userId,
         },
@@ -145,7 +145,7 @@ class ServiceRequest implements IServiceRequest {
             connect: [{ id: serviceRequestId }],
           },
         },
-      }) as user & { assignedServiceRequests: serviceRequest[] };
+      })) as user & { assignedServiceRequests: serviceRequest[] };
       return Promise.resolve();
     } catch (error) {
       throw new Error("Error creating service request.");
@@ -178,7 +178,7 @@ class ServiceRequest implements IServiceRequest {
       const { requesterId } = inputServiceRequest;
 
       if (!requesterId) {
-        throw new Error("Only existing users can create service requests.");
+        throw new Error("No requester ID.");
       }
 
       const userExists = await prisma.user.findUnique({

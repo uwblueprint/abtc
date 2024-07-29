@@ -1,0 +1,3 @@
+const EARLIEST_SHIFT_TIME = `06:00`;
+
+export default EARLIEST_SHIFT_TIME;

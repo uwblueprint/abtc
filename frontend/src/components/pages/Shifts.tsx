@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Box, Heading, Text } from "@chakra-ui/react";
 import ShiftCard from "../common/ShiftCard";
-import {
-  ServiceRequest,
-  ServiceRequestType,
-} from "../../types/ServiceRequestTypes";
+import { ServiceRequest } from "../../types/ServiceRequestTypes";
 import ServiceRequestAPIClient from "../../APIClients/ServiceRequestAPIClient";
+import CreateShift from "./CreateShift/CreateShift";
+import AuthContext from "../../contexts/AuthContext";
 
 type DateShifts = {
   date: string;
@@ -13,6 +12,8 @@ type DateShifts = {
 };
 
 const Shifts = (): React.ReactElement => {
+  const { authenticatedUser } = useContext(AuthContext);
+
   const [shiftsByDate, setShiftsByDate] = useState<DateShifts[]>([]);
   const YEAR_SIZE = 6;
 
@@ -71,9 +72,9 @@ const Shifts = (): React.ReactElement => {
       try {
         const shifts = await ServiceRequestAPIClient.get();
         const upcomingShifts = shifts
-          .filter(shift => shift.shiftTime) 
+          .filter(shift => shift.shiftTime)
           .sort(
-            (a, b) => new Date(a.shiftTime!).getTime() - new Date(b.shiftTime!).getTime() 
+            (a, b) => new Date(a.shiftTime!).getTime() - new Date(b.shiftTime!).getTime()
           )
           .slice(0, 15);
         setShiftsByDate(groupByDate(upcomingShifts));
@@ -100,6 +101,11 @@ const Shifts = (): React.ReactElement => {
         <Heading as="h1" size="lg" mb="30px">
           Your Shifts
         </Heading>
+        {authenticatedUser?.role === "ADMIN" &&
+          <Box mb="30px">
+            <CreateShift />
+          </Box>
+        }
         {shiftsByDate && shiftsByDate.length > 0 ? (
           shiftsByDate.map((dateShifts: DateShifts, index: number) => {
             return (
