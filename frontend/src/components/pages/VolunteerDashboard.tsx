@@ -3,6 +3,7 @@ import { Flex, Box, Heading } from "@chakra-ui/react";
 import AUTHENTICATED_USER_KEY from "../../constants/AuthConstants";
 import CustomizedCalendar from "./Calendar/CustomizedCalendar";
 import Shifts from "./Shifts";
+import NavBarVolunteer from "../common/NavBarVolunteer";
 
 const VolunteerDashboard = (): React.ReactElement => {
   const [userInfo, setUserInfo] = useState<any>(null);
@@ -20,11 +21,7 @@ const VolunteerDashboard = (): React.ReactElement => {
 
   return (
     <Flex direction="column" h="100vh">
-      {/* Navbar Component Here */}
-
-      <Flex bg="gray.100" pl={8} align="center" h="72px">
-        <Heading size="md">Temp Navbar</Heading>
-      </Flex>
+      <NavBarVolunteer/>
 
       <Flex flex="1">
         <Box pt={10} pl={8} border="1px" borderColor="gray.100">
