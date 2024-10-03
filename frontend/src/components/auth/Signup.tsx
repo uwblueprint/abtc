@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useHistory } from "react-router-dom";
 import useMultistepForm from '../../hooks/useMultistepForm';
 import SignupMain from './SignupMain';
 import SignupSecondary from './SignupSecondary';
@@ -43,6 +44,8 @@ const Signup = (): React.ReactElement => {
   const stepExists = !!StepComponent;
   const errorsExists = !!errors;
 
+  const history = useHistory();
+
   const updateFields = (fields: Partial<SignupRequest>) => {
     setData((prev: SignupRequest) => {
       return { ...prev, ...fields };
@@ -62,6 +65,7 @@ const Signup = (): React.ReactElement => {
     const user: AuthenticatedUser = await register({ ...data });
     if (user) {
       alert("Successful sign up!");
+      history.push("/volunteer-dashboard")
     } else {
       alert("There was an error in sign up");
     }
