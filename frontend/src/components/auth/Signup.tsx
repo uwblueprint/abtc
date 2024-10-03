@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useHistory } from "react-router-dom";
 import useMultistepForm from '../../hooks/useMultistepForm';
 import SignupMain from './SignupMain';
@@ -7,6 +7,8 @@ import { SignupFormStepComponentType, SignupRequest, SignupRequestErrors } from 
 import SignupEmergencyContact from './SignupEmergencyContact';
 import { register } from '../../APIClients/AuthAPIClient';
 import { AuthenticatedUser } from '../../types/AuthTypes';
+import AuthContext from "../../contexts/AuthContext";
+import { VOLUNTEER_DASHBOARD_PAGE } from "../../constants/Routes";
 
 const INITIAL_DATA: SignupRequest = {
   firstName: "",
@@ -18,6 +20,7 @@ const INITIAL_DATA: SignupRequest = {
   emergencyLastName: "",
   emergencyPhoneNumber: "",
 };
+
 const SignupMainErrors: Partial<SignupRequestErrors> = {};
 
 const SignupSecondaryErrors: Partial<SignupRequestErrors> = {
@@ -45,6 +48,7 @@ const Signup = (): React.ReactElement => {
   const errorsExists = !!errors;
 
   const history = useHistory();
+  const { setAuthenticatedUser } = useContext(AuthContext);
 
   const updateFields = (fields: Partial<SignupRequest>) => {
     setData((prev: SignupRequest) => {
@@ -59,17 +63,23 @@ const Signup = (): React.ReactElement => {
     setSignupErrors(newSignupErrors);
   };
 
+  // eslint-disable-next-line consistent-return
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!isLastStep) return next();
-    const user: AuthenticatedUser = await register({ ...data });
-    if (user) {
-      alert("Successful sign up!");
-      history.push("/volunteer-dashboard")
-    } else {
+    try {
+      const user: AuthenticatedUser = await register({ ...data });
+      if (user) {
+        setAuthenticatedUser(user);
+        alert("Successful sign up!");
+        history.push(VOLUNTEER_DASHBOARD_PAGE);
+      } else {
+        alert("There was an error in sign up");
+      }
+    } catch (error) {
+      console.error("Error during signup:", error);
       alert("There was an error in sign up");
     }
-    return true;
   }
 
   return (<>{!!stepExists && !!errorsExists &&
