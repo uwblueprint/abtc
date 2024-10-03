@@ -30,7 +30,13 @@ import { LuNavigation } from "react-icons/lu";
 import { FiPhone } from "react-icons/fi";
 import abtc_logo from '../../images/abtc_logo.png';
 
-const NavBarVolunteer: React.FC = () => {
+interface NavBarVolunteerProps {
+  firstName: string;
+  lastName: string;
+  role: string;
+}
+
+const NavBarVolunteer: React.FC<NavBarVolunteerProps> = ({firstName, lastName, role}) => {
   const location = useLocation();
 
   return (
@@ -107,16 +113,13 @@ const NavBarVolunteer: React.FC = () => {
       </ChakraLink>
       <Box>
         <Popover trigger="hover" placement="bottom-end">
-            
               <PopoverTrigger>
                 <Avatar size="md" name="User" src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSNfBG0r9nBON7QsYexKnLDtTnn4bjfuWZyDndX4OuZPwJTtPUA" />
               </PopoverTrigger>
-
               <PopoverContent maxW="200px">
-                <PopoverHeader>First Last</PopoverHeader>
-                <PopoverBody>Role</PopoverBody>
+                <PopoverHeader>{firstName} {lastName}</PopoverHeader>
+                <PopoverBody>Role: {role}</PopoverBody>
               </PopoverContent>
-
             </Popover>
       </Box>
     </Flex>
