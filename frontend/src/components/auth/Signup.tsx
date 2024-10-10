@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { useHistory } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 import useMultistepForm from '../../hooks/useMultistepForm';
 import SignupMain from './SignupMain';
 import SignupSecondary from './SignupSecondary';
@@ -8,7 +8,8 @@ import SignupEmergencyContact from './SignupEmergencyContact';
 import { register } from '../../APIClients/AuthAPIClient';
 import { AuthenticatedUser } from '../../types/AuthTypes';
 import AuthContext from "../../contexts/AuthContext";
-import { VOLUNTEER_DASHBOARD_PAGE } from "../../constants/Routes";
+import { HOME_PAGE, VOLUNTEER_DASHBOARD_PAGE, PLATFORM_SIGNUP_REQUESTS } from "../../constants/Routes";
+
 
 const INITIAL_DATA: SignupRequest = {
   firstName: "",
@@ -48,7 +49,7 @@ const Signup = (): React.ReactElement => {
   const errorsExists = !!errors;
 
   const history = useHistory();
-  const { setAuthenticatedUser } = useContext(AuthContext);
+  const { authenticatedUser, setAuthenticatedUser } = useContext(AuthContext);
 
   const updateFields = (fields: Partial<SignupRequest>) => {
     setData((prev: SignupRequest) => {
@@ -71,8 +72,6 @@ const Signup = (): React.ReactElement => {
       const user: AuthenticatedUser = await register({ ...data });
       if (user) {
         setAuthenticatedUser(user);
-        alert("Successful sign up!");
-        history.push(VOLUNTEER_DASHBOARD_PAGE);
       } else {
         alert("There was an error in sign up");
       }
@@ -80,6 +79,16 @@ const Signup = (): React.ReactElement => {
       console.error("Error during signup:", error);
       alert("There was an error in sign up");
     }
+  }
+
+  if (authenticatedUser) {
+    if (authenticatedUser.role === "VOLUNTEER") {
+      return <Redirect to={VOLUNTEER_DASHBOARD_PAGE} />;
+    }
+    if(authenticatedUser.role === "ADMIN"){
+      return <Redirect to={PLATFORM_SIGNUP_REQUESTS} />;
+    }
+    return <Redirect to={HOME_PAGE} />;
   }
 
   return (<>{!!stepExists && !!errorsExists &&
