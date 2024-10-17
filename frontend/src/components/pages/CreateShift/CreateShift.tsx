@@ -18,6 +18,8 @@ const INITIAL_DATA: ServiceRequest = {
     meal: null,
     cookingMethod: null,
     frequency: Frequency.NEVER,
+    currentEmail: "",
+    inviteEmails: [],
     requestType: ServiceRequestType.KITCHEN,
 };
 const CreateShiftMainErrors: Partial<ServiceRequestErrors> = {};

@@ -44,6 +44,8 @@ const post = async ({
   meal,
   cookingMethod,
   frequency,
+  currentEmail,
+  inviteEmails,
   requestType,
 }: ServiceRequest): Promise<ServiceRequest | null> => {
   const bearerToken = `Bearer ${getLocalStorageObjProperty(
@@ -63,6 +65,8 @@ const post = async ({
         meal,
         cookingMethod,
         frequency,
+        currentEmail,
+        inviteEmails,
         requestType,
       },
       { headers: { Authorization: bearerToken } },

@@ -30,6 +30,8 @@ export type ServiceRequest = {
   meal: string | null;
   cookingMethod: CookingMethod | null;
   frequency: Frequency | null;
+  currentEmail: string;
+  inviteEmails: string[] | null;
   requestType: ServiceRequestType;
 };
 

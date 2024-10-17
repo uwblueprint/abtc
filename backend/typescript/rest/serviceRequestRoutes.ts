@@ -93,7 +93,7 @@ serviceRequestRouter.get("/requester/:requesterId",isAuthorizedByRole(new Set(["
 
 /* Post service request by requester ID */
 serviceRequestRouter.post("/requester/:requesterId",isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])), async (req, res) => {
-  const { requesterId } = req.params;
+  const { requesterId, } = req.params;
   const { serviceRequestId } = req.body;
   try {
     await serviceRequestService.postServiceRequestByRequesterId(
