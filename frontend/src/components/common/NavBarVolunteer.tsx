@@ -46,6 +46,7 @@ const NavBarVolunteer: React.FC<NavBarVolunteerProps> = ({firstName, lastName, r
       title: "Toast Title",
       description: "This is a test toast message.",
       status: "success",
+      position: 'top-right',
       duration: 5000,
       isClosable: true,
     });
