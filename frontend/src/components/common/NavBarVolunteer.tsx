@@ -20,7 +20,8 @@ import {
   PopoverFooter,
   PopoverArrow,
   PopoverCloseButton,
-  PopoverAnchor
+  PopoverAnchor,
+  useToast
 } from '@chakra-ui/react';
 import { Link as ReactRouterLink, useLocation } from 'react-router-dom';
 import { RxChevronDown } from "react-icons/rx";
@@ -38,6 +39,18 @@ interface NavBarVolunteerProps {
 
 const NavBarVolunteer: React.FC<NavBarVolunteerProps> = ({firstName, lastName, role}) => {
   const location = useLocation();
+  const toast = useToast();
+
+  const showToast = () => {
+    toast({
+      title: "Toast Title",
+      description: "This is a test toast message.",
+      status: "success",
+      position: 'top-right',
+      duration: 5000,
+      isClosable: true,
+    });
+  }
 
   return (
     <Flex bg="white" p={4} alignItems="center">
@@ -99,6 +112,9 @@ const NavBarVolunteer: React.FC<NavBarVolunteerProps> = ({firstName, lastName, r
           Contact Us
         </Flex>
       </ChakraLink>
+      <button type="button" className="btn btn-primary" onClick={showToast}>
+        Test Toast
+      </button>
       <Spacer />
        {/*  TODO: add logic behind notification button */}
       <ChakraLink
