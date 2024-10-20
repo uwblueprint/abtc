@@ -53,10 +53,7 @@ const App = (): React.ReactElement => {
 
   return (
     <GoogleOAuthProvider clientId={process.env.REACT_APP_OAUTH_CLIENT_ID || ""}>
-      <SampleContext.Provider value={sampleContext}>
-        <SampleContextDispatcherContext.Provider
-          value={dispatchSampleContextUpdate}
-        >
+      <ChakraProvider>
           <AuthContext.Provider
             value={{ authenticatedUser, setAuthenticatedUser }}
           >
@@ -145,8 +142,7 @@ const App = (): React.ReactElement => {
               </Router>
             </ChakraProvider>
           </AuthContext.Provider>
-        </SampleContextDispatcherContext.Provider>
-      </SampleContext.Provider>
+        </ChakraProvider>
     </GoogleOAuthProvider>
   );
 };
