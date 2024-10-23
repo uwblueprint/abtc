@@ -31,3 +31,5 @@ export const SHIFTS_PAGE = "/shifts";
 export const VOLUNTEER_DASHBOARD_PAGE = "/volunteer-dashboard";
 
 export const PLATFORM_SIGNUP_REQUESTS = "/platform-signup-requests";
+
+export const INVITE_PAGE = "/invite"

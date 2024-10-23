@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Route, Redirect } from "react-router-dom";
+import { Route, Redirect, useLocation } from "react-router-dom";
 
 import AuthContext from "../../contexts/AuthContext";
 import { LOGIN_PAGE } from "../../constants/Routes";
@@ -17,11 +17,20 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
 }: PrivateRouteProps) => {
   const { authenticatedUser } = useContext(AuthContext);
 
-  return authenticatedUser ? (
-    <Route path={path} exact={exact} component={component} />
-  ) : (
-    <Redirect to={LOGIN_PAGE} />
-  );
+  const location = useLocation();
+
+  const queryParams = new URLSearchParams(location.search);
+  const shiftId = queryParams.get('shiftId');
+
+  if (authenticatedUser) {
+    return <Route path={path} exact={exact} component={component} />
+  }
+
+  if (shiftId) {
+    localStorage.setItem('shiftId', shiftId)
+  }
+
+  return <Redirect to={LOGIN_PAGE} />
 };
 
 export default PrivateRoute;

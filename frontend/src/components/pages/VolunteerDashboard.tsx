@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Flex, Box, Heading } from "@chakra-ui/react";
+import {Redirect} from "react-router-dom";
 import AUTHENTICATED_USER_KEY from "../../constants/AuthConstants";
 import CustomizedCalendar from "./Calendar/CustomizedCalendar";
 import Shifts from "./Shifts";
 import NavBarVolunteer from "../common/NavBarVolunteer";
+import { INVITE_PAGE } from "../../constants/Routes";
 
 const VolunteerDashboard = (): React.ReactElement => {
   const [userInfo, setUserInfo] = useState<any>({
@@ -12,9 +14,16 @@ const VolunteerDashboard = (): React.ReactElement => {
     role: "",        
   });
 
+  
+  const [inviteShiftId, setInviteShiftId] = useState<string | null>(null);
+
   useEffect(() => {
     const userData = localStorage.getItem(AUTHENTICATED_USER_KEY);
-    
+    const shiftId = localStorage.getItem('shiftId');
+    if (shiftId) {
+      setInviteShiftId(shiftId);
+      localStorage.removeItem('shiftId');
+    }
 
     if (userData) {
       const parsedUserData = JSON.parse(userData);
@@ -23,6 +32,11 @@ const VolunteerDashboard = (): React.ReactElement => {
       setUserInfo(parsedUserData);
     }
   }, []);
+
+  if (inviteShiftId) {
+    return <Redirect to={{pathname: INVITE_PAGE, search: `?shiftId=${inviteShiftId}`}} />
+  }
+
 
   return (
     <Flex direction="column" h="100vh">

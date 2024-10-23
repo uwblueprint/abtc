@@ -33,6 +33,7 @@ import SignupEmergencyContact from "./components/auth/SignupEmergencyContact";
 import SignupSecondary from "./components/auth/SignupSecondary";
 import CustomizedCalendar from "./components/pages/Calendar/CustomizedCalendar";
 import PlatformSignupRequests from "./components/pages/PlatformSignupRequests";
+import Invite from "./components/pages/Invite";
 
 const App = (): React.ReactElement => {
   const currentUser: AuthenticatedUser = getLocalStorageObj<AuthenticatedUser>(
@@ -139,6 +140,11 @@ const App = (): React.ReactElement => {
                     exact
                     path={Routes.PLATFORM_SIGNUP_REQUESTS}
                     component={PlatformSignupRequests}
+                  />
+                  <PrivateRoute
+                    exact
+                    path={Routes.INVITE_PAGE}
+                    component={Invite}
                   />
                   <Route exact path="*" component={NotFound} />
                 </Switch>
