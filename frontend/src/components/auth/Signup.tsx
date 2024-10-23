@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { Redirect, useHistory } from "react-router-dom";
 import useMultistepForm from '../../hooks/useMultistepForm';
 import SignupMain from './SignupMain';
 import SignupSecondary from './SignupSecondary';
@@ -6,6 +7,9 @@ import { SignupFormStepComponentType, SignupRequest, SignupRequestErrors } from 
 import SignupEmergencyContact from './SignupEmergencyContact';
 import { register } from '../../APIClients/AuthAPIClient';
 import { AuthenticatedUser } from '../../types/AuthTypes';
+import AuthContext from "../../contexts/AuthContext";
+import { HOME_PAGE, VOLUNTEER_DASHBOARD_PAGE, PLATFORM_SIGNUP_REQUESTS } from "../../constants/Routes";
+
 
 const INITIAL_DATA: SignupRequest = {
   firstName: "",
@@ -17,6 +21,7 @@ const INITIAL_DATA: SignupRequest = {
   emergencyLastName: "",
   emergencyPhoneNumber: "",
 };
+
 const SignupMainErrors: Partial<SignupRequestErrors> = {};
 
 const SignupSecondaryErrors: Partial<SignupRequestErrors> = {
@@ -43,6 +48,9 @@ const Signup = (): React.ReactElement => {
   const stepExists = !!StepComponent;
   const errorsExists = !!errors;
 
+  const history = useHistory();
+  const { authenticatedUser, setAuthenticatedUser } = useContext(AuthContext);
+
   const updateFields = (fields: Partial<SignupRequest>) => {
     setData((prev: SignupRequest) => {
       return { ...prev, ...fields };
@@ -56,16 +64,31 @@ const Signup = (): React.ReactElement => {
     setSignupErrors(newSignupErrors);
   };
 
+  // eslint-disable-next-line consistent-return
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!isLastStep) return next();
-    const user: AuthenticatedUser = await register({ ...data });
-    if (user) {
-      alert("Successful sign up!");
-    } else {
+    try {
+      const user: AuthenticatedUser = await register({ ...data });
+      if (user) {
+        setAuthenticatedUser(user);
+      } else {
+        alert("There was an error in sign up");
+      }
+    } catch (error) {
+      console.error("Error during signup:", error);
       alert("There was an error in sign up");
     }
-    return true;
+  }
+
+  if (authenticatedUser) {
+    if (authenticatedUser.role === "VOLUNTEER") {
+      return <Redirect to={VOLUNTEER_DASHBOARD_PAGE} />;
+    }
+    if(authenticatedUser.role === "ADMIN"){
+      return <Redirect to={PLATFORM_SIGNUP_REQUESTS} />;
+    }
+    return <Redirect to={HOME_PAGE} />;
   }
 
   return (<>{!!stepExists && !!errorsExists &&
