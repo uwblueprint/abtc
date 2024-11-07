@@ -1,14 +1,16 @@
 import React from 'react';
 import moment from "moment";
 
-import { Button, ModalBody, ModalFooter, Box, FormControl, FormLabel, Input, Flex, Select, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, InputRightElement, InputGroup, FormHelperText, Tag, TagLabel, TagCloseButton, Wrap, WrapItem} from "@chakra-ui/react";
+import { Button, ModalBody, ModalFooter, Box, FormControl, FormLabel, Input, Flex, Select, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, InputRightElement, InputGroup, FormHelperText, Tag, TagLabel, TagCloseButton, Wrap, WrapItem, useToast} from "@chakra-ui/react";
 import { CreateShiftFormStepComponentType, CreateShiftFormStepProps, Frequency, ServiceRequestType } from '../../../types/ServiceRequestTypes';
 import { titleCase } from '../../../utils/FormatUtils';
 import EARLIEST_SHIFT_TIME from '../../../constants/ServiceRequestConstants';
+import { validateEmail } from '../../../utils/ValidationUtils'
 
 const CreateShiftMain: CreateShiftFormStepComponentType = ({ onSubmit, updateFields, updateErrorFields, data, errors }: CreateShiftFormStepProps): React.ReactElement => {
     const { requestName, shiftTime, shiftEndTime, frequency, currentEmail, inviteEmails, requestType } = data;
     const { shiftTimeError, shiftEndTimeError } = errors;
+    const toast = useToast();
 
 
     const formatDate = (date: Date) => {
@@ -84,11 +86,23 @@ const CreateShiftMain: CreateShiftFormStepComponentType = ({ onSubmit, updateFie
             updateShiftTimeErrorFields(new Date(shiftTime), endTime);
         }
     };
-    const handleAddEmail = ()=> {
+
+    const handleAddEmail = () => {
         if (currentEmail && currentEmail.trim()) {
+            const emailError = validateEmail(currentEmail);
+            if (emailError) {
+                toast({
+                    title: "Invalid Email",
+                    description: "Please enter a valid email address.",
+                    status: "error",
+                    position: 'top-right',
+                    duration: 5000,
+                    isClosable: true,
+                });
+                return; // Stop execution if email is invalid
+            }
             const updatedEmails = [...(inviteEmails || []), currentEmail.trim()];
-            updateFields({ inviteEmails: updatedEmails, currentEmail: ""});
-            console.log(updatedEmails)
+            updateFields({ inviteEmails: updatedEmails, currentEmail: "" });
         }
     };
 
@@ -97,8 +111,6 @@ const CreateShiftMain: CreateShiftFormStepComponentType = ({ onSubmit, updateFie
         updateFields({ inviteEmails: updatedEmails });
     };
     
-
-
     const isButtonDisabled =
         !requestName ||
         !shiftTime ||

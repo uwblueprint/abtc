@@ -30,6 +30,7 @@ import { GoHome } from "react-icons/go";
 import { LuNavigation } from "react-icons/lu";
 import { FiPhone } from "react-icons/fi";
 import abtc_logo from '../../images/abtc_logo.png';
+import CreateShiftMain from '../pages/CreateShift/CreateShiftMain';
 
 interface NavBarVolunteerProps {
   firstName: string;
@@ -41,21 +42,10 @@ const NavBarVolunteer: React.FC<NavBarVolunteerProps> = ({firstName, lastName, r
   const location = useLocation();
   const toast = useToast();
 
-  const showToast = () => {
-    toast({
-      title: "Toast Title",
-      description: "This is a test toast message.",
-      status: "success",
-      position: 'top-right',
-      duration: 5000,
-      isClosable: true,
-    });
-  }
-
   return (
     <Flex bg="white" p={4} alignItems="center">
       <Box ml={4}>
-      <Image src={abtc_logo} alt="ABTC Logo" maxWidth="180px" height="auto"/>
+        <Image src={abtc_logo} alt="ABTC Logo" maxWidth="180px" height="auto"/>
       </Box >
       <ChakraLink
         as={ReactRouterLink}
@@ -112,9 +102,9 @@ const NavBarVolunteer: React.FC<NavBarVolunteerProps> = ({firstName, lastName, r
           Contact Us
         </Flex>
       </ChakraLink>
-      <button type="button" className="btn btn-primary" onClick={showToast}>
+      {/* <button type="button" className="btn btn-primary" onClick={() => showToast("test@example.com")}>
         Test Toast
-      </button>
+      </button> */}
       <Spacer />
        {/*  TODO: add logic behind notification button */}
       <ChakraLink
