@@ -10,7 +10,17 @@ import {
   Image,
   Spacer,
   Avatar,
+  Button,
   Icon,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverHeader,
+  PopoverBody,
+  PopoverFooter,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverAnchor
 } from '@chakra-ui/react';
 import { Link as ReactRouterLink, useLocation } from 'react-router-dom';
 import { BsPerson } from 'react-icons/bs';
@@ -19,7 +29,13 @@ import { PiBell } from "react-icons/pi";
 import { GoHome } from "react-icons/go";
 import abtc_logo from '../../images/abtc_logo.png';
 
-const NavBarAdmin: React.FC = () => {
+interface NavBarAdminProps {
+  firstName: string;
+  lastName: string;
+  role: string;
+}
+
+const NavBarAdmin: React.FC<NavBarAdminProps> = ({firstName, lastName, role}) => {
   const location = useLocation();
 
   return (
@@ -96,50 +112,21 @@ const NavBarAdmin: React.FC = () => {
         color="#444750"
         fontWeight="500"
         _hover={{ color: "black", textDecoration: "none" }}
+        paddingRight={4}
       >
         <Icon as={PiBell} boxSize={6} />
       </ChakraLink>
-      <Box ml={6} mr={2}>
-        <ChakraLink as={ReactRouterLink} to="/user-profile" fontWeight="bold" lineHeight="1.5">
-          <Avatar size="md" name="User" src="https://placehold.co/25x25" />
-        </ChakraLink>
-      </Box>
+      
       <Box>
-        <Menu>
-          <MenuButton
-            as={Box}
-            color="#444750"
-            fontWeight="500"
-            _hover={{ color: "black", textDecoration: "none" }}
-          >
-            <Flex align="center">
-              <Box ml={2}>
-                Name-First-Last
-              </Box>
-              <Icon as={RxChevronDown} boxSize={6} ml={2} mr={2}/>
-            </Flex>
-          </MenuButton>
-          <MenuList bg="white" border="none" minW="auto" w="auto">
-            <MenuItem
-              as={ReactRouterLink}
-              to="/profile/placeholder"
-              color="#444750"
-              fontWeight="500"
-              _hover={{ color: "black", textDecoration: "none" }}
-            >
-              Placeholder
-            </MenuItem>
-            <MenuItem
-              as={ReactRouterLink}
-              to="/profile/placeholder1"
-              color="#444750"
-              fontWeight="500"
-              _hover={{ color: "black", textDecoration: "none" }}
-            >
-              Placeholder 2
-            </MenuItem>
-          </MenuList>
-        </Menu>
+        <Popover trigger="hover" placement="bottom-end">
+          <PopoverTrigger>
+            <Avatar size="md" name="User" src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSNfBG0r9nBON7QsYexKnLDtTnn4bjfuWZyDndX4OuZPwJTtPUA" />
+          </PopoverTrigger>
+          <PopoverContent maxW="200px">
+            <PopoverHeader>{firstName} {lastName}</PopoverHeader>
+            <PopoverBody>Role: {role}</PopoverBody>
+          </PopoverContent>
+        </Popover>
       </Box>
     </Flex>
   );
