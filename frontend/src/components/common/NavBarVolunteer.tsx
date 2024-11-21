@@ -102,9 +102,6 @@ const NavBarVolunteer: React.FC<NavBarVolunteerProps> = ({firstName, lastName, r
           Contact Us
         </Flex>
       </ChakraLink>
-      {/* <button type="button" className="btn btn-primary" onClick={() => showToast("test@example.com")}>
-        Test Toast
-      </button> */}
       <Spacer />
        {/*  TODO: add logic behind notification button */}
       <ChakraLink

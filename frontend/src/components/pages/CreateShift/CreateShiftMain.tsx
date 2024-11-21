@@ -6,6 +6,7 @@ import { CreateShiftFormStepComponentType, CreateShiftFormStepProps, Frequency, 
 import { titleCase } from '../../../utils/FormatUtils';
 import EARLIEST_SHIFT_TIME from '../../../constants/ServiceRequestConstants';
 import { validateEmail } from '../../../utils/ValidationUtils'
+import ServiceRequestAPIClient from "../../../APIClients/ServiceRequestAPIClient";
 
 const CreateShiftMain: CreateShiftFormStepComponentType = ({ onSubmit, updateFields, updateErrorFields, data, errors }: CreateShiftFormStepProps): React.ReactElement => {
     const { requestName, shiftTime, shiftEndTime, frequency, currentEmail, inviteEmails, requestType } = data;
@@ -87,24 +88,49 @@ const CreateShiftMain: CreateShiftFormStepComponentType = ({ onSubmit, updateFie
         }
     };
 
-    const handleAddEmail = () => {
+    const handleAddEmail = async () => {
         if (currentEmail && currentEmail.trim()) {
-            const emailError = validateEmail(currentEmail);
-            if (emailError) {
-                toast({
-                    title: "Invalid Email",
-                    description: "Please enter a valid email address.",
-                    status: "error",
-                    position: 'top-right',
-                    duration: 5000,
-                    isClosable: true,
-                });
-                return; // Stop execution if email is invalid
+          const emailError = validateEmail(currentEmail);
+          if (emailError) {
+            toast({
+              title: "Invalid Email",
+              description: "Please enter a valid email address.",
+              status: "error",
+              position: 'top-right',
+              duration: 5000,
+              isClosable: true,
+            });
+            return;
+          }
+    
+          try {
+            // Use the API client to get user by email
+            const user = await ServiceRequestAPIClient.getUserByEmail(currentEmail.trim());
+    
+            if (user) {
+              // If user exists, display their name
+              const displayName = `${user.firstName} ${user.lastName}`;
+              const updatedEmails = [...(inviteEmails || []), displayName];
+              updateFields({ inviteEmails: updatedEmails, currentEmail: "" });
+            } else {
+              // If user doesn't exist, add the email as-is
+              const updatedEmails = [...(inviteEmails || []), currentEmail.trim()];
+              updateFields({ inviteEmails: updatedEmails, currentEmail: "" });
             }
-            const updatedEmails = [...(inviteEmails || []), currentEmail.trim()];
-            updateFields({ inviteEmails: updatedEmails, currentEmail: "" });
+          } catch (error) {
+            console.error("Error fetching user by email:", error);
+            toast({
+              title: "Error",
+              description: "Unable to verify email at this time. Please try again later.",
+              status: "error",
+              position: 'top-right',
+              duration: 5000,
+              isClosable: true,
+            });
+          }
         }
-    };
+      };
+    
 
     const handleRemoveEmail = (index: number) => {
         const updatedEmails = (inviteEmails || []).filter((_, i) => i !== index);

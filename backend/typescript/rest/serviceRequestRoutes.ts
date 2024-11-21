@@ -160,4 +160,27 @@ serviceRequestRouter.delete("/delete/:id", isAuthorizedByRole(new Set(["ADMIN", 
   }
 });
 
+/* Get user by email - this is for displaying first/last name for email invitation*/
+serviceRequestRouter.get("/user-by-email", isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])), async (req, res) => {
+  console.log("HIHIHI")
+  const { email } = req.query;
+
+  if (!email || typeof email !== "string") {
+    return res.status(400).json({ error: "A valid email query parameter is required." });
+  }
+
+  try {
+    const user = await userService.getUserByEmail(email.trim());
+    if (user) {
+      res.status(200).json({ firstName: user.firstName, lastName: user.lastName });
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  } catch (error: unknown) {
+    res.status(500).json({ error: getErrorMessage(error) });
+  }
+});
+
+
+
 export default serviceRequestRouter;

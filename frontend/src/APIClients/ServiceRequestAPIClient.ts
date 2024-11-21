@@ -77,4 +77,27 @@ const post = async ({
   }
 };
 
-export default { get, getPlatformSignups, post };
+const getUserByEmail = async (email: string): Promise<{ firstName: string; lastName: string } | null> => {
+  const bearerToken = `Bearer ${getLocalStorageObjProperty(
+    AUTHENTICATED_USER_KEY,
+    "accessToken",
+  )}`;
+  try {
+    console.log(`/user-by-email?email=${encodeURIComponent(email)}`)
+    const { data } = await baseAPIClient.get(`/serviceRequests/user-by-email?email=testpost@gmail.com}`, {
+      headers: { Authorization: bearerToken },
+    });
+    console.log("check")
+    return data; // { firstName: string; lastName: string }
+  } catch (error: any) {
+    if (error.response?.status === 404) {
+      console.warn("User not found for email:", email);
+      return null;
+    }
+    console.error("Error fetching user by email:", error);
+    throw error;
+  }
+};
+
+
+export default { get, getPlatformSignups, post, getUserByEmail };
