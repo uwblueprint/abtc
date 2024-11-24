@@ -84,17 +84,16 @@ const getUserByEmail = async (email: string): Promise<{ firstName: string; lastN
   )}`;
   try {
     console.log(`/user-by-email?email=${encodeURIComponent(email)}`)
-    const { data } = await baseAPIClient.get(`/serviceRequests/user-by-email?email=testpost@gmail.com}`, {
+    const { data } = await baseAPIClient.get(`/serviceRequests/user-by-email?email=${encodeURIComponent(String(email))}`, {
       headers: { Authorization: bearerToken },
     });
-    console.log("check")
     return data; // { firstName: string; lastName: string }
   } catch (error: any) {
     if (error.response?.status === 404) {
       console.warn("User not found for email:", email);
       return null;
     }
-    console.error("Error fetching user by email:", error);
+    // console.error("Error fetching user by email:", error);
     throw error;
   }
 };

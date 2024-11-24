@@ -72,6 +72,7 @@ class UserService implements IUserService {
         throw new Error(`userId with authId ${firebaseUser.uid} not found.`);
       }
     } catch (error: unknown) {
+      console.log("CATCH ERROR")
       Logger.error(`Failed to get user. Reason = ${getErrorMessage(error)}`);
       throw error;
     }

@@ -162,7 +162,6 @@ serviceRequestRouter.delete("/delete/:id", isAuthorizedByRole(new Set(["ADMIN", 
 
 /* Get user by email - this is for displaying first/last name for email invitation*/
 serviceRequestRouter.get("/user-by-email", isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])), async (req, res) => {
-  console.log("HIHIHI")
   const { email } = req.query;
 
   if (!email || typeof email !== "string") {
@@ -177,7 +176,7 @@ serviceRequestRouter.get("/user-by-email", isAuthorizedByRole(new Set(["ADMIN", 
       res.status(404).json({ message: "User not found" });
     }
   } catch (error: unknown) {
-    res.status(500).json({ error: getErrorMessage(error) });
+    res.status(404).json({ error: getErrorMessage(error) });
   }
 });
 
