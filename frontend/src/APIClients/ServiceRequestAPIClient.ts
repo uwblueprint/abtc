@@ -18,22 +18,6 @@ const get = async (): Promise<ServiceRequest[]> => {
   }
 };
 
-const getPlatformSignups = async (): Promise<any[]> => {
-  const bearerToken = `Bearer ${getLocalStorageObjProperty(
-    AUTHENTICATED_USER_KEY,
-    "accessToken",
-  )}`;
-  try {
-    const { data } = await baseAPIClient.get("/platformsignups", {
-      headers: { Authorization: bearerToken },
-    });
-    return data;
-  } catch (error: any) {
-    console.error("Error fetching platform signups:", error);
-    throw error;
-  }
-};
-
 const post = async ({
   requestName,
   requesterId,
@@ -77,4 +61,4 @@ const post = async ({
   }
 };
 
-export default { get, getPlatformSignups, post };
+export default { get, post };

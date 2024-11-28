@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { Status } from "@prisma/client";
 
 import { isAuthorizedByRole } from "../middlewares/auth";
 import {
@@ -120,6 +121,27 @@ userRouter.put("/:userId", updateUserDtoValidator,isAuthorizedByRole(new Set(["A
       role: req.body.role,
     });
     res.status(200).json(updatedUser);
+  } catch (error: unknown) {
+    res.status(500).json({ error: getErrorMessage(error) });
+  }
+});
+
+
+userRouter.get("/accept",isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])), async (req, res) => {
+  try {
+    const { email } = req.query;
+    if (email){
+      if (typeof email !== "string") {
+        res.status(400).json({ error: "email query parameter must be a string." });
+      } else {
+        const user = await userService.getUserByEmail(email);
+        const userId = user.id
+        const updatedUser = await userService.acceptUserById(userId);
+        res.status(200).json(updatedUser);
+      }
+    } else{
+      res.status(400).json({ error: "Must supply email as query parameter." });
+    }
   } catch (error: unknown) {
     res.status(500).json({ error: getErrorMessage(error) });
   }

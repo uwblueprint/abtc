@@ -79,6 +79,13 @@ interface IUserService {
   updateUserById(userId: string, user: UpdateUserDTO): Promise<UserDTO>;
 
   /**
+   * Accept a user who is currently in 'PENDING'
+   * @param userId user's id
+   * @throws Error if user update fails
+   */
+  acceptUserById(userId: string): Promise<void>;
+
+  /**
    * Delete a user by id
    * @param userId user's userId
    * @throws Error if user deletion fails
