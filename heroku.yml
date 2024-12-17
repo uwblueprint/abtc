@@ -1,0 +1,7 @@
+build:
+  docker:
+    frontend: frontend/Dockerfile
+    backend: backend/typescript/Dockerfile
+run:
+  frontend: yarn start
+  backend: yarn dev
