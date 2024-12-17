@@ -1,5 +1,3 @@
 build:
   docker:
-    frontend: ./frontend/Dockerfile
-    backend: ./backend/typescript/Dockerfile
-    
+    web: ./frontend/Dockerfile
