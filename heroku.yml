@@ -1,5 +1,5 @@
 build:
   docker:
-    frontend: frontend/Dockerfile
-run:
-  frontend: yarn start
+    frontend: ./frontend/Dockerfile
+    backend: ./backend/typescript/Dockerfile
+    
