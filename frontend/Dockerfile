@@ -7,5 +7,5 @@ RUN yarn install
 
 COPY . ./
 
-EXPOSE process.env.PORT || 3000
+EXPOSE $PORT
 ENTRYPOINT ["yarn", "start"]
