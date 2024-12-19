@@ -8,4 +8,6 @@ RUN yarn install
 COPY . ./
 
 EXPOSE $PORT
-ENTRYPOINT ["yarn", "start"]
+
+# Limit Node.js memory to 512MB
+ENTRYPOINT ["node", "--max-old-space-size=512", "node_modules/.bin/yarn", "start"]
