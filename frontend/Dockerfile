@@ -7,6 +7,10 @@ RUN yarn install
 
 COPY . ./
 
-EXPOSE 8080
+RUN yarn run build
 
-CMD ["yarn", "start"]
+EXPOSE $PORT
+
+CMD ["yarn", "global", "add", "serve"]
+CMD ["serve", "-s", "build"]
+
