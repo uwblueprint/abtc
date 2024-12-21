@@ -13,6 +13,7 @@ import {
     Badge,
     IconButton,
     Icon,
+    Input
 } from '@chakra-ui/react';
 import { FaCheck, FaXmark, FaSistrix, FaArrowsRotate, FaBars, FaAngleRight, FaAngleLeft } from "react-icons/fa6";
 
@@ -47,6 +48,11 @@ const PlatformSignupRequests = (): React.ReactElement => {
     const [checkedItems, setCheckedItems] = useState<boolean[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const itemsPerPage = 999;
+
+    const [searchFilter, setSearchFilter] = useState<string>('');
+    const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchFilter(event.target.value)
+    };
 
     useEffect(() => {
         setCheckedItems(new Array(userInfo.length).fill(false));
@@ -109,7 +115,7 @@ const PlatformSignupRequests = (): React.ReactElement => {
             <NavBarAdmin />
             <Text mt="10" fontSize='2xl'>Manage Accounts</Text>
 
-            <TableContainer mt='5' border='1px' borderColor='gray.200' borderRadius='20'>
+            <TableContainer mt='5' mb = "10" border='1px' borderColor='gray.200' borderRadius='20'>
                 <Table variant='simple'>
                     <Thead>
                     <Tr mt='3'>
@@ -150,8 +156,13 @@ const PlatformSignupRequests = (): React.ReactElement => {
                                     variant='ghost'
                                     onClick={handleFilterClick}
                                 />
+                                <Input 
+                                    placeholder='Search for a user' 
+                                    size='sm' 
+                                    onChange={handleSearch}
+                                    borderRadius="md"
+                                />
                             </Th>
-                            <Th> </Th>
                             <Th> </Th>
                             <Th> </Th>
                             <Th>
@@ -180,7 +191,7 @@ const PlatformSignupRequests = (): React.ReactElement => {
                         </Tr>
                     </Thead>
                     <Tbody>
-                        {currentItems.map((user, index) => (
+                        {currentItems.filter((user) => (`${user.firstName.toLowerCase()} ${user.lastName.toLowerCase()}`).includes(searchFilter.toLowerCase())).map((user, index) => (
                             <Tr key={user.id}>
                                 <Td>
                                     <Checkbox
@@ -192,7 +203,7 @@ const PlatformSignupRequests = (): React.ReactElement => {
                                 <Td>{user.firstName} {user.lastName}</Td>
                                 <Td>{user.email}</Td>
                                 <Td>{user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}</Td>
-                                <Td>
+                                <Td display="flex" justifyContent="center">
                                     <Badge
                                         bg={getBadgeBg(user.status)}
                                         color={getBadgeColor(user.status)}
