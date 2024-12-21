@@ -1,0 +1,5 @@
+build:
+  docker:
+    web: ./backend/typescript/Dockerfile
+run:
+  web: docker run -p $PORT:$PORT backend
