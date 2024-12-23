@@ -17,7 +17,8 @@ import {
 import { FaCheck, FaXmark, FaSistrix, FaArrowsRotate, FaBars, FaAngleRight, FaAngleLeft } from "react-icons/fa6";
 
 import NavBarAdmin from "../common/NavBarAdmin";
-import ServiceRequestAPIClient from "../../APIClients/ServiceRequestAPIClient";
+import SignupRequestAPIClient from "../../APIClients/SignupRequestAPIClient";
+import UserAPIClient from "../../APIClients/UserAPIClient";
 
 interface UserInfo {
     id: string;
@@ -34,7 +35,7 @@ const PlatformSignupRequests = (): React.ReactElement => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await ServiceRequestAPIClient.getPlatformSignups();
+                const response = await SignupRequestAPIClient.getPlatformSignups();
                 setUserInfo(response);
             } catch (error) {
                 console.error("Error fetching platform signups:", error);
@@ -76,10 +77,20 @@ const PlatformSignupRequests = (): React.ReactElement => {
     };
 
     const handleApproveClick = () => {
+        checkedItems.forEach((checkedItem, index) => {
+            if (checkedItem){
+                console.log(userInfo[index]);
+                console.log(userInfo[index].id);
+                console.log(userInfo[index].email);
+                SignupRequestAPIClient.deletePlatformSignup(userInfo[index].id);
+                UserAPIClient.acceptUserByEmail(userInfo[index].email);
+            }
+        })
         console.log("Approve icon clicked");
     };
 
     const handleRejectClick = () => {
+        // reject logic to be determined
         console.log("Reject icon clicked");
     };
 
