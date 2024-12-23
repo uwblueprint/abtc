@@ -15,11 +15,12 @@ import {
     Icon,
 } from '@chakra-ui/react';
 import { FaCheck, FaXmark, FaSistrix, FaArrowsRotate, FaBars, FaAngleRight, FaAngleLeft } from "react-icons/fa6";
+import AUTHENTICATED_USER_KEY from "../../constants/AuthConstants";
 
 import NavBarAdmin from "../common/NavBarAdmin";
 import ServiceRequestAPIClient from "../../APIClients/ServiceRequestAPIClient";
 
-interface UserInfo {
+interface PlatformSignupRequestsUser {
     id: string;
     email: string;
     firstName: string;
@@ -29,13 +30,27 @@ interface UserInfo {
 }
 
 const PlatformSignupRequests = (): React.ReactElement => {
-    const [userInfo, setUserInfo] = useState<UserInfo[]>([]);
+    const [platformSignupRequestUsers, setPlatformSignupRequestUsers] = useState<PlatformSignupRequestsUser[]>([]);
+    const [userInfo, setUserInfo] = useState<any>({
+        firstName: "",   
+        lastName: "",    
+        role: "",        
+      });
 
     useEffect(() => {
+        const userData = localStorage.getItem(AUTHENTICATED_USER_KEY);
+    
+        if (userData) {
+            const parsedUserData = JSON.parse(userData);
+            console.log(parsedUserData); // Remove this later
+    
+            setUserInfo(parsedUserData);
+        }
+
         const fetchData = async () => {
             try {
                 const response = await ServiceRequestAPIClient.getPlatformSignups();
-                setUserInfo(response);
+                setPlatformSignupRequestUsers(response);
             } catch (error) {
                 console.error("Error fetching platform signups:", error);
             }
@@ -49,13 +64,13 @@ const PlatformSignupRequests = (): React.ReactElement => {
     const itemsPerPage = 999;
 
     useEffect(() => {
-        setCheckedItems(new Array(userInfo.length).fill(false));
-    }, [userInfo]);
+        setCheckedItems(new Array(platformSignupRequestUsers.length).fill(false));
+    }, [platformSignupRequestUsers]);
 
     const handleSelectAllChange = () => {
         const newSelectAll = !selectAll;
         setSelectAll(newSelectAll);
-        setCheckedItems(new Array(userInfo.length).fill(newSelectAll));
+        setCheckedItems(new Array(platformSignupRequestUsers.length).fill(newSelectAll));
     };
 
     const handleCheckboxChange = (index: number) => {
@@ -99,14 +114,14 @@ const PlatformSignupRequests = (): React.ReactElement => {
         setCurrentPage(page);
     };
 
-    const totalPages = Math.ceil(userInfo.length / itemsPerPage);
-    const currentItems = userInfo.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+    const totalPages = Math.ceil(platformSignupRequestUsers.length / itemsPerPage);
+    const currentItems = platformSignupRequestUsers.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
     const itemCountStart = (currentPage - 1) * itemsPerPage + 1;
-    const itemCountEnd = Math.min(currentPage * itemsPerPage, userInfo.length);
+    const itemCountEnd = Math.min(currentPage * itemsPerPage, platformSignupRequestUsers.length);
 
     return (
         <Flex direction="column" h="100vh" ml="20" mr="20">
-            <NavBarAdmin />
+            <NavBarAdmin firstName={userInfo.firstName} lastName={userInfo.lastName} role={userInfo.role}/>
             <Text mt="10" fontSize='2xl'>Manage Accounts</Text>
 
             <TableContainer mt='5' border='1px' borderColor='gray.200' borderRadius='20'>
@@ -157,7 +172,7 @@ const PlatformSignupRequests = (): React.ReactElement => {
                             <Th>
                                 <Flex justifyContent="space-between" alignItems="center">
                                     <Flex alignItems="center">
-                                        <Text>{itemCountStart}-{itemCountEnd} of {userInfo.length}</Text>
+                                        <Text>{itemCountStart}-{itemCountEnd} of {platformSignupRequestUsers.length}</Text>
                                         <IconButton
                                             aria-label="Previous Page"
                                             size="sm"
