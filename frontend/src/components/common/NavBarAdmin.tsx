@@ -29,7 +29,7 @@ const NavBarAdmin: React.FC = () => {
       </Box >
       <ChakraLink
         as={ReactRouterLink}
-        to="/"
+        to="/volunteer-dashboard"
         color={location.pathname === '/' ? '#3F3575' : "#444750"}
         fontWeight='500'
         _hover={{ color: "black", textDecoration: "none" }}

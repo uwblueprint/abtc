@@ -3,34 +3,23 @@ import {
   Box,
   Flex,
   Link as ChakraLink,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
   Image,
   Spacer,
   Avatar,
-  Button,
   Icon,
   Popover,
   PopoverTrigger,
   PopoverContent,
   PopoverHeader,
   PopoverBody,
-  PopoverFooter,
-  PopoverArrow,
-  PopoverCloseButton,
-  PopoverAnchor,
   useToast
 } from '@chakra-ui/react';
 import { Link as ReactRouterLink, useLocation } from 'react-router-dom';
-import { RxChevronDown } from "react-icons/rx";
 import { PiBell } from "react-icons/pi";
 import { GoHome } from "react-icons/go";
 import { LuNavigation } from "react-icons/lu";
 import { FiPhone } from "react-icons/fi";
 import abtc_logo from '../../images/abtc_logo.png';
-import CreateShiftMain from '../pages/CreateShift/CreateShiftMain';
 
 interface NavBarVolunteerProps {
   firstName: string;
@@ -49,7 +38,7 @@ const NavBarVolunteer: React.FC<NavBarVolunteerProps> = ({firstName, lastName, r
       </Box >
       <ChakraLink
         as={ReactRouterLink}
-        to="/"
+        to="/volunteer-dashboard"
         color={location.pathname === '/' ? '#3F3575' : "#444750"}
         fontWeight='500'
         _hover={{ color: "black", textDecoration: "none" }}
@@ -102,9 +91,6 @@ const NavBarVolunteer: React.FC<NavBarVolunteerProps> = ({firstName, lastName, r
           Contact Us
         </Flex>
       </ChakraLink>
-      {/* <button type="button" className="btn btn-primary" onClick={() => showToast("test@example.com")}>
-        Test Toast
-      </button> */}
       <Spacer />
        {/*  TODO: add logic behind notification button */}
       <ChakraLink
@@ -119,12 +105,25 @@ const NavBarVolunteer: React.FC<NavBarVolunteerProps> = ({firstName, lastName, r
       </ChakraLink>
       <Box>
         <Popover trigger="hover" placement="bottom-end">
-              <PopoverTrigger>
-                <Avatar size="md" name="User" src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSNfBG0r9nBON7QsYexKnLDtTnn4bjfuWZyDndX4OuZPwJTtPUA" />
-              </PopoverTrigger>
+                <PopoverTrigger>
+                <Box
+                  width="40px"
+                  height="40px"
+                  borderRadius="50%"
+                  backgroundColor="gray.200"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  fontWeight="bold"
+                  color="black"
+                >
+                  {firstName?.charAt(0)}{lastName?.charAt(0)}
+                </Box>
+                </PopoverTrigger>
               <PopoverContent maxW="200px">
                 <PopoverHeader>{firstName} {lastName}</PopoverHeader>
                 <PopoverBody>Role: {role}</PopoverBody>
+                <PopoverBody _hover={{ backgroundColor: "gray.200" }} style={{color: "red"}}>Logout </PopoverBody>
               </PopoverContent>
             </Popover>
       </Box>
