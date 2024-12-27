@@ -3,9 +3,10 @@ import moment from "moment";
 
 import { Button, ModalBody, ModalFooter, Box, FormControl, FormLabel, Input, Flex, Select, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, InputRightElement, InputGroup, FormHelperText, Tag, TagLabel, TagCloseButton, Wrap, WrapItem, useToast} from "@chakra-ui/react";
 import { CreateShiftFormStepComponentType, CreateShiftFormStepProps, Frequency, ServiceRequestType } from '../../../types/ServiceRequestTypes';
-import { titleCase } from '../../../utils/FormatUtils';
+import { capitalizeName, titleCase } from '../../../utils/FormatUtils';
 import EARLIEST_SHIFT_TIME from '../../../constants/ServiceRequestConstants';
 import { validateEmail } from '../../../utils/ValidationUtils'
+import ServiceRequestAPIClient from "../../../APIClients/ServiceRequestAPIClient";
 
 const CreateShiftMain: CreateShiftFormStepComponentType = ({ onSubmit, updateFields, updateErrorFields, data, errors }: CreateShiftFormStepProps): React.ReactElement => {
     const { requestName, shiftTime, shiftEndTime, frequency, currentEmail, inviteEmails, requestType } = data;
@@ -87,7 +88,7 @@ const CreateShiftMain: CreateShiftFormStepComponentType = ({ onSubmit, updateFie
         }
     };
 
-    const handleAddEmail = () => {
+    const handleAddEmail = async () => {
         if (currentEmail && currentEmail.trim()) {
             const emailError = validateEmail(currentEmail);
             if (emailError) {
@@ -99,12 +100,34 @@ const CreateShiftMain: CreateShiftFormStepComponentType = ({ onSubmit, updateFie
                     duration: 5000,
                     isClosable: true,
                 });
-                return; // Stop execution if email is invalid
+                return;
             }
-            const updatedEmails = [...(inviteEmails || []), currentEmail.trim()];
-            updateFields({ inviteEmails: updatedEmails, currentEmail: "" });
+    
+            try {
+                const user = await ServiceRequestAPIClient.getUserByEmail(currentEmail.trim());
+    
+                if (user) {
+                    // If user exists in the database, add their full name
+                    const displayName = capitalizeName(`${user.firstName} ${user.lastName}`);
+                    const updatedEmails = [...(inviteEmails || []), displayName];
+                    updateFields({ inviteEmails: updatedEmails, currentEmail: "" });
+                } else {
+                    // If user doesn't exist, add the email as-is (this part doesn't work right now so I put the logic in the catch block)
+                    const updatedEmails = [...(inviteEmails || []), currentEmail.trim()];
+                    updateFields({ inviteEmails: updatedEmails, currentEmail: "" });
+                }
+            } catch (error) {
+                console.error("User not Found:", error);
+                // Add the email if there's an error
+                const updatedEmails = [...(inviteEmails || []), currentEmail.trim()];
+                updateFields({ inviteEmails: updatedEmails, currentEmail: "" });
+            }
+            console.log(inviteEmails);
         }
     };
+    
+      
+    
 
     const handleRemoveEmail = (index: number) => {
         const updatedEmails = (inviteEmails || []).filter((_, i) => i !== index);
