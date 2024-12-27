@@ -1,10 +1,30 @@
 import React, { useContext, useState, useEffect } from "react";
-import { Redirect, useHistory, Link as ReactRouterLink } from "react-router-dom";
-import { Box, Heading, FormControl, Text, Input, Flex, FormLabel, Center, Link, Button } from "@chakra-ui/react";
+import {
+  Redirect,
+  useHistory,
+  Link as ReactRouterLink,
+} from "react-router-dom";
+import {
+  Box,
+  Heading,
+  FormControl,
+  Text,
+  Input,
+  Flex,
+  FormLabel,
+  Center,
+  Link,
+  Button,
+} from "@chakra-ui/react";
 
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import authAPIClient from "../../APIClients/AuthAPIClient";
-import { HOME_PAGE, SIGNUP_PAGE, VOLUNTEER_DASHBOARD_PAGE, PLATFORM_SIGNUP_REQUESTS } from "../../constants/Routes";
+import {
+  HOME_PAGE,
+  SIGNUP_PAGE,
+  VOLUNTEER_DASHBOARD_PAGE,
+  PLATFORM_SIGNUP_REQUESTS,
+} from "../../constants/Routes";
 import AuthContext from "../../contexts/AuthContext";
 import { AuthenticatedUser } from "../../types/AuthTypes";
 
@@ -44,7 +64,7 @@ const Login = (): React.ReactElement => {
     if (authenticatedUser.role === "VOLUNTEER") {
       return <Redirect to={VOLUNTEER_DASHBOARD_PAGE} />;
     }
-    if(authenticatedUser.role === "ADMIN"){
+    if (authenticatedUser.role === "ADMIN") {
       return <Redirect to={PLATFORM_SIGNUP_REQUESTS} />;
     }
     return <Redirect to={HOME_PAGE} />;
