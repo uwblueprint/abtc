@@ -17,32 +17,32 @@ import {
 } from '@chakra-ui/react';
 import { FaCheck, FaXmark, FaSistrix, FaArrowsRotate, FaBars, FaAngleRight, FaAngleLeft } from "react-icons/fa6";
 
-import NavBarAdmin from "../common/NavBarAdmin";
+import NavBar from "../common/NavBar";
 import ServiceRequestAPIClient from "../../APIClients/ServiceRequestAPIClient";
 
 interface UserInfo {
-    id: string;
-    email: string;
-    firstName: string;
-    lastName: string;
-    status: string;
-    createdAt: string | null;
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  status: string;
+  createdAt: string | null;
 }
 
 const PlatformSignupRequests = (): React.ReactElement => {
-    const [userInfo, setUserInfo] = useState<UserInfo[]>([]);
+  const [userInfo, setUserInfo] = useState<UserInfo[]>([]);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await ServiceRequestAPIClient.getPlatformSignups();
-                setUserInfo(response);
-            } catch (error) {
-                console.error("Error fetching platform signups:", error);
-            }
-        };
-        fetchData();
-    }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await ServiceRequestAPIClient.getPlatformSignups();
+        setUserInfo(response);
+      } catch (error) {
+        console.error("Error fetching platform signups:", error);
+      }
+    };
+    fetchData();
+  }, []);
 
     const [selectAll, setSelectAll] = useState<boolean>(false);
     const [checkedItems, setCheckedItems] = useState<boolean[]>([]);
@@ -54,66 +54,75 @@ const PlatformSignupRequests = (): React.ReactElement => {
         setSearchFilter(event.target.value)
     };
 
-    useEffect(() => {
-        setCheckedItems(new Array(userInfo.length).fill(false));
-    }, [userInfo]);
+  useEffect(() => {
+    setCheckedItems(new Array(userInfo.length).fill(false));
+  }, [userInfo]);
 
-    const handleSelectAllChange = () => {
-        const newSelectAll = !selectAll;
-        setSelectAll(newSelectAll);
-        setCheckedItems(new Array(userInfo.length).fill(newSelectAll));
-    };
+  const handleSelectAllChange = () => {
+    const newSelectAll = !selectAll;
+    setSelectAll(newSelectAll);
+    setCheckedItems(new Array(userInfo.length).fill(newSelectAll));
+  };
 
-    const handleCheckboxChange = (index: number) => {
-        const newCheckedItems = [...checkedItems];
-        newCheckedItems[index] = !newCheckedItems[index];
-        setCheckedItems(newCheckedItems);
-        setSelectAll(newCheckedItems.every(item => item));
-    };
+  const handleCheckboxChange = (index: number) => {
+    const newCheckedItems = [...checkedItems];
+    newCheckedItems[index] = !newCheckedItems[index];
+    setCheckedItems(newCheckedItems);
+    setSelectAll(newCheckedItems.every((item) => item));
+  };
 
-    const getBadgeBg = (status: string): string => {
-        if (status === "PENDING") return '#DACFFB';
-        return 'gray.200';
-    };
+  const getBadgeBg = (status: string): string => {
+    if (status === "PENDING") return "#DACFFB";
+    return "gray.200";
+  };
 
-    const getBadgeColor = (status: string): string => {
-        if (status === "PENDING") return "#230282";
-        return 'black';
-    };
+  const getBadgeColor = (status: string): string => {
+    if (status === "PENDING") return "#230282";
+    return "black";
+  };
 
-    const handleApproveClick = () => {
-        console.log("Approve icon clicked");
-    };
+  const handleApproveClick = () => {
+    console.log("Approve icon clicked");
+  };
 
-    const handleRejectClick = () => {
-        console.log("Reject icon clicked");
-    };
+  const handleRejectClick = () => {
+    console.log("Reject icon clicked");
+  };
 
-    const handleSearchClick = () => {
-        console.log("Search icon clicked");
-    };
+  const handleSearchClick = () => {
+    console.log("Search icon clicked");
+  };
 
-    const handleRefreshClick = () => {
-        console.log("Refresh icon clicked");
-    };
+  const handleRefreshClick = () => {
+    console.log("Refresh icon clicked");
+  };
 
-    const handleFilterClick = () => {
-        console.log("Filter icon clicked");
-    };
+  const handleFilterClick = () => {
+    console.log("Filter icon clicked");
+  };
 
-    const handlePageChange = (page: number) => {
-        setCurrentPage(page);
-    };
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
-    const totalPages = Math.ceil(userInfo.length / itemsPerPage);
-    const currentItems = userInfo.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-    const itemCountStart = (currentPage - 1) * itemsPerPage + 1;
-    const itemCountEnd = Math.min(currentPage * itemsPerPage, userInfo.length);
+  const totalPages = Math.ceil(userInfo.length / itemsPerPage);
+  const currentItems = userInfo.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage,
+  );
+  const itemCountStart = (currentPage - 1) * itemsPerPage + 1;
+  const itemCountEnd = Math.min(currentPage * itemsPerPage, userInfo.length);
 
-    return (
-        <Flex direction="column" h="100vh" ml="20" mr="20">
-            <NavBarAdmin />
-            <Text mt="10" fontSize='2xl'>Manage Accounts</Text>
+  return (
+    <Flex direction="column" h="100vh" ml="20" mr="20">
+      {/* <NavBar
+        firstName={userInfo[0].firstName}
+        lastName={userInfo[0].lastName}
+        role={userInfo[0].role}
+      /> */}
+      <Text mt="10" fontSize="2xl">
+        Manage Accounts
+      </Text>
 
             <TableContainer mt='5' mb = "10" border='1px' borderColor='gray.200' borderRadius='20'>
                 <Table variant='simple'>

@@ -1,14 +1,16 @@
 import React from 'react';
 import moment from "moment";
 
-import { Button, ModalBody, ModalFooter, Box, FormControl, FormLabel, Input, Flex, Select, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, InputRightElement, InputGroup, FormHelperText, } from "@chakra-ui/react";
+import { Button, ModalBody, ModalFooter, Box, FormControl, FormLabel, Input, Flex, Select, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, InputRightElement, InputGroup, FormHelperText, Tag, TagLabel, TagCloseButton, Wrap, WrapItem, useToast} from "@chakra-ui/react";
 import { CreateShiftFormStepComponentType, CreateShiftFormStepProps, Frequency, ServiceRequestType } from '../../../types/ServiceRequestTypes';
 import { titleCase } from '../../../utils/FormatUtils';
 import EARLIEST_SHIFT_TIME from '../../../constants/ServiceRequestConstants';
+import { validateEmail } from '../../../utils/ValidationUtils'
 
 const CreateShiftMain: CreateShiftFormStepComponentType = ({ onSubmit, updateFields, updateErrorFields, data, errors }: CreateShiftFormStepProps): React.ReactElement => {
     const { requestName, shiftTime, shiftEndTime, frequency, currentEmail, inviteEmails, requestType } = data;
     const { shiftTimeError, shiftEndTimeError } = errors;
+    const toast = useToast();
 
 
     const formatDate = (date: Date) => {
@@ -84,15 +86,31 @@ const CreateShiftMain: CreateShiftFormStepComponentType = ({ onSubmit, updateFie
             updateShiftTimeErrorFields(new Date(shiftTime), endTime);
         }
     };
-    const handleAddEmail = ()=> {
+
+    const handleAddEmail = () => {
         if (currentEmail && currentEmail.trim()) {
+            const emailError = validateEmail(currentEmail);
+            if (emailError) {
+                toast({
+                    title: "Invalid Email",
+                    description: "Please enter a valid email address.",
+                    status: "error",
+                    position: 'top-right',
+                    duration: 5000,
+                    isClosable: true,
+                });
+                return; // Stop execution if email is invalid
+            }
             const updatedEmails = [...(inviteEmails || []), currentEmail.trim()];
-            updateFields({ inviteEmails: updatedEmails, currentEmail: ""});
-            console.log(updatedEmails)
+            updateFields({ inviteEmails: updatedEmails, currentEmail: "" });
         }
     };
 
-
+    const handleRemoveEmail = (index: number) => {
+        const updatedEmails = (inviteEmails || []).filter((_, i) => i !== index);
+        updateFields({ inviteEmails: updatedEmails });
+    };
+    
     const isButtonDisabled =
         !requestName ||
         !shiftTime ||
@@ -175,38 +193,39 @@ const CreateShiftMain: CreateShiftFormStepComponentType = ({ onSubmit, updateFie
                 </Select>
             </FormControl>
             <FormControl mt={6}>
-                <FormLabel>Invite Others</FormLabel>
-                {/* TODO: implement invite others */}
-                <InputGroup>
-                    <Input
-                        placeholder="first.last@gmail.com"
-                        value={currentEmail}
-                        onChange={event => { updateFields({ currentEmail: event.target.value }); }}
-                    />
-                    <InputRightElement width="4.5rem">
-                        <Button
-                            color="white"
-                            background="#28214C"
-                            h="1.75rem"
-                            w="3.5rem"
-                            size="sm"
-                            onClick={handleAddEmail}
-                        >
-                            Add
-                        </Button>
-                    </InputRightElement>
-                </InputGroup>
-                {inviteEmails && inviteEmails.length > 0 && (
-                    <Box mt={4}>
-                    <FormLabel>Invited Emails:</FormLabel>
-                    <ul>
-                        {inviteEmails.map((email, index) => (
-                        <li key={index}>{email}</li>
-                        ))}
-                    </ul>
-                    </Box>
-                )}
-            </FormControl>
+                    <FormLabel>Invite Others</FormLabel>
+                    <InputGroup>
+                        <Input
+                            placeholder="first.last@gmail.com"
+                            value={currentEmail}
+                            onChange={(event) => updateFields({ currentEmail: event.target.value })}
+                        />
+                        <InputRightElement width="4.5rem">
+                            <Button
+                                color="white"
+                                background="#28214C"
+                                h="1.75rem"
+                                w="3.5rem"
+                                size="sm"
+                                onClick={handleAddEmail}
+                            >
+                                Add
+                            </Button>
+                        </InputRightElement>
+                    </InputGroup>
+                    {inviteEmails && inviteEmails.length > 0 && (
+                        <Wrap mt={4}>
+                            {inviteEmails.map((email, index) => (
+                                <WrapItem key={index}>
+                                    <Tag size="md" colorScheme="gray" borderRadius="full">
+                                        <TagLabel>{email}</TagLabel>
+                                        <TagCloseButton onClick={() => handleRemoveEmail(index)} />
+                                    </Tag>
+                                </WrapItem>
+                            ))}
+                        </Wrap>
+                    )}
+                </FormControl>
             <Flex columnGap={3}>
                 {/* <Box flex="1">
                     <FormControl mt={6} isRequired>

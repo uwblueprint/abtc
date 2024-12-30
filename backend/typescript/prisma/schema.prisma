@@ -40,6 +40,8 @@ model serviceRequest {
   shiftTime     DateTime?
   shiftEndTime  DateTime?
   description   String?
+  currentEmail  String?
+  inviteEmails  String[]
   meal          String?
   cookingMethod CookingMethod?
   frequency     Frequency?

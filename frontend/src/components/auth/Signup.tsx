@@ -82,12 +82,6 @@ const Signup = (): React.ReactElement => {
   }
 
   if (authenticatedUser) {
-    if (authenticatedUser.role === "VOLUNTEER") {
-      return <Redirect to={VOLUNTEER_DASHBOARD_PAGE} />;
-    }
-    if(authenticatedUser.role === "ADMIN"){
-      return <Redirect to={PLATFORM_SIGNUP_REQUESTS} />;
-    }
     return <Redirect to={HOME_PAGE} />;
   }
 
