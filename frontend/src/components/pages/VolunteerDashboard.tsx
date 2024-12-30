@@ -28,7 +28,7 @@ const VolunteerDashboard = (): React.ReactElement => {
       <NavBar
         firstName={userInfo.firstName}
         lastName={userInfo.lastName}
-        role={userInfo.role}
+        userRole={userInfo.role}
       />
       <Flex flex="1">
         <Box pt={10} pl={8} border="1px" borderColor="gray.100">
