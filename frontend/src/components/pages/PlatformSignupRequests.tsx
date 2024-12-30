@@ -13,7 +13,8 @@ import {
     Badge,
     IconButton,
     Icon,
-    Input
+    Input,
+    Heading
 } from '@chakra-ui/react';
 import { FaCheck, FaXmark, FaSistrix, FaArrowsRotate, FaBars, FaAngleRight, FaAngleLeft } from "react-icons/fa6";
 
@@ -31,7 +32,8 @@ interface UserInfo {
 
 const PlatformSignupRequests = (): React.ReactElement => {
   const [userInfo, setUserInfo] = useState<UserInfo[]>([]);
-
+  const [filteredUserInfo, setFilteredUserInfo] = useState<UserInfo[]>([]);
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -44,15 +46,20 @@ const PlatformSignupRequests = (): React.ReactElement => {
     fetchData();
   }, []);
 
-    const [selectAll, setSelectAll] = useState<boolean>(false);
-    const [checkedItems, setCheckedItems] = useState<boolean[]>([]);
-    const [currentPage, setCurrentPage] = useState<number>(1);
-    const itemsPerPage = 999;
+  const [selectAll, setSelectAll] = useState<boolean>(false);
+  const [checkedItems, setCheckedItems] = useState<boolean[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const itemsPerPage = 10;
 
-    const [searchFilter, setSearchFilter] = useState<string>('');
-    const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const [searchFilter, setSearchFilter] = useState<string>('');
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchFilter(event.target.value)
-    };
+  };
+
+  useEffect(() => {
+    setFilteredUserInfo(userInfo.filter((user) => (`${user.firstName.toLowerCase()} ${user.lastName.toLowerCase()}`).includes(searchFilter.toLowerCase())));
+    setCurrentPage(1);
+  }, [userInfo, searchFilter]);
 
   useEffect(() => {
     setCheckedItems(new Array(userInfo.length).fill(false));
@@ -89,12 +96,15 @@ const PlatformSignupRequests = (): React.ReactElement => {
     console.log("Reject icon clicked");
   };
 
-  const handleSearchClick = () => {
-    console.log("Search icon clicked");
-  };
+  // const handleSearchClick = () => {
+  //   console.log("Search icon clicked");
+  // };
 
   const handleRefreshClick = () => {
-    console.log("Refresh icon clicked");
+    setSearchFilter('');
+    setSelectAll(false);
+    setCheckedItems(new Array(userInfo.length).fill(false));
+    setCurrentPage(1);
   };
 
   const handleFilterClick = () => {
@@ -105,24 +115,23 @@ const PlatformSignupRequests = (): React.ReactElement => {
     setCurrentPage(page);
   };
 
-  const totalPages = Math.ceil(userInfo.length / itemsPerPage);
-  const currentItems = userInfo.slice(
+  const totalPages = Math.ceil(filteredUserInfo.length / itemsPerPage);
+  const currentItems = filteredUserInfo.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage,
   );
   const itemCountStart = (currentPage - 1) * itemsPerPage + 1;
-  const itemCountEnd = Math.min(currentPage * itemsPerPage, userInfo.length);
+  const itemCountEnd = Math.min(currentPage * itemsPerPage, filteredUserInfo.length);
 
   return (
-    <Flex direction="column" h="100vh" ml="20" mr="20">
-      {/* <NavBar
-        firstName={userInfo[0].firstName}
-        lastName={userInfo[0].lastName}
-        role={userInfo[0].role}
-      /> */}
-      <Text mt="10" fontSize="2xl">
-        Manage Accounts
-      </Text>
+    <Flex direction="column" h="100vh">
+      <NavBar
+        firstName="L"
+        lastName="F"
+        userRole="ADMIN"
+      />
+      <Flex direction="column" ml={10} mr={20}>
+      <Heading as="h1" size="lg" mt="30px" mb="15px"> Platform Requests </Heading>
 
             <TableContainer mt='5' mb = "10" border='1px' borderColor='gray.200' borderRadius='20'>
                 <Table variant='simple'>
@@ -144,13 +153,13 @@ const PlatformSignupRequests = (): React.ReactElement => {
                                     variant='ghost'
                                     onClick={handleRejectClick}
                                 />
-                                <IconButton
+                                {/* <IconButton
                                     aria-label="Search"
                                     size="sm"
                                     icon={<Icon as={FaSistrix} />}
                                     variant='ghost'
                                     onClick={handleSearchClick}
-                                />
+                                /> */}
                                 <IconButton
                                     aria-label="Refresh"
                                     size="sm"
@@ -158,17 +167,18 @@ const PlatformSignupRequests = (): React.ReactElement => {
                                     variant='ghost'
                                     onClick={handleRefreshClick}
                                 />
-                                <IconButton
+                                {/* <IconButton
                                     aria-label="Filter"
                                     size="sm"
                                     icon={<Icon as={FaBars} />}
                                     variant='ghost'
                                     onClick={handleFilterClick}
-                                />
+                                /> */}
                                 <Input 
                                     placeholder='Search for a user' 
                                     size='sm' 
                                     onChange={handleSearch}
+                                    value={searchFilter}
                                     borderRadius="md"
                                 />
                             </Th>
@@ -177,7 +187,7 @@ const PlatformSignupRequests = (): React.ReactElement => {
                             <Th>
                                 <Flex justifyContent="space-between" alignItems="center">
                                     <Flex alignItems="center">
-                                        <Text>{itemCountStart}-{itemCountEnd} of {userInfo.length}</Text>
+                                        <Text>{itemCountStart}-{itemCountEnd} of {filteredUserInfo.length}</Text>
                                         <IconButton
                                             aria-label="Previous Page"
                                             size="sm"
@@ -200,33 +210,35 @@ const PlatformSignupRequests = (): React.ReactElement => {
                         </Tr>
                     </Thead>
                     <Tbody>
-                        {currentItems.filter((user) => (`${user.firstName.toLowerCase()} ${user.lastName.toLowerCase()}`).includes(searchFilter.toLowerCase())).map((user, index) => (
-                            <Tr key={user.id}>
-                                <Td>
-                                    <Checkbox
-                                        size='md'
-                                        isChecked={checkedItems[index]}
-                                        onChange={() => handleCheckboxChange(index)}
-                                    />
-                                </Td>
-                                <Td>{user.firstName} {user.lastName}</Td>
-                                <Td>{user.email}</Td>
-                                <Td>{user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}</Td>
-                                <Td display="flex" justifyContent="center">
-                                    <Badge
-                                        bg={getBadgeBg(user.status)}
-                                        color={getBadgeColor(user.status)}
-                                        px="6"
-                                        textTransform='unset'
-                                    >
-                                        {user.status}
-                                    </Badge>
-                                </Td>
-                            </Tr>
+                        {currentItems.map((user, index) => (
+                          <Tr key={user.id}>
+                            <Td>
+                              <Checkbox
+                                size='md'
+                                isChecked={checkedItems[index]}
+                                onChange={() => handleCheckboxChange(index)}
+                              />
+                            </Td>
+                            <Td>{user.firstName} {user.lastName}</Td>
+                            <Td>{user.email}</Td>
+                            <Td>{user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}</Td>
+                            <Td display="flex" justifyContent="center">
+                              <Badge
+                                bg={getBadgeBg(user.status)}
+                                color={getBadgeColor(user.status)}
+                                px="6"
+                                textTransform='unset'
+                              >
+                                {user.status}
+                              </Badge>
+                            </Td>
+                          </Tr>
                         ))}
+                        
                     </Tbody>
                 </Table>
             </TableContainer>
+            </Flex>
         </Flex>
     );
 };

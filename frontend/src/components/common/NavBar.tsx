@@ -34,13 +34,13 @@ import { logout } from "../../utils/logout";
 interface NavBarProps {
   firstName: string;
   lastName: string;
-  role: string;
+  userRole: string;
 }
 
-const NavBar: React.FC<NavBarProps> = ({ firstName, lastName, role }) => {
+const NavBar: React.FC<NavBarProps> = ({ firstName, lastName, userRole }) => {
   const location = useLocation();
   const toast = useToast();
-  const isAdmin = role === "ADMIN";
+  const isAdmin = userRole === "ADMIN";
 
   return (
     <Flex bg="white" p={4} alignItems="center">
@@ -209,7 +209,7 @@ const NavBar: React.FC<NavBarProps> = ({ firstName, lastName, role }) => {
                 }}
               >
                 <p>Role: </p>
-                <p style={{ fontWeight: "bold" }}>{role}</p>
+                <p style={{ fontWeight: "bold" }}>{userRole}</p>
               </div>
             </PopoverBody>
             <PopoverBody
