@@ -27,8 +27,11 @@ import {
 import { FiClock } from "react-icons/fi";
 
 import NavBar from "../common/NavBar";
-import SignupRequestAPIClient from "../../APIClients/SignupRequestAPIClient";
+
+import ServiceRequestAPIClient from "../../APIClients/ServiceRequestAPIClient";
+
 import UserAPIClient from "../../APIClients/UserAPIClient";
+import SignupRequestAPIClient from "../../APIClients/SignupRequestAPIClient";
 
 interface UserInfo {
   id: string;
@@ -56,7 +59,7 @@ const PlatformSignupRequests = (): React.ReactElement => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await ServiceRequestAPIClient.getPlatformSignups();
+        const response = await SignupRequestAPIClient.getPlatformSignups();
         setUserInfo(response);
       } catch (error) {
         console.error("Error fetching platform signups:", error);
@@ -277,6 +280,7 @@ const PlatformSignupRequests = (): React.ReactElement => {
                     {user.firstName} {user.lastName}
                   </Td>
                   <Td>{user.email}</Td>
+
                   <Td>
                     {user.createdAt
                       ? new Date(user.createdAt).toLocaleDateString()

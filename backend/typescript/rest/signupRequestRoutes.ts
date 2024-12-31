@@ -24,7 +24,7 @@ platformSignupRouter.delete("/delete/:id",isAuthorizedByRole(new Set(["ADMIN", "
     const signupId = req.params.id;
 
     const platformSignup = new PlatformSignup();
-    await platformSignup.editPlatformSignup(signupId);
+    await platformSignup.acceptById(signupId);
 
     res.status(200).json({ message: `Platform signup deleted successfully.` });
   } catch (error: unknown) {

@@ -84,7 +84,7 @@ class PlatformSignup implements IPlatformSignup {
       if (!existingSignup) {
         throw new Error(`Signup with ID ${signupRequestId} not found.`);
       }
-
+      
       // Update status
       await prisma.platformSignUp.update({
         where: { id: signupRequestId },
