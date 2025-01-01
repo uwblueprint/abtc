@@ -24,12 +24,9 @@ import {
   FaAngleLeft,
   FaRegClock,
 } from "react-icons/fa6";
-import { FiClock } from "react-icons/fi";
 
 import NavBar from "../common/NavBar";
-
 import ServiceRequestAPIClient from "../../APIClients/ServiceRequestAPIClient";
-
 import UserAPIClient from "../../APIClients/UserAPIClient";
 import SignupRequestAPIClient from "../../APIClients/SignupRequestAPIClient";
 
@@ -52,6 +49,14 @@ const PlatformSignupRequests = (): React.ReactElement => {
   // Filter flag (show only PENDING)
   const [isFilterActive, setIsFilterActive] = useState<boolean>(false);
 
+  // For selecting all checkboxes
+  const [selectAll, setSelectAll] = useState<boolean>(false);
+  const [checkedItems, setCheckedItems] = useState<boolean[]>([]);
+
+  // Pagination
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const itemsPerPage = 10;
+
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchFilter(event.target.value);
   };
@@ -68,27 +73,39 @@ const PlatformSignupRequests = (): React.ReactElement => {
     fetchData();
   }, []);
 
-  // Checkbox and pagination logic
-  const [selectAll, setSelectAll] = useState<boolean>(false);
-  const [checkedItems, setCheckedItems] = useState<boolean[]>([]);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const itemsPerPage = 10;
-
-  // Filtering logic
+  /**
+   * Filtering + Sorting logic
+   *  - First, filter by name + status (if isFilterActive)
+   *  - Then, sort by `createdAt` descending.
+   *    Rows with null or empty createdAt go last.
+   */
   useEffect(() => {
-    setFilteredUserInfo(
-      userInfo.filter((user) => {
-        // Search by first + last name
-        const nameMatch = `${user.firstName.toLowerCase()} ${user.lastName.toLowerCase()}`.includes(
-          searchFilter.toLowerCase(),
-        );
+    // 1) Filter the data
+    const filtered = userInfo.filter((user) => {
+      const nameMatch = `${user.firstName.toLowerCase()} ${user.lastName.toLowerCase()}`.includes(
+        searchFilter.toLowerCase(),
+      );
+      const statusMatch = isFilterActive ? user.status === "PENDING" : true;
+      return nameMatch && statusMatch;
+    });
 
-        // If isFilterActive is true, only keep rows with status === "PENDING"
-        const statusMatch = isFilterActive ? user.status === "PENDING" : true;
+    // 2) Sort the filtered data in reverse chronological order
+    //    If createdAt is null or empty, push it to the bottom.
+    const sorted = filtered.sort((a, b) => {
+      const dateA = a.createdAt ? Date.parse(a.createdAt) : NaN;
+      const dateB = b.createdAt ? Date.parse(b.createdAt) : NaN;
 
-        return nameMatch && statusMatch;
-      }),
-    );
+      // Both invalid => preserve order between them
+      if (Number.isNaN(dateA) && Number.isNaN(dateB)) return 0;
+      // a invalid, b valid => a goes after b
+      if (Number.isNaN(dateA)) return 1;
+      // b invalid, a valid => b goes after a
+      if (Number.isNaN(dateB)) return -1;
+      // Both valid => descending
+      return dateB - dateA;
+    });
+
+    setFilteredUserInfo(sorted);
     setCurrentPage(1);
   }, [userInfo, searchFilter, isFilterActive]);
 
@@ -136,12 +153,10 @@ const PlatformSignupRequests = (): React.ReactElement => {
     return "black";
   };
 
+  // Approve selected items
   const handleApproveClick = () => {
     checkedItems.forEach((checkedItem, index) => {
       if (checkedItem) {
-        console.log(userInfo[index]);
-        console.log(userInfo[index].id);
-        console.log(userInfo[index].email);
         SignupRequestAPIClient.deletePlatformSignup(userInfo[index].id);
         UserAPIClient.acceptUserByEmail(userInfo[index].email);
       }
@@ -154,17 +169,12 @@ const PlatformSignupRequests = (): React.ReactElement => {
     console.log("Reject icon clicked");
   };
 
-  const handleSearchClick = () => {
-    console.log("Search icon clicked");
-  };
-
   const handleRefreshClick = () => {
     setSearchFilter("");
     setIsFilterActive(false);
     setSelectAll(false);
     setCheckedItems(new Array(userInfo.length).fill(false));
     setCurrentPage(1);
-    setIsFilterActive(false);
   };
 
   // Toggle showing only PENDING rows
@@ -218,6 +228,7 @@ const PlatformSignupRequests = (): React.ReactElement => {
                     icon={<Icon as={FaRegClock} />}
                     onClick={handleFilterClick}
                     variant={isFilterActive ? "solid" : "ghost"}
+                    ml={1}
                   />
                   <IconButton
                     aria-label="Refresh"
@@ -225,6 +236,7 @@ const PlatformSignupRequests = (): React.ReactElement => {
                     icon={<Icon as={FaArrowsRotate} />}
                     variant="ghost"
                     onClick={handleRefreshClick}
+                    ml={1}
                   />
 
                   <Input
@@ -238,34 +250,11 @@ const PlatformSignupRequests = (): React.ReactElement => {
                 </Th>
                 <Th />
                 <Th />
-                <Th>
-                  <Flex justifyContent="space-between" alignItems="center">
-                    <Flex alignItems="center">
-                      <Text>
-                        {itemCountStart}-{itemCountEnd} of{" "}
-                        {filteredUserInfo.length}
-                      </Text>
-                      <IconButton
-                        aria-label="Previous Page"
-                        size="sm"
-                        icon={<FaAngleLeft />}
-                        variant="ghost"
-                        onClick={() => handlePageChange(currentPage - 1)}
-                        disabled={currentPage === 1}
-                      />
-                      <IconButton
-                        aria-label="Next Page"
-                        size="sm"
-                        icon={<FaAngleRight />}
-                        variant="ghost"
-                        onClick={() => handlePageChange(currentPage + 1)}
-                        disabled={currentPage === totalPages}
-                      />
-                    </Flex>
-                  </Flex>
-                </Th>
+                <Th />
+                <Th />
               </Tr>
             </Thead>
+
             <Tbody>
               {currentItems.map((user, index) => (
                 <Tr key={user.id}>
@@ -280,13 +269,8 @@ const PlatformSignupRequests = (): React.ReactElement => {
                     {user.firstName} {user.lastName}
                   </Td>
                   <Td>{user.email}</Td>
-
-                  <Td>
-                    {user.createdAt
-                      ? new Date(user.createdAt).toLocaleDateString()
-                      : "N/A"}
-                  </Td>
-                  <Td display="flex" justifyContent="center">
+                  <Td>{user.email}</Td>
+                  <Td display="flex" justifyContent="center" marginTop={2}>
                     <Badge
                       bg={getBadgeBg(user.status)}
                       color={getBadgeColor(user.status)}
@@ -296,11 +280,40 @@ const PlatformSignupRequests = (): React.ReactElement => {
                       {user.status}
                     </Badge>
                   </Td>
+                  <Td>
+                    {user.createdAt
+                      ? new Date(user.createdAt).toLocaleDateString()
+                      : ""}
+                  </Td>
                 </Tr>
               ))}
             </Tbody>
           </Table>
         </TableContainer>
+
+        <Flex justifyContent="end" alignItems="center">
+          <Flex alignItems="center">
+            <Text>
+              {itemCountStart}-{itemCountEnd} of {filteredUserInfo.length}
+            </Text>
+            <IconButton
+              aria-label="Previous Page"
+              size="sm"
+              icon={<FaAngleLeft />}
+              variant="ghost"
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+            />
+            <IconButton
+              aria-label="Next Page"
+              size="sm"
+              icon={<FaAngleRight />}
+              variant="ghost"
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+            />
+          </Flex>
+        </Flex>
       </Flex>
     </Flex>
   );
