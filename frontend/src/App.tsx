@@ -32,6 +32,7 @@ import SignupEmergencyContact from "./components/auth/SignupEmergencyContact";
 import SignupSecondary from "./components/auth/SignupSecondary";
 import CustomizedCalendar from "./components/pages/Calendar/CustomizedCalendar";
 import PlatformSignupRequests from "./components/pages/PlatformSignupRequests";
+import AccountDirectory from "./components/pages/AccountDirectory";
 
 const App = (): React.ReactElement => {
   const currentUser: AuthenticatedUser = getLocalStorageObj<AuthenticatedUser>(
@@ -44,9 +45,7 @@ const App = (): React.ReactElement => {
 
   return (
     <GoogleOAuthProvider clientId={process.env.REACT_APP_OAUTH_CLIENT_ID || ""}>
-      <AuthContext.Provider
-        value={{ authenticatedUser, setAuthenticatedUser }}
-      >
+      <AuthContext.Provider value={{ authenticatedUser, setAuthenticatedUser }}>
         <Router>
           <Switch>
             <Route exact path={Routes.LOGIN_PAGE} component={Login} />
@@ -111,11 +110,7 @@ const App = (): React.ReactElement => {
               path={Routes.HOOKS_PAGE}
               component={HooksDemo}
             />
-            <PrivateRoute
-              exact
-              path={Routes.SHIFTS_PAGE}
-              component={Shifts}
-            />
+            <PrivateRoute exact path={Routes.SHIFTS_PAGE} component={Shifts} />
             <PrivateRoute
               exact
               path={Routes.VOLUNTEER_DASHBOARD_PAGE}
@@ -125,6 +120,11 @@ const App = (): React.ReactElement => {
               exact
               path={Routes.PLATFORM_SIGNUP_REQUESTS}
               component={PlatformSignupRequests}
+            />
+            <PrivateRoute
+              exact
+              path={Routes.ACCOUNT_DIRECTORY}
+              component={AccountDirectory}
             />
             <Route exact path="*" component={NotFound} />
           </Switch>

@@ -27,11 +27,12 @@ import {
   FaRegClock,
 } from "react-icons/fa6";
 import { GrDocumentUpdate } from "react-icons/gr";
-import NavBar from "../common/NavBar";
+
 import ServiceRequestAPIClient from "../../APIClients/ServiceRequestAPIClient";
 import UserAPIClient from "../../APIClients/UserAPIClient";
 import SignupRequestAPIClient from "../../APIClients/SignupRequestAPIClient";
 import AUTHENTICATED_USER_KEY from "../../constants/AuthConstants";
+import NavBar from "../common/NavBar";
 
 interface UserInfo {
   id: string;
@@ -383,7 +384,7 @@ const PlatformSignupRequests = (): React.ReactElement => {
                   </Td>
                   <Td>{user.email}</Td>
                   <Td minWidth="400px">
-                    <Flex flexDirection="row" alignItems="center" gap={1}>
+                    <Flex flexDirection="row" alignItems="start" gap={1}>
                       <Textarea
                         placeholder="Add a note.."
                         size="sm"
@@ -396,6 +397,7 @@ const PlatformSignupRequests = (): React.ReactElement => {
                         borderRadius="md"
                         ml="4"
                         maxWidth="300px"
+                        variant="subtle"
                       />
                       {notes[user.id] && (
                         <IconButton

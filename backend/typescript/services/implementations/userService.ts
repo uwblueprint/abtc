@@ -142,20 +142,21 @@ class UserService implements IUserService {
         users?.map(async (user) => {
           let firebaseUser: firebaseAdmin.auth.UserRecord;
 
-          try {
-            firebaseUser = await firebaseAdmin.auth().getUser(user.authId);
-          } catch (error) {
-            Logger.error(
-              `user with authId ${user.authId} could not be fetched from Firebase`,
-            );
-            throw error;
-          }
+          // This is computationally expensive and slow. 
+          // try {
+          //   firebaseUser = await firebaseAdmin.auth().getUser(user.authId);
+          // } catch (error) {
+          //   Logger.error(
+          //     `user with authId ${user.authId} could not be fetched from Firebase`,
+          //   );
+          //   throw error;
+          // }
 
           return {
             id: user.id,
             firstName: user.firstName,
             lastName: user.lastName,
-            email: firebaseUser.email ?? "",
+            email: user.email ?? "",
             role: user.role,
             phoneNumber: user.phoneNumber,
             emergencyFirstName: user.emergencyFirstName,
@@ -164,6 +165,8 @@ class UserService implements IUserService {
           };
         }) ?? [],
       );
+
+     
     } catch (error: unknown) {
       Logger.error(`Failed to get users. Reason = ${getErrorMessage(error)}`);
       throw error;

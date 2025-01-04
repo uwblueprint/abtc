@@ -102,7 +102,7 @@ const NavBar: React.FC<NavBarProps> = ({ firstName, lastName, userRole }) => {
               {" "}
               <MenuItem
                 as={ReactRouterLink}
-                to="/manage-accounts/employee-directory"
+                to="/account-directory"
                 color="#444750"
                 fontWeight="500"
                 _hover={{ color: "black", textDecoration: "none" }}
