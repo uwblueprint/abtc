@@ -165,14 +165,24 @@ const PlatformSignupRequests = (): React.ReactElement => {
   };
 
   const handleNoteSubmit = (userId: string, note: string) => {
-    SignupRequestAPIClient.updateNote(userId, note);
-    toast({
-      description: "Your note has been saved.",
-      status: "success",
-      position: "top-right",
-      duration: 3000,
-      isClosable: true,
-    });
+    try {
+      SignupRequestAPIClient.updateNote(userId, note);
+      toast({
+        description: "Your note has been saved.",
+        status: "success",
+        position: "top-right",
+        duration: 3000,
+        isClosable: true,
+      });
+    } catch {
+      toast({
+        description: "Failed to save note.",
+        status: "error",
+        position: "top-right",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
   };
 
   const totalPages = Math.ceil(filteredUserInfo.length / itemsPerPage);
