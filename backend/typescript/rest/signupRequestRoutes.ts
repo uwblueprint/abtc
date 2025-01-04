@@ -60,4 +60,18 @@ platformSignupRouter.get("/reject/:id",isAuthorizedByRole(new Set(["ADMIN", "VOL
   }
 });
 
+/* Change the note of a user's platform request given an id */
+platformSignupRouter.post("/update-note",isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])), async (req, res) => {
+  try {
+    const {uuid, note} = req.body;
+
+    const platformSignup = new PlatformSignup();
+    await platformSignup.updateNote(uuid, note);
+
+    res.status(200).json({ message: `Note updated successfully.` });
+  } catch (error: unknown) {
+    res.status(500).json({ error: getErrorMessage(error) });
+  }
+});
+
 export default platformSignupRouter;

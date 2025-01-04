@@ -75,9 +75,29 @@ const rejectPlatformSignup = async (uuid: string): Promise<any[]> => {
   }
 };
 
+const updateNote = async (uuid: string, note: string) => {
+  const bearerToken = `Bearer ${getLocalStorageObjProperty(
+    AUTHENTICATED_USER_KEY,
+    "accessToken",
+  )}`;
+  try {
+    const { data } = await baseAPIClient.post(
+      `/platformsignups/update-note`,
+      { uuid, note },
+      {
+        headers: { Authorization: bearerToken },
+      },
+    );
+    return data;
+  } catch (error: any) {
+    console.error("Error deleting platform signup", error);
+    throw error;
+  }
+};
 export default {
   getPlatformSignups,
   deletePlatformSignup,
   acceptPlatformSignup,
   rejectPlatformSignup,
+  updateNote,
 };

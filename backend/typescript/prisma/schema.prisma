@@ -56,6 +56,7 @@ model platformSignUp {
   lastName  String
   status    Status
   createdAt String?
+  note      String?
 }
 
 enum Role {

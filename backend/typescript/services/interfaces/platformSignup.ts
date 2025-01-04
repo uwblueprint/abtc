@@ -6,6 +6,7 @@ export type postPlatformSignupInput = {
   lastName: string;
   email: string;
   status: Status;
+  note: string;
 };
 
 interface IPlatformSignup {
@@ -35,6 +36,7 @@ interface IPlatformSignup {
    * @throws Error if  acceptnce fails
    */
   acceptById(signupRequestId: string): Promise<void>;
+  rejectById(signupRequestId: string): Promise<void>;
 
 }
 

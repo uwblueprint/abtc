@@ -13,8 +13,10 @@ import {
   Badge,
   IconButton,
   Icon,
+  Textarea,
   Input,
   Heading,
+  useToast,
 } from "@chakra-ui/react";
 import {
   FaCheck,
@@ -24,7 +26,7 @@ import {
   FaAngleLeft,
   FaRegClock,
 } from "react-icons/fa6";
-
+import { GrDocumentUpdate } from "react-icons/gr";
 import NavBar from "../common/NavBar";
 import ServiceRequestAPIClient from "../../APIClients/ServiceRequestAPIClient";
 import UserAPIClient from "../../APIClients/UserAPIClient";
@@ -37,9 +39,12 @@ interface UserInfo {
   lastName: string;
   status: string;
   createdAt: string | null;
+  note: string | null;
 }
 
 const PlatformSignupRequests = (): React.ReactElement => {
+  const toast = useToast();
+
   const [userInfo, setUserInfo] = useState<UserInfo[]>([]);
   const [filteredUserInfo, setFilteredUserInfo] = useState<UserInfo[]>([]);
 
@@ -57,6 +62,8 @@ const PlatformSignupRequests = (): React.ReactElement => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 10;
 
+  const [notes, setNotes] = useState<Record<string, string>>({});
+
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchFilter(event.target.value);
   };
@@ -66,6 +73,13 @@ const PlatformSignupRequests = (): React.ReactElement => {
       try {
         const response = await SignupRequestAPIClient.getPlatformSignups();
         setUserInfo(response);
+
+        // Build an object keyed by userId => initial note (or "")
+        const initialNotes: Record<string, string> = {};
+        response.forEach((user) => {
+          initialNotes[user.id] = user.note ?? "";
+        });
+        setNotes(initialNotes);
       } catch (error) {
         console.error("Error fetching platform signups:", error);
       }
@@ -124,6 +138,24 @@ const PlatformSignupRequests = (): React.ReactElement => {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
+  };
+
+  const handleNoteChange = (userId: string, newValue: string) => {
+    setNotes((prevNotes) => ({
+      ...prevNotes,
+      [userId]: newValue,
+    }));
+  };
+
+  const handleNoteSubmit = (userId: string, note: string) => {
+    SignupRequestAPIClient.updateNote(userId, note);
+    toast({
+      description: "Your note has been saved.",
+      status: "success",
+      position: "top-right",
+      duration: 3000,
+      isClosable: true,
+    });
   };
 
   const totalPages = Math.ceil(filteredUserInfo.length / itemsPerPage);
@@ -293,7 +325,7 @@ const PlatformSignupRequests = (): React.ReactElement => {
                   />
                 </Th>
                 <Th />
-                <Th />
+                <Th minWidth="350px" />
                 <Th />
                 <Th />
               </Tr>
@@ -319,8 +351,35 @@ const PlatformSignupRequests = (): React.ReactElement => {
                     {user.firstName} {user.lastName}
                   </Td>
                   <Td>{user.email}</Td>
-                  <Td>{user.email}</Td>
-                  <Td display="flex" justifyContent="center" marginTop={2}>
+                  <Td minWidth="400px">
+                    <Flex flexDirection="row" alignItems="center" gap={1}>
+                      <Textarea
+                        placeholder="Add a note.."
+                        size="sm"
+                        rows={1} // show at least 2 lines
+                        resize="vertical" // allow vertical resize (optional)
+                        value={notes[user.id] || ""}
+                        onChange={(e) =>
+                          handleNoteChange(user.id, e.target.value)
+                        }
+                        borderRadius="md"
+                        ml="4"
+                        maxWidth="300px"
+                      />
+                      {notes[user.id] && (
+                        <IconButton
+                          aria-label="Approve"
+                          size="md"
+                          icon={<Icon as={GrDocumentUpdate} />}
+                          variant="ghost"
+                          onClick={() => {
+                            handleNoteSubmit(user.id, notes[user.id] || "");
+                          }}
+                        />
+                      )}
+                    </Flex>
+                  </Td>
+                  <Td marginTop={4}>
                     <Badge
                       bg={getBadgeBg(user.status)}
                       color={getBadgeColor(user.status)}

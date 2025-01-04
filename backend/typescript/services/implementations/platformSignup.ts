@@ -117,6 +117,28 @@ class PlatformSignup implements IPlatformSignup {
       throw error;
     }
   }
+
+  async updateNote(signupRequestId: string, note: string): Promise<void> {
+    try {
+      const existingSignup = await prisma.platformSignUp.findUnique({
+        where: { id: signupRequestId },
+      });
+
+      // Check if  ID is valid
+      if (!existingSignup) {
+        throw new Error(`Signup with ID ${signupRequestId} not found.`);
+      }
+      
+      // Update note
+      await prisma.platformSignUp.update({
+        where: { id: signupRequestId },
+        data: { note },
+      });
+    } catch (error: unknown) {
+      Logger.error(`Failed to accept. Reason = ${getErrorMessage(error)}`);
+      throw error;
+    }
+  }
 }
 
 export default PlatformSignup;
