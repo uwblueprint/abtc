@@ -65,6 +65,7 @@ const PlatformSignupRequests = (): React.ReactElement => {
   const itemsPerPage = 10;
 
   const [notes, setNotes] = useState<Record<string, string>>({});
+  const [noteUpdated, setNoteUpdated] = useState<Record<string, boolean>>({});
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchFilter(event.target.value);
@@ -98,6 +99,12 @@ const PlatformSignupRequests = (): React.ReactElement => {
           initialNotes[user.id] = user.note ?? "";
         });
         setNotes(initialNotes);
+
+        const initialUpdates: Record<string, boolean> = {};
+        response.forEach((user) => {
+          initialUpdates[user.id] = false;
+        });
+        setNoteUpdated(initialUpdates);
       } catch (error) {
         console.error("Error fetching platform signups:", error);
       }
@@ -159,6 +166,8 @@ const PlatformSignupRequests = (): React.ReactElement => {
   };
 
   const handleNoteChange = (userId: string, newValue: string) => {
+    const newUpdatedNotes = { ...noteUpdated, [userId]: true };
+    setNoteUpdated(newUpdatedNotes);
     setNotes((prevNotes) => ({
       ...prevNotes,
       [userId]: newValue,
@@ -168,6 +177,8 @@ const PlatformSignupRequests = (): React.ReactElement => {
   const handleNoteSubmit = (userId: string, note: string) => {
     try {
       SignupRequestAPIClient.updateNote(userId, note);
+      const newUpdatedNotes = { ...noteUpdated, [userId]: false };
+      setNoteUpdated(newUpdatedNotes);
       toast({
         description: "Your note has been saved.",
         status: "success",
@@ -399,7 +410,7 @@ const PlatformSignupRequests = (): React.ReactElement => {
                         maxWidth="300px"
                         variant="subtle"
                       />
-                      {notes[user.id] && (
+                      {noteUpdated[user.id] && (
                         <IconButton
                           aria-label="Approve"
                           size="md"
