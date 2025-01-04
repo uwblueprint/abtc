@@ -130,11 +130,13 @@ userRouter.put("/:userId", updateUserDtoValidator,isAuthorizedByRole(new Set(["A
 userRouter.get("/accept",isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])), async (req, res) => {
   try {
     const { email } = req.query;
+    
     if (email){
       if (typeof email !== "string") {
         res.status(400).json({ error: "email query parameter must be a string." });
       } else {
-        const user = await userService.getUserByEmail(email);
+        const decodedEmail = decodeURI(email)
+        const user = await userService.getUserByEmail(decodedEmail);
         const userId = user.id
         const updatedUser = await userService.acceptUserById(userId);
         res.status(200).json(updatedUser);

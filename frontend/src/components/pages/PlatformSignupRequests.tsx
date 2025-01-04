@@ -109,11 +109,6 @@ const PlatformSignupRequests = (): React.ReactElement => {
     setCurrentPage(1);
   }, [userInfo, searchFilter, isFilterActive]);
 
-  // When userInfo changes, reset the checked items array
-  useEffect(() => {
-    setCheckedItems(new Array(userInfo.length).fill(false));
-  }, [userInfo]);
-
   const handleSelectAllChange = () => {
     const newSelectAll = !selectAll;
     setSelectAll(newSelectAll);
@@ -142,31 +137,81 @@ const PlatformSignupRequests = (): React.ReactElement => {
     filteredUserInfo.length,
   );
 
+  // When userInfo changes, reset the checked items array
+  useEffect(() => {
+    setCheckedItems(new Array(filteredUserInfo.length).fill(false));
+  }, [filteredUserInfo]);
+
   // Status badge style
   const getBadgeBg = (status: string): string => {
     if (status === "PENDING") return "#DACFFB";
+    if (status === "ACCEPTED") return "#A8E4A0";
     return "gray.200";
   };
 
   const getBadgeColor = (status: string): string => {
     if (status === "PENDING") return "#230282";
+    if (status === "ACCEPTED") return "#2E6F40";
     return "black";
   };
 
   // Approve selected items
   const handleApproveClick = () => {
-    checkedItems.forEach((checkedItem, index) => {
-      if (checkedItem) {
-        SignupRequestAPIClient.deletePlatformSignup(userInfo[index].id);
-        UserAPIClient.acceptUserByEmail(userInfo[index].email);
+    // Make a copy of checkedItems
+    const newCheckedItems = [...checkedItems];
+
+    // Make a copy of filteredUserInfo
+    const newFiltered = filteredUserInfo.map((user, index) => {
+      if (newCheckedItems[index]) {
+        // Approve logic
+        SignupRequestAPIClient.acceptPlatformSignup(user.id);
+        UserAPIClient.acceptUserByEmail(encodeURI(user.email));
+        // Update the status
+        return { ...user, status: "ACCEPTED" };
       }
+      return user;
     });
-    console.log("Approve icon clicked");
+
+    // Reset the checkboxes
+    for (let i = 0; i < newCheckedItems.length; i += 1) {
+      if (newCheckedItems[i]) {
+        newCheckedItems[i] = false;
+      }
+    }
+
+    // Update state
+    setFilteredUserInfo(newFiltered);
+    setCheckedItems(newCheckedItems);
+    setSelectAll(false);
   };
 
   const handleRejectClick = () => {
-    // reject logic to be determined
-    console.log("Reject icon clicked");
+    // Make a copy of checkedItems
+    const newCheckedItems = [...checkedItems];
+
+    // Make a copy of filteredUserInfo
+    const newFiltered = filteredUserInfo.map((user, index) => {
+      if (newCheckedItems[index]) {
+        // Approve logic
+        SignupRequestAPIClient.rejectPlatformSignup(user.id);
+        UserAPIClient.acceptUserByEmail(encodeURI(user.email));
+        // Update the status
+        return { ...user, status: "REJECTED" };
+      }
+      return user;
+    });
+
+    // Reset the checkboxes
+    for (let i = 0; i < newCheckedItems.length; i += 1) {
+      if (newCheckedItems[i]) {
+        newCheckedItems[i] = false;
+      }
+    }
+
+    // Update state
+    setFilteredUserInfo(newFiltered);
+    setCheckedItems(newCheckedItems);
+    setSelectAll(false);
   };
 
   const handleRefreshClick = () => {
@@ -238,7 +283,6 @@ const PlatformSignupRequests = (): React.ReactElement => {
                     onClick={handleRefreshClick}
                     ml={1}
                   />
-
                   <Input
                     placeholder="Search for a user"
                     size="sm"
@@ -261,8 +305,14 @@ const PlatformSignupRequests = (): React.ReactElement => {
                   <Td>
                     <Checkbox
                       size="md"
-                      isChecked={checkedItems[index]}
-                      onChange={() => handleCheckboxChange(index)}
+                      isChecked={
+                        checkedItems[index + (currentPage - 1) * itemsPerPage]
+                      }
+                      onChange={() =>
+                        handleCheckboxChange(
+                          index + (currentPage - 1) * itemsPerPage,
+                        )
+                      }
                     />
                   </Td>
                   <Td>
@@ -293,7 +343,7 @@ const PlatformSignupRequests = (): React.ReactElement => {
 
         <Flex justifyContent="end" alignItems="center">
           <Flex alignItems="center">
-            <Text>
+            <Text marginRight={2}>
               {itemCountStart}-{itemCountEnd} of {filteredUserInfo.length}
             </Text>
             <IconButton

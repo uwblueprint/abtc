@@ -32,4 +32,32 @@ platformSignupRouter.delete("/delete/:id",isAuthorizedByRole(new Set(["ADMIN", "
   }
 });
 
+/* Accept a PlatformSignup given an id */
+platformSignupRouter.get("/accept/:id",isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])), async (req, res) => {
+  try {
+    const signupId = req.params.id;
+
+    const platformSignup = new PlatformSignup();
+    await platformSignup.acceptById(signupId);
+
+    res.status(200).json({ message: `Platform signup accepted successfully.` });
+  } catch (error: unknown) {
+    res.status(500).json({ error: getErrorMessage(error) });
+  }
+});
+
+/* Reject a PlatformSignup given an id */
+platformSignupRouter.get("/reject/:id",isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])), async (req, res) => {
+  try {
+    const signupId = req.params.id;
+
+    const platformSignup = new PlatformSignup();
+    await platformSignup.rejectById(signupId);
+
+    res.status(200).json({ message: `Platform signup rejected successfully.` });
+  } catch (error: unknown) {
+    res.status(500).json({ error: getErrorMessage(error) });
+  }
+});
+
 export default platformSignupRouter;

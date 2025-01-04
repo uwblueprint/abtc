@@ -2,13 +2,12 @@ import baseAPIClient from "./BaseAPIClient";
 import AUTHENTICATED_USER_KEY from "../constants/AuthConstants";
 import { getLocalStorageObjProperty } from "../utils/LocalStorageUtils";
 
-
 const acceptUserByEmail = async (email: string): Promise<void> => {
   const bearerToken = `Bearer ${getLocalStorageObjProperty(
     AUTHENTICATED_USER_KEY,
     "accessToken",
   )}`;
-
+  console.log(email, "email");
   try {
     await baseAPIClient.get(`/users/accept?email=${email}`, {
       headers: { Authorization: bearerToken },
@@ -18,5 +17,5 @@ const acceptUserByEmail = async (email: string): Promise<void> => {
     throw error;
   }
 };
-  
+
 export default { acceptUserByEmail };

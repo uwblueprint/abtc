@@ -62,7 +62,10 @@ class UserService implements IUserService {
     let firebaseUser: firebaseAdmin.auth.UserRecord;
 
     try {
-      firebaseUser = await firebaseAdmin.auth().getUserByEmail(email);
+      // Replace all spaces with '+'
+      const decodedEmail = email.replace(/ /g, "+")
+      
+      firebaseUser = await firebaseAdmin.auth().getUserByEmail(decodedEmail);
       user = await prisma.user.findFirst({
         where: {
           authId: firebaseUser.uid,

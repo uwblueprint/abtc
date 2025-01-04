@@ -42,6 +42,7 @@ baseAPIClient.interceptors.request.use(async (config: AxiosRequestConfig) => {
 
         newConfig.headers.Authorization = accessToken;
       } catch {
+        // If we fail to refresh our token, remove it and logout.
         logout();
       }
     }
