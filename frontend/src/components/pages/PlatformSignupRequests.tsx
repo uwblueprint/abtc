@@ -31,6 +31,7 @@ import NavBar from "../common/NavBar";
 import ServiceRequestAPIClient from "../../APIClients/ServiceRequestAPIClient";
 import UserAPIClient from "../../APIClients/UserAPIClient";
 import SignupRequestAPIClient from "../../APIClients/SignupRequestAPIClient";
+import AUTHENTICATED_USER_KEY from "../../constants/AuthConstants";
 
 interface UserInfo {
   id: string;
@@ -67,6 +68,22 @@ const PlatformSignupRequests = (): React.ReactElement => {
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchFilter(event.target.value);
   };
+
+  const [currentUser, setCurrentUser] = useState<any>({
+    firstName: "",
+    lastName: "",
+    role: "",
+  });
+
+  useEffect(() => {
+    const userData = localStorage.getItem(AUTHENTICATED_USER_KEY);
+
+    if (userData) {
+      const parsedUserData = JSON.parse(userData);
+
+      setCurrentUser(parsedUserData);
+    }
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -261,7 +278,11 @@ const PlatformSignupRequests = (): React.ReactElement => {
 
   return (
     <Flex direction="column" h="100vh">
-      <NavBar firstName="L" lastName="F" userRole="ADMIN" />
+      <NavBar
+        firstName={currentUser.firstName}
+        lastName={currentUser.lastName}
+        userRole={currentUser.role}
+      />
       <Flex direction="column" ml={10} mr={20}>
         <Heading as="h1" size="lg" mt="30px" mb="15px">
           Platform Requests
