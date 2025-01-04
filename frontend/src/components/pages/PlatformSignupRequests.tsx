@@ -372,6 +372,14 @@ const PlatformSignupRequests = (): React.ReactElement => {
                 <Th />
                 <Th />
               </Tr>
+              <Tr>
+                <Th />
+                <Th> Name </Th>
+                <Th> Email </Th>
+                <Th> Note </Th>
+                <Th> Status </Th>
+                <Th> Date Requested </Th>
+              </Tr>
             </Thead>
 
             <Tbody>
@@ -395,7 +403,12 @@ const PlatformSignupRequests = (): React.ReactElement => {
                   </Td>
                   <Td>{user.email}</Td>
                   <Td minWidth="400px">
-                    <Flex flexDirection="row" alignItems="start" gap={1}>
+                    <Flex
+                      flexDirection="row"
+                      justifyContent="start"
+                      alignItems="start"
+                      gap={1}
+                    >
                       <Textarea
                         placeholder="Add a note.."
                         size="sm"
@@ -406,9 +419,8 @@ const PlatformSignupRequests = (): React.ReactElement => {
                           handleNoteChange(user.id, e.target.value)
                         }
                         borderRadius="md"
-                        ml="4"
                         maxWidth="300px"
-                        variant="subtle"
+                        // variant="subtle"
                       />
                       {noteUpdated[user.id] && (
                         <IconButton

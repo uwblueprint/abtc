@@ -66,6 +66,9 @@ const AccountDirectory = (): React.ReactElement => {
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [userInfo, setUserInfo] = useState<UserInfo[]>([]);
+  const [filteredUserInfo, setFilteredUserInfo] = useState<UserInfo[]>([]);
+  const [searchFilter, setSearchFilter] = useState<string>("");
+
   // Pagination
   const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 10;
@@ -85,17 +88,37 @@ const AccountDirectory = (): React.ReactElement => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    // 1) Filter the data
+    const filtered = userInfo.filter((user) => {
+      const nameMatch = `${user.firstName.toLowerCase()} ${user.lastName.toLowerCase()}`.includes(
+        searchFilter.toLowerCase(),
+      );
+      return nameMatch;
+    });
+
+    setFilteredUserInfo(filtered);
+    setCurrentPage(1);
+  }, [userInfo, searchFilter]);
+
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
 
-  const totalPages = Math.ceil(userInfo.length / itemsPerPage);
-  const currentItems = userInfo.slice(
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchFilter(event.target.value);
+  };
+
+  const totalPages = Math.ceil(filteredUserInfo.length / itemsPerPage);
+  const currentItems = filteredUserInfo.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage,
   );
   const itemCountStart = (currentPage - 1) * itemsPerPage + 1;
-  const itemCountEnd = Math.min(currentPage * itemsPerPage, userInfo.length);
+  const itemCountEnd = Math.min(
+    currentPage * itemsPerPage,
+    filteredUserInfo.length,
+  );
 
   return (
     <Flex direction="column" h="100vh">
@@ -119,11 +142,29 @@ const AccountDirectory = (): React.ReactElement => {
             <Table variant="simple">
               <Thead>
                 <Tr>
+                  <Th>
+                    {" "}
+                    <Input
+                      placeholder="Search for a user"
+                      size="sm"
+                      onChange={handleSearch}
+                      value={searchFilter}
+                      borderRadius="md"
+                    />
+                  </Th>
+                  <Th />
+                  <Th />
+                  <Th />
+                  <Th />
+                  <Th />
+                  <Th />
+                </Tr>
+                <Tr>
                   <Th>Name</Th>
                   <Th>Email</Th>
                   <Th>Phone Number</Th>
                   <Th>Emergency Contact</Th>
-                  <Th>Phone Number</Th>
+                  <Th>EC Phone Number</Th>
                   <Th>Role</Th>
                   <Th />
                 </Tr>
