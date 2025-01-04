@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import AUTHENTICATED_USER_KEY from "../constants/AuthConstants";
 import { DecodedJWT } from "../types/AuthTypes";
 import { setLocalStorageObjProperty } from "../utils/LocalStorageUtils";
+import { logout } from "../utils/logout";
 
 const baseAPIClient = axios.create({
   baseURL: process.env.REACT_APP_BACKEND_URL,
@@ -26,20 +27,24 @@ baseAPIClient.interceptors.request.use(async (config: AxiosRequestConfig) => {
       (typeof decodedToken === "string" ||
         decodedToken.exp <= Math.round(new Date().getTime() / 1000))
     ) {
-      const { data } = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/auth/refresh`,
-        {},
-        { withCredentials: true },
-      );
+      try {
+        const { data } = await axios.post(
+          `${process.env.REACT_APP_BACKEND_URL}/auth/refresh`,
+          {},
+          { withCredentials: true },
+        );
+        const accessToken = data.accessToken || data.access_token;
+        setLocalStorageObjProperty(
+          AUTHENTICATED_USER_KEY,
+          "accessToken",
+          accessToken,
+        );
 
-      const accessToken = data.accessToken || data.access_token;
-      setLocalStorageObjProperty(
-        AUTHENTICATED_USER_KEY,
-        "accessToken",
-        accessToken,
-      );
-
-      newConfig.headers.Authorization = accessToken;
+        newConfig.headers.Authorization = accessToken;
+      } catch {
+        // If we fail to refresh our token, remove it and logout.
+        logout();
+      }
     }
   }
 

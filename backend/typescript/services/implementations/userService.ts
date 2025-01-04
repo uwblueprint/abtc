@@ -62,7 +62,10 @@ class UserService implements IUserService {
     let firebaseUser: firebaseAdmin.auth.UserRecord;
 
     try {
-      firebaseUser = await firebaseAdmin.auth().getUserByEmail(email);
+      // Replace all spaces with '+'
+      const decodedEmail = email.replace(/ /g, "+")
+      
+      firebaseUser = await firebaseAdmin.auth().getUserByEmail(decodedEmail);
       user = await prisma.user.findFirst({
         where: {
           authId: firebaseUser.uid,
@@ -314,6 +317,29 @@ class UserService implements IUserService {
     };
   }
 
+  async acceptUserById(userId: string): Promise<void> {
+    let oldUser: user | null;
+
+    try {
+      oldUser = await prisma.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          isAccepted: Status.ACCEPTED
+        },
+      });
+
+      if (!oldUser) {
+        throw new Error(`userId ${userId} not found.`);
+      }
+
+    } catch (error: unknown) {
+      Logger.error(`Failed to update user. Reason = ${getErrorMessage(error)}`);
+      throw error;
+    }
+  }
+  
   async deleteUserById(userId: string): Promise<void> {
     try {
       const deletedUser = await prisma.user.delete({

@@ -87,4 +87,5 @@ enum Frequency {
 enum Status {
   PENDING
   ACCEPTED
+  REJECTED
 }
