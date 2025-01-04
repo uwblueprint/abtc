@@ -7,7 +7,7 @@ const acceptUserByEmail = async (email: string): Promise<void> => {
     AUTHENTICATED_USER_KEY,
     "accessToken",
   )}`;
-  console.log(email, "email");
+
   try {
     await baseAPIClient.get(`/users/accept?email=${email}`, {
       headers: { Authorization: bearerToken },
