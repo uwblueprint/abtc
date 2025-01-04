@@ -120,11 +120,13 @@ const App = (): React.ReactElement => {
               exact
               path={Routes.PLATFORM_SIGNUP_REQUESTS}
               component={PlatformSignupRequests}
+              adminOnly
             />
             <PrivateRoute
               exact
               path={Routes.ACCOUNT_DIRECTORY}
               component={AccountDirectory}
+              adminOnly
             />
             <Route exact path="*" component={NotFound} />
           </Switch>
