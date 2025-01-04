@@ -50,11 +50,10 @@ const NavBar: React.FC<NavBarProps> = ({ firstName, lastName, userRole }) => {
       <ChakraLink
         as={ReactRouterLink}
         to="/volunteer-dashboard"
-        color={location.pathname === "/" ? "#3F3575" : "#444750"}
+        color="#444750"
         fontWeight="500"
         _hover={{ color: "black", textDecoration: "none" }}
         ml={6}
-        backgroundColor={location.pathname === "/" ? "#D9D7E3" : "none"}
         paddingLeft={4}
         paddingRight={4}
         paddingTop={1}
