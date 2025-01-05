@@ -217,13 +217,13 @@ const PlatformSignupRequests = (): React.ReactElement => {
   const getBadgeBg = (status: string): string => {
     if (status === "PENDING") return "#DACFFB";
     if (status === "ACCEPTED") return "#A8E4A0";
-    return "gray.200";
+    return "#FF9E99";
   };
 
   const getBadgeColor = (status: string): string => {
     if (status === "PENDING") return "#230282";
     if (status === "ACCEPTED") return "#2E6F40";
-    return "black";
+    return "#9B0700";
   };
 
   // Approve selected items

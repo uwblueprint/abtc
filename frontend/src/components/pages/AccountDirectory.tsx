@@ -109,6 +109,18 @@ const AccountDirectory = (): React.ReactElement => {
     setSearchFilter(event.target.value);
   };
 
+  const getBadgeBg = (status: string): string => {
+    if (status === "ADMIN") return "#d1e9ff";
+    if (status === "VOLUNTEER") return "#DACFFB";
+    return "gray.200";
+  };
+
+  const getBadgeColor = (status: string): string => {
+    if (status === "ADMIN") return "#00488b";
+    if (status === "VOLUNTEER") return "#230282";
+    return "black";
+  };
+
   const totalPages = Math.ceil(filteredUserInfo.length / itemsPerPage);
   const currentItems = filteredUserInfo.slice(
     (currentPage - 1) * itemsPerPage,
@@ -181,8 +193,17 @@ const AccountDirectory = (): React.ReactElement => {
                       {user.emergencyFirstName} {user.emergencyLastName}
                     </Td>
                     <Td>{formatPhoneNumber(user.emergencyPhoneNumber)}</Td>
-                    <Td> {titleCase(user.role)}</Td>
-                    <Td> {user.isAccepted} </Td>
+                    <Td>
+                      {" "}
+                      <Badge
+                        bg={getBadgeBg(user.role)}
+                        color={getBadgeColor(user.role)}
+                        px="6"
+                        textTransform="unset"
+                      >
+                        {user.role}
+                      </Badge>
+                    </Td>
                   </Tr>
                 ))}
               </Tbody>
