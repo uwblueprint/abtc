@@ -15,6 +15,7 @@ import {
   Center,
   Link,
   Button,
+  useToast,
 } from "@chakra-ui/react";
 
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
@@ -34,11 +35,30 @@ const Login = (): React.ReactElement => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
 
+  const toast = useToast();
   useEffect(() => {
     if (error) {
       setError(null);
     }
   }, [email, password]);
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const registrationComplete = urlParams.has("registrationComplete")
+    ? urlParams.get("registrationComplete")
+    : null;
+
+  useEffect(() => {
+    if (registrationComplete) {
+      toast({
+        title: "Registration complete!",
+        description: "Please log in.",
+        status: "success",
+        position: "top-right",
+        duration: 6000,
+        isClosable: true,
+      });
+    }
+  }, []);
 
   const onLogInClick = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -47,9 +67,20 @@ const Login = (): React.ReactElement => {
         email,
         password,
       );
+
       setAuthenticatedUser(user);
     } catch (_error) {
-      setError("Invalid email or password");
+      if (_error.message.includes("403")) {
+        toast({
+          description: "Awaiting admin approval.",
+          status: "info",
+          position: "top-right",
+          duration: 5000,
+          isClosable: true,
+        });
+      } else {
+        setError("Invalid email or password");
+      }
     }
   };
 
@@ -136,7 +167,8 @@ const Login = (): React.ReactElement => {
                 Log In
               </Button>
             </Center>
-            <Center>
+
+            {/* <Center>
               <GoogleLogin
                 onSuccess={(credentialResponse) => {
                   if (credentialResponse.credential) {
@@ -147,7 +179,7 @@ const Login = (): React.ReactElement => {
                   console.log("Login Failed");
                 }}
               />
-            </Center>
+            </Center> */}
             <Center>
               <Text mt={4} fontSize="sm">
                 Don&apos;t have an account?{" "}

@@ -15,6 +15,7 @@ export type UserDTO = {
   emergencyLastName: string;
   emergencyPhoneNumber: string;
   role: Role;
+  isAccepted?: string | null;
 };
 
 export type CreateUserDTO = Omit<UserDTO, "id"> & { password: string };

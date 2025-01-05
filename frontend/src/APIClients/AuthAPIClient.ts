@@ -25,7 +25,7 @@ const login = async (
     localStorage.setItem(AUTHENTICATED_USER_KEY, JSON.stringify(data));
     return data;
   } catch (error) {
-    throw new Error("Login failed");
+    throw new Error(error);
   }
 };
 

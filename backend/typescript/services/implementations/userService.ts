@@ -89,6 +89,7 @@ class UserService implements IUserService {
       emergencyLastName: user.emergencyLastName,
       emergencyPhoneNumber: user.emergencyPhoneNumber,
       role: user.role,
+      isAccepted: user.isAccepted
     };
   }
 

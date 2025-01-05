@@ -39,10 +39,14 @@ authRouter.post("/login", loginRequestValidator, async (req, res) => {
 
     const { refreshToken, ...rest } = authDTO;
 
-    res
-      .cookie("refreshToken", refreshToken, cookieOptions)
-      .status(200)
-      .json(rest);
+    if (authDTO.isAccepted !== "ACCEPTED") {
+      res.status(403).json({ error: "User is pending admin approval" });
+    } else {
+      res
+        .cookie("refreshToken", refreshToken, cookieOptions)
+        .status(200)
+        .json(rest);
+    }
   } catch (error: unknown) {
     res.status(500).json({ error: getErrorMessage(error) });
   }

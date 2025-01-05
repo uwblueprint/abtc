@@ -1,15 +1,23 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext } from "react";
 import { Redirect, useHistory } from "react-router-dom";
-import useMultistepForm from '../../hooks/useMultistepForm';
-import SignupMain from './SignupMain';
-import SignupSecondary from './SignupSecondary';
-import { SignupFormStepComponentType, SignupRequest, SignupRequestErrors } from '../../types/SignupFormTypes';
-import SignupEmergencyContact from './SignupEmergencyContact';
-import { register } from '../../APIClients/AuthAPIClient';
-import { AuthenticatedUser } from '../../types/AuthTypes';
+import useMultistepForm from "../../hooks/useMultistepForm";
+import SignupMain from "./SignupMain";
+import SignupSecondary from "./SignupSecondary";
+import {
+  SignupFormStepComponentType,
+  SignupRequest,
+  SignupRequestErrors,
+} from "../../types/SignupFormTypes";
+import SignupEmergencyContact from "./SignupEmergencyContact";
+import { register } from "../../APIClients/AuthAPIClient";
+import { AuthenticatedUser } from "../../types/AuthTypes";
 import AuthContext from "../../contexts/AuthContext";
-import { HOME_PAGE, VOLUNTEER_DASHBOARD_PAGE, PLATFORM_SIGNUP_REQUESTS } from "../../constants/Routes";
-
+import {
+  HOME_PAGE,
+  VOLUNTEER_DASHBOARD_PAGE,
+  PLATFORM_SIGNUP_REQUESTS,
+} from "../../constants/Routes";
+import { logout } from "../../utils/logout";
 
 const INITIAL_DATA: SignupRequest = {
   firstName: "",
@@ -35,10 +43,24 @@ const SignupEmergencyContactErrors: Partial<SignupRequestErrors> = {
 };
 
 const Signup = (): React.ReactElement => {
-  const allErrors = [SignupMainErrors, SignupSecondaryErrors, SignupEmergencyContactErrors];
-  const steps: SignupFormStepComponentType[] = [SignupMain, SignupSecondary, SignupEmergencyContact];
+  const allErrors = [
+    SignupMainErrors,
+    SignupSecondaryErrors,
+    SignupEmergencyContactErrors,
+  ];
+  const steps: SignupFormStepComponentType[] = [
+    SignupMain,
+    SignupSecondary,
+    SignupEmergencyContact,
+  ];
 
-  const { StepComponent, currentStepIndex, isLastStep, back, next } = useMultistepForm(steps);
+  const {
+    StepComponent,
+    currentStepIndex,
+    isLastStep,
+    back,
+    next,
+  } = useMultistepForm(steps);
 
   const [data, setData] = useState(INITIAL_DATA);
   const [signupErrors, setSignupErrors] = useState(allErrors);
@@ -60,7 +82,10 @@ const Signup = (): React.ReactElement => {
   const updateErrorFields = (fields: Partial<SignupRequestErrors>) => {
     if (!errorsExists) return;
     const newSignupErrors = [...signupErrors];
-    newSignupErrors[currentStepIndex] = { ...newSignupErrors[currentStepIndex], ...fields };
+    newSignupErrors[currentStepIndex] = {
+      ...newSignupErrors[currentStepIndex],
+      ...fields,
+    };
     setSignupErrors(newSignupErrors);
   };
 
@@ -82,11 +107,22 @@ const Signup = (): React.ReactElement => {
   }
 
   if (authenticatedUser) {
-    return <Redirect to={HOME_PAGE} />;
+    logout("registrationComplete");
   }
 
-  return (<>{!!stepExists && !!errorsExists &&
-    <StepComponent back={back} onSubmit={onSubmit} updateFields={updateFields} data={data} errors={errors} updateErrorFields={updateErrorFields} />}</>
+  return (
+    <>
+      {!!stepExists && !!errorsExists && (
+        <StepComponent
+          back={back}
+          onSubmit={onSubmit}
+          updateFields={updateFields}
+          data={data}
+          errors={errors}
+          updateErrorFields={updateErrorFields}
+        />
+      )}
+    </>
   );
 };
 
