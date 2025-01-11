@@ -109,48 +109,66 @@ class ServiceRequest implements IServiceRequest {
   }
 
   async postServiceRequestByUserId(
-    userId: string,
-    serviceRequestId: string,
-  ): Promise<void> {
-    try {
-      const newServiceRequest = await prisma.serviceRequest.findUnique({
-        where: {
-          id: serviceRequestId,
-        },
-      });
+  userId: string,
+  serviceRequestId: string
+): Promise<void> {
+  try {
+    // Find the service request by ID
+    const newServiceRequest = await prisma.serviceRequest.findUnique({
+      where: {
+        id: serviceRequestId,
+      },
+    });
 
-      if (!newServiceRequest) {
-        throw new Error("Service request not found.");
-      }
-
-      const existingUser = (await prisma.user.findUnique({
-        where: {
-          id: userId,
-        },
-        include: {
-          assignedServiceRequests: true,
-        },
-      })) as user & { assignedServiceRequests: serviceRequest[] };
-
-      if (!existingUser) {
-        throw new Error("User not found.");
-      }
-
-      const updatedUser = (await prisma.user.update({
-        where: {
-          id: userId,
-        },
-        data: {
-          assignedServiceRequests: {
-            connect: [{ id: serviceRequestId }],
-          },
-        },
-      })) as user & { assignedServiceRequests: serviceRequest[] };
-      return Promise.resolve();
-    } catch (error) {
-      throw new Error("Error creating service request.");
+    if (!newServiceRequest) {
+      throw new Error("Service request not found.");
     }
+
+    // Check if the user exists
+    const existingUser = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!existingUser) {
+      throw new Error("User not found.");
+    }
+
+    // Append the userId to the assigneeIds array in the service request
+    await prisma.serviceRequest.update({
+      where: {
+        id: serviceRequestId,
+      },
+      data: {
+        assigneeIds: {
+          set: [
+            ...(newServiceRequest.assigneeIds || []), // Keep existing IDs
+            userId, // Add the new userId
+          ],
+        },
+      },
+    });
+
+    // Update the user's assignedServiceRequests (optional, if necessary)
+    await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        assignedServiceRequests: {
+          connect: [{ id: serviceRequestId }],
+        },
+      },
+    });
+
+    return Promise.resolve();
+  } catch (error) {
+    console.error("Error creating service request:", error);
+    throw new Error("Error creating service request.");
   }
+}
+
 
   async getServiceRequestByID(requestId: string): Promise<serviceRequest> {
     try {

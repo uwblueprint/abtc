@@ -12,11 +12,7 @@ import SignupEmergencyContact from "./SignupEmergencyContact";
 import { register } from "../../APIClients/AuthAPIClient";
 import { AuthenticatedUser } from "../../types/AuthTypes";
 import AuthContext from "../../contexts/AuthContext";
-import {
-  HOME_PAGE,
-  VOLUNTEER_DASHBOARD_PAGE,
-  PLATFORM_SIGNUP_REQUESTS,
-} from "../../constants/Routes";
+
 import { logout } from "../../utils/logout";
 
 const INITIAL_DATA: SignupRequest = {

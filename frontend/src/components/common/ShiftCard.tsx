@@ -1,4 +1,5 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
 import { Text, Box } from "@chakra-ui/react";
 import { ServiceRequest } from "../../types/ServiceRequestTypes";
 
@@ -7,7 +8,9 @@ type ShiftCardProps = {
 };
 
 const ShiftCard: React.FC<ShiftCardProps> = ({ shift }) => {
-  const { requestName, shiftTime, shiftEndTime, description } = shift;
+  const history = useHistory();
+
+  const { requestName, shiftTime, shiftEndTime, description, id } = shift;
 
   const formatTime = (dateStr: string | null) => {
     if (!dateStr) return "";
@@ -28,6 +31,9 @@ const ShiftCard: React.FC<ShiftCardProps> = ({ shift }) => {
       borderStyle="solid"
       borderColor="#0B0B0B"
       borderRadius="lg"
+      onClick={() => {
+        history.push(`/dashboard?shiftId=${id}`);
+      }}
     >
       <Text fontSize="xl" fontWeight="bold">
         {requestName}

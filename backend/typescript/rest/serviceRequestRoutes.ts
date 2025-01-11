@@ -19,8 +19,9 @@ const authService: IAuthService = new AuthService(userService, emailService);
 
 /* Get service request by ID if requestId is specified; otherwise, return all service requests. */
 serviceRequestRouter.get("/", isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])),async (req, res) => {
-  const { requestId, fromDate, toDate } = req.body;
-
+ 
+  const {requestId, fromDate, toDate} = req.params
+  
   if (requestId) {
     if (typeof requestId !== "string") {
       res
@@ -82,9 +83,22 @@ serviceRequestRouter.get("/", isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])
 /* Get service requests by requester ID */
 serviceRequestRouter.get("/requester/:requesterId",isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])), async (req, res) => {
   const { requesterId } = req.params;
+
   try {
     const serviceRequests =
       await serviceRequestService.getServiceRequestsByRequesterId(requesterId);
+    res.status(200).json(serviceRequests);
+  } catch (error: unknown) {
+    res.status(500).json({ error: getErrorMessage(error) });
+  }
+});
+
+serviceRequestRouter.get("/id/:requestId",isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])), async (req, res) => {
+  const { requestId } = req.params;
+ 
+  try {
+    const serviceRequests =
+      await serviceRequestService.getServiceRequestByID(requestId);
     res.status(200).json(serviceRequests);
   } catch (error: unknown) {
     res.status(500).json({ error: getErrorMessage(error) });
@@ -153,6 +167,7 @@ serviceRequestRouter.post("/post",isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEE
 serviceRequestRouter.delete("/delete/:id", isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])),async (req, res) => {
   try {
     const requestId = req.params.id;
+    console.log(requestId, "requestId")
     await serviceRequestService.deleteServiceRequestByID(requestId);
     res.status(200).json({ message: `Service Request deleted successfully.` });
   } catch (error: unknown) {

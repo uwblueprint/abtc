@@ -217,13 +217,13 @@ const PlatformSignupRequests = (): React.ReactElement => {
   const getBadgeBg = (status: string): string => {
     if (status === "PENDING") return "#DACFFB";
     if (status === "ACCEPTED") return "#A8E4A0";
-    return "#FF9E99";
+    return "#E8E9EB";
   };
 
   const getBadgeColor = (status: string): string => {
     if (status === "PENDING") return "#230282";
     if (status === "ACCEPTED") return "#2E6F40";
-    return "#9B0700";
+    return "#676767";
   };
 
   // Approve selected items
@@ -420,7 +420,7 @@ const PlatformSignupRequests = (): React.ReactElement => {
                         }
                         borderRadius="md"
                         maxWidth="300px"
-                        // variant="subtle"
+                        variant="filled"
                       />
                       {noteUpdated[user.id] && (
                         <IconButton

@@ -5,31 +5,37 @@ import { Text, Box, Flex, Icon, IconButton, Select } from "@chakra-ui/react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import { Views, DateRange, Event } from "react-big-calendar";
 
+import { useHistory } from "react-router-dom";
 import Calendar from "../Calendar";
 import ServiceRequestAPIClient from "../../../APIClients/ServiceRequestAPIClient";
-import { ServiceRequest, ServiceRequestType } from "../../../types/ServiceRequestTypes";
+import {
+  ServiceRequest,
+  ServiceRequestType,
+} from "../../../types/ServiceRequestTypes";
 
 type Keys = keyof typeof Views;
 
 export default function CustomizedCalendar() {
+  const history = useHistory();
   const [shifts, setShifts] = useState<Event[]>([]);
-  const [selectedRequestType, setSelectedRequestType] = useState('');
-  const [view, setView] = useState<(typeof Views)[Keys]>(Views.MONTH);
+  const [selectedRequestType, setSelectedRequestType] = useState("");
+  const [view, setView] = useState<typeof Views[Keys]>(Views.MONTH);
   const [date, setDate] = useState<Date>(moment(new Date()).toDate());
 
   useEffect(() => {
     const getAndTransformRequests = async () => {
       const serviceRequests: ServiceRequest[] = await ServiceRequestAPIClient.get();
-      const events: Event[] = [];
+      const events: any[] = [];
       serviceRequests.forEach((shift) => {
         if (!shift.shiftTime || !shift.shiftEndTime) return;
         events.push({
+          id: shift.id,
           title: shift.requestName,
           start: new Date(shift.shiftTime),
           end: new Date(shift.shiftEndTime),
           resource: {
             requestType: shift.requestType,
-          }
+          },
         });
       });
       setShifts(events);
@@ -38,15 +44,20 @@ export default function CustomizedCalendar() {
     getAndTransformRequests();
   }, []);
 
-  const onNavigate = useCallback((newDate: Date) => setDate(newDate), [setDate]);
-  const onView = useCallback((newView: (typeof Views)[Keys]) => setView(newView), [setView]);
+  const onNavigate = useCallback((newDate: Date) => setDate(newDate), [
+    setDate,
+  ]);
+  const onView = useCallback(
+    (newView: typeof Views[Keys]) => setView(newView),
+    [setView],
+  );
 
   const onDrillDown = useCallback(
     (newDate: Date) => {
       setDate(newDate);
       setView(Views.WEEK);
     },
-    [setDate, setView]
+    [setDate, setView],
   );
 
   const onPrevClick = useCallback(() => {
@@ -65,38 +76,53 @@ export default function CustomizedCalendar() {
     }
   }, [view, date]);
 
-  const onSelectRequestTypeChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selected = e.currentTarget.value;
-    setSelectedRequestType(selected);
-  }, [selectedRequestType]);
+  const onSelectRequestTypeChange = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      const selected = e.currentTarget.value;
+      setSelectedRequestType(selected);
+    },
+    [selectedRequestType],
+  );
 
-  const onSelectViewChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selected = e.currentTarget.value;
-    switch (selected.toUpperCase()) {
-      case "WEEK":
-        setView(Views.WEEK);
-        break;
-      default:
-        setView(Views.MONTH);
-    }
-  }, [view]);
+  const onSelectViewChange = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      const selected = e.currentTarget.value;
+      switch (selected.toUpperCase()) {
+        case "WEEK":
+          setView(Views.WEEK);
+          break;
+        default:
+          setView(Views.MONTH);
+      }
+    },
+    [view],
+  );
 
   const dateText = useMemo(() => {
     return moment(date).format("MMMM, YYYY");
   }, [date]);
 
-  const formats = useMemo(() => ({
-    dateFormat: 'D',
+  const formats = useMemo(
+    () => ({
+      dateFormat: "D",
 
-    timeGutterFormat: 'h a',
+      timeGutterFormat: "h a",
 
-    eventTimeRangeFormat: (range: DateRange, culture: any, localizer: any) =>
-      `${localizer.format(range.start, 'h:mma', culture)} - ${localizer.format(range.end, 'h:mma', culture)}`,
+      eventTimeRangeFormat: (range: DateRange, culture: any, localizer: any) =>
+        `${localizer.format(
+          range.start,
+          "h:mma",
+          culture,
+        )} - ${localizer.format(range.end, "h:mma", culture)}`,
 
-    dayFormat: (dateParam: Date, culture: any, localizer: any) =>
-      localizer.format(dateParam, 'ddd', culture).substring(0, 3).toUpperCase()
-      + localizer.format(dateParam, ' D', culture)
-  }), []);
+      dayFormat: (dateParam: Date, culture: any, localizer: any) =>
+        localizer
+          .format(dateParam, "ddd", culture)
+          .substring(0, 3)
+          .toUpperCase() + localizer.format(dateParam, " D", culture),
+    }),
+    [],
+  );
 
   const eventPropGetter = useCallback(
     (event: any, _start: Date, _end: Date, _isSelected: boolean) => {
@@ -104,93 +130,114 @@ export default function CustomizedCalendar() {
         case ServiceRequestType.KITCHEN:
           return {
             style: {
-              backgroundColor: '#E1EEFA', // pale blue
+              backgroundColor: "#E1EEFA", // pale blue
               color: "#004E97", // dark blue
             },
           };
         case ServiceRequestType.SITE:
           return {
             style: {
-              backgroundColor: '#E1F4E6', // pale green
+              backgroundColor: "#E1F4E6", // pale green
               color: "#00701F", // dark green
             },
           };
         default:
           return {
             style: {
-              backgroundColor: '#E8E8E8', // pale gray
+              backgroundColor: "#E8E8E8", // pale gray
               color: "#A0A0A0", // cold gray
             },
           };
       }
-    }
-    ,
-    []
+    },
+    [],
   );
-
-  return <Flex height="100%" direction="column" width="100%" gap={2} p={2}>
-    <Flex ml={view === Views.WEEK ? "50px" : "0"} mb={3} mt={2} justifyContent="space-between" alignItems="center">
-      <Box display="flex" alignItems="center" gap={3} pt={2} pb={2}>
-        <Text fontSize="xl" fontWeight="bold">{dateText}</Text>
-        <Box>
-          <IconButton
-            aria-label="Back"
-            size="sm"
-            icon={<Icon as={FaChevronLeft} />}
-            variant='ghost'
-            onClick={onPrevClick}
-          />
-          <IconButton
-            aria-label="Next"
-            size="sm"
-            icon={<Icon as={FaChevronRight} />}
-            variant='ghost'
-            onClick={onNextClick}
-          />
+  console.log("shifts", shifts);
+  return (
+    <Flex height="100%" direction="column" width="100%" gap={2} p={2}>
+      <Flex
+        ml={view === Views.WEEK ? "50px" : "0"}
+        mb={3}
+        mt={2}
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        <Box display="flex" alignItems="center" gap={3} pt={2} pb={2}>
+          <Text fontSize="xl" fontWeight="bold">
+            {dateText}
+          </Text>
+          <Box>
+            <IconButton
+              aria-label="Back"
+              size="sm"
+              icon={<Icon as={FaChevronLeft} />}
+              variant="ghost"
+              onClick={onPrevClick}
+            />
+            <IconButton
+              aria-label="Next"
+              size="sm"
+              icon={<Icon as={FaChevronRight} />}
+              variant="ghost"
+              onClick={onNextClick}
+            />
+          </Box>
         </Box>
-      </Box>
-      <Box display="flex" flexGrow={0.1} gap={3}>
-        <Select
-          placeholder="Filter by"
-          onChange={onSelectRequestTypeChange}
-          value={selectedRequestType}
-          size='sm'
-          borderRadius={20}
-          fontWeight="600"
-        >
-          <option value='kitchen'>Kitchen</option>
-          <option value='site'>Site</option>
-        </Select>
-        <Select
-          onChange={onSelectViewChange}
-          value={view}
-          size='sm'
-          borderRadius={20}
-          fontWeight="600"
-        >
-          <option value='month'>Month</option>
-          <option value='week'>Week</option>
-        </Select>
+        <Box display="flex" flexGrow={0.1} gap={3}>
+          <Select
+            placeholder="Filter by"
+            onChange={onSelectRequestTypeChange}
+            value={selectedRequestType}
+            size="sm"
+            borderRadius={20}
+            fontWeight="600"
+          >
+            <option value="kitchen">Kitchen</option>
+            <option value="site">Site</option>
+          </Select>
+          <Select
+            onChange={onSelectViewChange}
+            value={view}
+            size="sm"
+            borderRadius={20}
+            fontWeight="600"
+          >
+            <option value="month">Month</option>
+            <option value="week">Week</option>
+          </Select>
+        </Box>
+      </Flex>
+      <Box flex={1} width="100%" overflow="auto" position="relative">
+        <Calendar
+          events={
+            selectedRequestType === ""
+              ? shifts
+              : shifts.filter(
+                  (shift) =>
+                    shift.resource.requestType ===
+                    selectedRequestType.toUpperCase(),
+                )
+          }
+          eventPropGetter={eventPropGetter}
+          defaultView={Views.MONTH}
+          toolbar={false}
+          date={date}
+          view={view}
+          formats={formats}
+          onDrillDown={onDrillDown}
+          onNavigate={onNavigate}
+          onView={onView}
+          // New Props for Time Layout
+          step={30} // 30 minutes per slot
+          timeslots={2} // 2 slots per hour
+          defaultDate={new Date()} // Today's date
+          onSelectEvent={(event: any) => {
+            // Handle the event click
+            console.log("Event clicked:", event);
+            history.push(`/dashboard?shiftId=${event.id}`);
+          }}
+        />
       </Box>
     </Flex>
-    <Box
-      flex={1}
-      width="100%"
-      overflow="auto"
-      position="relative"
-    >
-      <Calendar
-        events={selectedRequestType === '' ? shifts : shifts.filter((shift) => shift.resource.requestType === selectedRequestType.toUpperCase())}
-        eventPropGetter={eventPropGetter}
-        defaultView={Views.MONTH}
-        toolbar={false}
-        date={date}
-        view={view}
-        formats={formats}
-        onDrillDown={onDrillDown}
-        onNavigate={onNavigate}
-        onView={onView}
-      />
-    </Box>
-  </Flex >;
+  );
 }

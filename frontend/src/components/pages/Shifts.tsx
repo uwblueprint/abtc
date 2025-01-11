@@ -71,12 +71,31 @@ const Shifts = (): React.ReactElement => {
     const fetchShifts = async () => {
       try {
         const shifts = await ServiceRequestAPIClient.get();
-        const upcomingShifts = shifts
-          .filter(shift => shift.shiftTime)
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Set time to the start of the day
+
+        // Filter shifts based on the role
+        const filteredShifts = shifts.filter((shift) => {
+          const shiftDate = new Date(shift.shiftTime!);
+          if (shiftDate < today) {
+            return false; // Exclude past shifts
+          }
+          if (authenticatedUser?.role !== "ADMIN") {
+            // Show only the user's shifts if not an admin
+            return shift.assigneeIds?.includes(authenticatedUser?.id ?? "");
+          }
+          return true; // Admins see all future shifts
+        });
+
+        const upcomingShifts = filteredShifts
           .sort(
-            (a, b) => new Date(a.shiftTime!).getTime() - new Date(b.shiftTime!).getTime()
+            (a, b) =>
+              new Date(a.shiftTime!).getTime() -
+              new Date(b.shiftTime!).getTime(),
           )
           .slice(0, 15);
+
         setShiftsByDate(groupByDate(upcomingShifts));
       } catch (error) {
         console.error("Error fetching shifts:", error);
@@ -84,7 +103,6 @@ const Shifts = (): React.ReactElement => {
     };
 
     fetchShifts();
-
   }, []);
 
   return (
@@ -98,14 +116,16 @@ const Shifts = (): React.ReactElement => {
         overflowY="scroll"
         height="100%"
       >
-        <Heading as="h1" size="lg" mb="30px">
-          Your Shifts
-        </Heading>
-        {authenticatedUser?.role === "ADMIN" &&
+        {authenticatedUser?.role === "ADMIN" && (
           <Box mb="30px">
             <CreateShift />
           </Box>
-        }
+        )}
+        <Heading as="h1" size="lg" mb="30px">
+          {authenticatedUser?.role === "ADMIN"
+            ? "Upcoming Shifts"
+            : "Your Shifts"}
+        </Heading>
         {shiftsByDate && shiftsByDate.length > 0 ? (
           shiftsByDate.map((dateShifts: DateShifts, index: number) => {
             return (

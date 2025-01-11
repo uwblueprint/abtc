@@ -141,7 +141,7 @@ class UserService implements IUserService {
 
       userDtos = await Promise.all(
         users?.map(async (user) => {
-          let firebaseUser: firebaseAdmin.auth.UserRecord;
+          // let firebaseUser: firebaseAdmin.auth.UserRecord;
 
           // This is computationally expensive and slow. 
           // try {

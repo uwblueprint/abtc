@@ -20,12 +20,7 @@ import {
 
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import authAPIClient from "../../APIClients/AuthAPIClient";
-import {
-  HOME_PAGE,
-  SIGNUP_PAGE,
-  VOLUNTEER_DASHBOARD_PAGE,
-  PLATFORM_SIGNUP_REQUESTS,
-} from "../../constants/Routes";
+import { HOME_PAGE, SIGNUP_PAGE } from "../../constants/Routes";
 import AuthContext from "../../contexts/AuthContext";
 import { AuthenticatedUser } from "../../types/AuthTypes";
 

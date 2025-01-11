@@ -28,7 +28,7 @@ export const HOOKS_PAGE = "/hooks";
 
 export const SHIFTS_PAGE = "/shifts";
 
-export const VOLUNTEER_DASHBOARD_PAGE = "/volunteer-dashboard";
+export const DASHBOARD_PAGE = "/dashboard";
 
 export const PLATFORM_SIGNUP_REQUESTS = "/platform-signup-requests";
 

@@ -18,15 +18,15 @@ const upload = multer({ dest: "uploads/" });
 const entityRouter: Router = Router();
 entityRouter.use(isAuthorizedByRole(new Set(["VOLUNTEER", "ADMIN"])));
 
+// Firebase Storage Bucket
 const defaultBucket = process.env.FIREBASE_STORAGE_DEFAULT_BUCKET || "";
-const fileStorageService: IFileStorageService = new FileStorageService(
-  defaultBucket,
-);
+const fileStorageService: IFileStorageService = new FileStorageService(defaultBucket);
 const entityService: IEntityService = new EntityService(fileStorageService);
 
 /* Create entity */
 entityRouter.post(
-  "/",isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])),
+  "/",
+  isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])),
   upload.single("file"),
   entityRequestDtoValidator,
   async (req, res) => {
@@ -48,11 +48,11 @@ entityRouter.post(
     } catch (e: unknown) {
       res.status(500).send(getErrorMessage(e));
     }
-  },
+  }
 );
 
 /* Get all entities */
-entityRouter.get("/", isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])),async (req, res) => {
+entityRouter.get("/", isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])), async (req, res) => {
   const contentType = req.headers["content-type"];
   try {
     const entities = await entityService.getEntities();
@@ -60,7 +60,7 @@ entityRouter.get("/", isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])),async 
       res,
       200,
       contentType,
-      entities,
+      entities
     );
   } catch (e: unknown) {
     await sendResponseByMimeType(res, 500, contentType, [
@@ -72,7 +72,7 @@ entityRouter.get("/", isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])),async 
 });
 
 /* Get entity by id */
-entityRouter.get("/:id", isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])),async (req, res) => {
+entityRouter.get("/:id", isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])), async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -85,7 +85,8 @@ entityRouter.get("/:id", isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])),asy
 
 /* Update entity by id */
 entityRouter.put(
-  "/:id",isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])),
+  "/:id",
+  isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])),
   upload.single("file"),
   entityRequestDtoValidator,
   async (req, res) => {
@@ -108,11 +109,11 @@ entityRouter.put(
     } catch (e: unknown) {
       res.status(500).send(getErrorMessage(e));
     }
-  },
+  }
 );
 
 /* Delete entity by id */
-entityRouter.delete("/:id",isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])), async (req, res) => {
+entityRouter.delete("/:id", isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])), async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -124,8 +125,9 @@ entityRouter.delete("/:id",isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])), 
 });
 
 /* Get file associated with entity by fileUUID */
-entityRouter.get("/files/:fileUUID",isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])), async (req, res) => {
+entityRouter.get("/files/:fileUUID", isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])), async (req, res) => {
   const { fileUUID } = req.params;
+
   try {
     const fileURL = await fileStorageService.getFile(fileUUID);
     res.status(200).json({ fileURL });

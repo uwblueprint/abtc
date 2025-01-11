@@ -33,21 +33,21 @@ export type ServiceRequest = {
   currentEmail: string;
   inviteEmails: string[] | null;
   requestType: ServiceRequestType;
+  assigneeIds?: string[] | null;
 };
 
 export type ServiceRequestErrors = {
   shiftTimeError: string;
   shiftEndTimeError: string;
-}
+};
 
 export type CreateShiftFormStepProps = {
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => true | void;
-    back: () => void;
-    updateFields: (fields: Partial<ServiceRequest>) => void;
-    data: ServiceRequest;
-    errors: Partial<ServiceRequestErrors>;
-    updateErrorFields: (fields: Partial<ServiceRequestErrors>) => void;
-
-}
+  back: () => void;
+  updateFields: (fields: Partial<ServiceRequest>) => void;
+  data: ServiceRequest;
+  errors: Partial<ServiceRequestErrors>;
+  updateErrorFields: (fields: Partial<ServiceRequestErrors>) => void;
+};
 
 export type CreateShiftFormStepComponentType = React.FunctionComponent<CreateShiftFormStepProps>;
