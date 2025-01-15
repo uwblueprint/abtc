@@ -151,6 +151,32 @@ serviceRequestRouter.post("/user/:userId",isAuthorizedByRole(new Set(["ADMIN", "
   }
 });
 
+/* Post service request by user ID */
+serviceRequestRouter.post("/removeUser/:userId",isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])), async (req, res) => {
+  const { userId } = req.params;
+  const { serviceRequestId, shiftName, fullName, shiftDate } = req.body;
+  try {
+    await serviceRequestService.postRemoveServiceRequestByUserId(
+      userId,
+      serviceRequestId,
+    );
+
+    const emailTitle = `Cancelled shift - ${shiftName}`
+    const emailBody = `
+      <br><br>
+      ${fullName} has withdrawn from a shift scheduled for ${shiftDate}
+      <br><br>
+      `;
+    await emailService.sendEmail("aathithan.chandrabalan.27@gmail.com", emailTitle, emailBody)
+    res
+      .status(200)
+      .json({ message: `Service Request added to user successfully.` });
+  } catch (error: unknown) {
+    res.status(500).json({ error: getErrorMessage(error) });
+  }
+});
+
+
 /* Post ServiceRequest route. Requires ADMIN role to perform this action. */
 serviceRequestRouter.post("/post",isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])), async (req, res) => {
   try {

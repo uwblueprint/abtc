@@ -169,6 +169,65 @@ class ServiceRequest implements IServiceRequest {
   }
 }
 
+async postRemoveServiceRequestByUserId(
+  userId: string,
+  serviceRequestId: string
+): Promise<void> {
+  try {
+    // Find the service request by ID
+    const existingServiceRequest = await prisma.serviceRequest.findUnique({
+      where: {
+        id: serviceRequestId,
+      },
+    });
+
+    if (!existingServiceRequest) {
+      throw new Error("Service request not found.");
+    }
+
+    // Check if the user exists
+    const existingUser = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!existingUser) {
+      throw new Error("User not found.");
+    }
+
+    // Remove the userId from the assigneeIds array in the service request
+    await prisma.serviceRequest.update({
+      where: {
+        id: serviceRequestId,
+      },
+      data: {
+        assigneeIds: {
+          set: (existingServiceRequest.assigneeIds || []).filter(
+            (id) => id !== userId // Filter out the userId
+          ),
+        },
+      },
+    });
+
+    // Disconnect the serviceRequestId from the user's assignedServiceRequests
+    await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        assignedServiceRequests: {
+          disconnect: [{ id: serviceRequestId }], // Disconnect the service request
+        },
+      },
+    });
+
+    return Promise.resolve();
+  } catch (error) {
+    console.error("Error removing service request:", error);
+    throw new Error("Error removing service request.");
+  }
+}
 
   async getServiceRequestByID(requestId: string): Promise<serviceRequest> {
     try {

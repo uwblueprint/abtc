@@ -75,16 +75,22 @@ const Shifts = (): React.ReactElement => {
         const today = new Date();
         today.setHours(0, 0, 0, 0); // Set time to the start of the day
 
+        const yesterday = new Date(today);
+        yesterday.setDate(yesterday.getDate() - 1); // Subtract one day to get yesterday
+
         // Filter shifts based on the role
         const filteredShifts = shifts.filter((shift) => {
           const shiftDate = new Date(shift.shiftTime!);
-          if (shiftDate < today) {
-            return false; // Exclude past shifts
+
+          if (shiftDate < yesterday) {
+            return false; // Exclude shifts before yesterday
           }
+
           if (authenticatedUser?.role !== "ADMIN") {
             // Show only the user's shifts if not an admin
             return shift.assigneeIds?.includes(authenticatedUser?.id ?? "");
           }
+
           return true; // Admins see all future shifts
         });
 

@@ -46,6 +46,17 @@ interface IServiceRequest {
     serviceRequestId: string,
   ): Promise<void>;
 
+   /**
+   * Remove serviceRequest from a user
+   * @param userId user's id
+   * @param serviceRequestId the serviceRequest's id to be added
+   * @throws Error if serviceRequest addition fails
+   */
+  postRemoveServiceRequestByUserId(
+    userId: string,
+    serviceRequestId: string,
+  ): Promise<void>;
+
   /**
    * Get serviceRequest by id
    * @param requestId serviceRequest's id

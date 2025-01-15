@@ -30,23 +30,26 @@ model user {
 }
 
 model serviceRequest {
-  id            String             @id @default(auto()) @map("_id") @db.ObjectId
-  requestName   String
-  requesterId   String             @db.ObjectId
-  requester     user               @relation(name: "requester", fields: [requesterId], references: [id]) // Admin requester
-  assigneeIds   String[]           @db.ObjectId
-  assignees     user[]             @relation(name: "assignee", fields: [assigneeIds], references: [id]) // Volunteers
-  location      String
-  shiftTime     DateTime?
-  shiftEndTime  DateTime?
-  description   String?
-  currentEmail  String?
-  inviteEmails  String[]
-  meal          String?
-  cookingMethod CookingMethod?
-  frequency     Frequency?
-  requestType   ServiceRequestType
-  createdAt     String?
+  id                 String             @id @default(auto()) @map("_id") @db.ObjectId
+  requestName        String
+  requesterId        String             @db.ObjectId
+  requester          user               @relation(name: "requester", fields: [requesterId], references: [id]) // Admin requester
+  assigneeIds        String[]           @db.ObjectId
+  assignees          user[]             @relation(name: "assignee", fields: [assigneeIds], references: [id]) // Volunteers
+  location           String
+  shiftTime          DateTime?
+  shiftEndTime       DateTime?
+  description        String?
+  currentEmail       String?
+  inviteEmails       String[]
+  meal               String?
+  cookingMethod      CookingMethod?
+  frequency          Frequency?
+  requestType        ServiceRequestType
+  createdAt          String?
+  pickUpLocation     String?
+  dropOffLocation    String?
+  numberOfVolunteers Int?
 }
 
 model platformSignUp {
@@ -59,6 +62,17 @@ model platformSignUp {
   note      String?
 }
 
+model notification {
+  id                      String  @id @default(auto()) @map("_id") @db.ObjectId
+  assigneeId              String
+  requesterId               String
+  notificationTitle       String?
+  notificationDescription String?
+  date                    String
+  checked                 Boolean?
+  type                    NotificationType
+}
+
 enum Role {
   VOLUNTEER
   ADMIN
@@ -67,6 +81,7 @@ enum Role {
 enum ServiceRequestType {
   SITE
   KITCHEN
+  DELIVERY
 }
 
 enum CookingMethod {
@@ -89,4 +104,10 @@ enum Status {
   PENDING
   ACCEPTED
   REJECTED
+}
+
+enum NotificationType {
+  INVITE
+  CANCELLED
+  PLATFORM
 }

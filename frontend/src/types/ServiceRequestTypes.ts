@@ -1,6 +1,7 @@
 export enum ServiceRequestType {
   SITE = "SITE",
   KITCHEN = "KITCHEN",
+  DELIVERY = "DELIVERY",
 }
 
 export enum CookingMethod {
@@ -34,6 +35,9 @@ export type ServiceRequest = {
   inviteEmails: string[] | null;
   requestType: ServiceRequestType;
   assigneeIds?: string[] | null;
+  pickUpLocation?: string | null;
+  dropOffLocation?: string | null;
+  numberOfVolunteers?: number | null;
 };
 
 export type ServiceRequestErrors = {

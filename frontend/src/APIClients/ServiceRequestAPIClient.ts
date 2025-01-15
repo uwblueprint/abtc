@@ -54,11 +54,15 @@ const post = async ({
   currentEmail,
   inviteEmails,
   requestType,
+  pickUpLocation,
+  dropOffLocation,
+  numberOfVolunteers,
 }: ServiceRequest): Promise<ServiceRequest | null> => {
   const bearerToken = `Bearer ${getLocalStorageObjProperty(
     AUTHENTICATED_USER_KEY,
     "accessToken",
   )}`;
+  console.log(numberOfVolunteers, "numVols");
   try {
     const { data } = await baseAPIClient.post(
       "/serviceRequests/post",
@@ -75,6 +79,9 @@ const post = async ({
         currentEmail,
         inviteEmails,
         requestType,
+        pickUpLocation,
+        dropOffLocation,
+        numberOfVolunteers,
       },
       { headers: { Authorization: bearerToken } },
     );
@@ -106,6 +113,34 @@ const addUserToServiceRequest = async (
   }
 };
 
+const removeUserFromServiceRequest = async (
+  userId: string,
+  serviceRequestId: string,
+  shiftName: string,
+  fullName: string,
+  shiftDate: string,
+): Promise<ServiceRequest | null> => {
+  const bearerToken = `Bearer ${getLocalStorageObjProperty(
+    AUTHENTICATED_USER_KEY,
+    "accessToken",
+  )}`;
+  try {
+    const { data } = await baseAPIClient.post(
+      `/serviceRequests/removeUser/${userId}`,
+      {
+        serviceRequestId,
+        shiftName,
+        fullName,
+        shiftDate,
+      },
+      { headers: { Authorization: bearerToken } },
+    );
+    return data;
+  } catch (error) {
+    return null;
+  }
+};
+
 const deleteShiftById = async (uuid: string): Promise<any> => {
   const bearerToken = `Bearer ${getLocalStorageObjProperty(
     AUTHENTICATED_USER_KEY,
@@ -121,4 +156,11 @@ const deleteShiftById = async (uuid: string): Promise<any> => {
   }
 };
 
-export default { get, getById, post, deleteShiftById, addUserToServiceRequest };
+export default {
+  get,
+  getById,
+  post,
+  deleteShiftById,
+  addUserToServiceRequest,
+  removeUserFromServiceRequest,
+};

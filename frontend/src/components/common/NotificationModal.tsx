@@ -14,41 +14,35 @@ import { FiCheck, FiX } from "react-icons/fi";
 const NotificationPanel = ({
   isVisible,
   onClose,
+  numUnchecked,
+  setNumUnchecked,
 }: {
   isVisible: boolean;
   onClose: () => void;
+  numUnchecked: number;
+  setNumUnchecked: (num: number) => void;
 }) => {
   const notifications = [
     {
+      notificationDescription: "Here is a notification description",
+      notificationTitle: "Cancelled Shift",
+      date: "2024-03",
+      checked: false,
       id: 1,
-      avatar: "https://bit.ly/dan-abramov",
-      name: "frankiesullivan",
-      action: "followed you",
-      time: "2 hours ago",
     },
     {
+      notificationDescription: "Here is a notification description",
+      notificationTitle: "Cancelled Shift",
+      date: "2024-03",
+      checked: true,
       id: 2,
-      avatar: "https://bit.ly/prosper-baba",
-      name: "eleanor_mac",
-      action: "commented on your post",
-      comment:
-        "Love the background on this! Would love to learn how you created the mesh gradient effect.",
-      time: "3 hours ago",
     },
     {
+      notificationDescription: "Here is a notification description",
+      notificationTitle: "Cancelled Shift",
+      date: "2024-03",
+      checked: false,
       id: 3,
-      avatar: "https://bit.ly/code-beast",
-      name: "eleanor_mac",
-      action: "liked your post",
-      time: "3 hours ago",
-    },
-    {
-      id: 4,
-      avatar: "https://bit.ly/ryan-florence",
-      name: "ollie_diggs",
-      action: "invited you to Sisyphus Dashboard",
-      time: "4 hours ago",
-      isInvitation: true,
     },
   ];
 
@@ -65,56 +59,31 @@ const NotificationPanel = ({
       boxShadow="md"
       borderRadius="lg"
       width="400px"
+      maxHeight="500px"
       p={4}
       zIndex={1000}
     >
-      <Flex justifyContent="space-between" mb={4}>
-        <Text fontWeight="bold">Your Notifications</Text>
-        <Text fontSize="sm" color="blue.500" cursor="pointer" onClick={onClose}>
-          Close
-        </Text>
-      </Flex>
       {notifications.map((notification) => (
         <Box key={notification.id} mb={4}>
           <Flex alignItems="center">
-            <Avatar size="sm" src={notification.avatar} mr={4} />
             <Box flex="1">
-              <Text>
-                <Text as="span" fontWeight="bold">
-                  @{notification.name}
-                </Text>{" "}
-                {notification.action}
-              </Text>
-              {notification.comment && (
-                <Text fontSize="sm" color="gray.600" mt={1}>
-                  {notification.comment}
-                </Text>
-              )}
-              <Text fontSize="xs" color="gray.500">
-                {notification.time}
+              <Text as="span" fontWeight="bold">
+                {notification.notificationTitle}
+              </Text>{" "}
+              <Text flexDirection="column">
+                {notification.notificationDescription}
               </Text>
             </Box>
-            {notification.isInvitation && (
-              <Flex>
-                <IconButton
-                  icon={<FiCheck />}
-                  aria-label="Accept"
-                  size="sm"
-                  colorScheme="green"
-                  mr={2}
-                />
-                <IconButton
-                  icon={<FiX />}
-                  aria-label="Decline"
-                  size="sm"
-                  colorScheme="red"
-                />
+
+            {!notification.checked && (
+              <Flex flexDirection="column" gap={1}>
+                <Badge colorScheme="blue" ml={2}>
+                  New
+                </Badge>
+                <Text fontSize="xs" color="gray.500">
+                  {notification.date}
+                </Text>
               </Flex>
-            )}
-            {!notification.isInvitation && (
-              <Badge colorScheme="blue" ml={2}>
-                New
-              </Badge>
             )}
           </Flex>
           <Divider mt={4} />

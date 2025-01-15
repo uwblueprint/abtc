@@ -15,6 +15,7 @@ import {
   ModalBody,
   ModalFooter,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { TbCircleChevronLeft } from "react-icons/tb";
 import { Link as ReactRouterLink, useHistory } from "react-router-dom";
@@ -23,19 +24,24 @@ import EntityAPIClient from "../../APIClients/EntityAPIClient";
 import { titleCase } from "../../utils/FormatUtils";
 import UserAPIClient from "../../APIClients/UserAPIClient";
 import AUTHENTICATED_USER_KEY from "../../constants/AuthConstants";
+import NotificationAPIClient from "../../APIClients/NotificationAPIClient";
+import { NotificationType } from "../../types/NotificationTypes";
 
 const ShiftDetails = ({ shiftId }: any) => {
+  const toast = useToast();
   const [shiftData, setShiftData] = useState<any>();
   const [day, setDay] = useState("");
   const [time, setTime] = useState("");
   const [photo, setPhoto] = useState("");
   const [volunteerNames, setVolunteerNames] = useState<any[]>([]);
+  const [userAssignedShift, setUserAssignedShift] = useState<boolean>(false);
+
   const [currentUser, setCurrentUser] = useState<any>({
     firstName: "",
     lastName: "",
     role: "",
   });
-  console.log("shiftId", shiftId);
+
   const history = useHistory();
 
   const { isOpen, onOpen, onClose } = useDisclosure(); // Chakra's modal hooks
@@ -85,6 +91,7 @@ const ShiftDetails = ({ shiftId }: any) => {
       const data = await ServiceRequestAPIClient.getById({
         requestId: shiftId,
       });
+
       setShiftData(data);
     };
     fetchData();
@@ -92,14 +99,27 @@ const ShiftDetails = ({ shiftId }: any) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const path = shiftData?.requestType;
-      const photoFile = await EntityAPIClient.getFile(
-        shiftTypeToPhoto[path as keyof typeof shiftTypeToPhoto],
-      );
+      if (shiftData?.requestType) {
+        const path = shiftData.requestType;
+        const photoFile = shiftTypeToPhoto[
+          path as keyof typeof shiftTypeToPhoto
+        ]
+          ? await EntityAPIClient.getFile(
+              shiftTypeToPhoto[path as keyof typeof shiftTypeToPhoto],
+            )
+          : null;
+
+        if (photoFile) {
+          setPhoto(photoFile);
+        }
+      }
 
       if (shiftData?.assigneeIds) {
         const userDataArray = await Promise.all(
-          shiftData?.assigneeIds.map(async (id: any) => {
+          shiftData.assigneeIds.map(async (id: any) => {
+            if (id === currentUser.id) {
+              setUserAssignedShift(true);
+            }
             const userData = await UserAPIClient.getUserById(id);
             return `${titleCase(userData.firstName)} ${titleCase(
               userData.lastName,
@@ -113,10 +133,10 @@ const ShiftDetails = ({ shiftId }: any) => {
         shiftData?.shiftTime,
         shiftData?.shiftEndTime,
       );
-      setPhoto(photoFile);
       setDay(formattedDate[0]);
       setTime(formattedDate[1]);
     };
+
     fetchData();
   }, [shiftData, shiftId]);
 
@@ -125,23 +145,100 @@ const ShiftDetails = ({ shiftId }: any) => {
     try {
       await ServiceRequestAPIClient.deleteShiftById(shiftData?.id);
       onClose();
-      history.push("/");
+      history.push("/?refresh=true");
     } catch (error) {
       console.error("Error deleting shift:", error);
     }
   };
 
   const addUserToShift = async () => {
+    if (volunteerNames.length >= shiftData?.numberOfVolunteers) {
+      toast({
+        title: "Registration failed",
+        description: "Maximum number of volunteers reached",
+        status: "error",
+        position: "top-right",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
     try {
       await ServiceRequestAPIClient.addUserToServiceRequest(
         currentUser.id,
         shiftData?.id,
       );
+      await NotificationAPIClient.post({
+        assigneeId: currentUser.id,
+        requesterId: currentUser.id,
+        notificationDescription: "Shift description",
+        notificationTitle: "Notification Title",
+        type: NotificationType.INVITE,
+      });
       onClose();
-      history.push("/");
+      history.push("/?refresh=true");
     } catch (error) {
-      console.error("Error deleting shift:", error);
+      console.error("Error adding user to shift:", error);
     }
+  };
+
+  const removeUserFromShift = async () => {
+    try {
+      await ServiceRequestAPIClient.removeUserFromServiceRequest(
+        currentUser.id,
+        shiftData?.id,
+        shiftData?.requestName,
+        `${currentUser?.firstName} ${currentUser?.lastName}`,
+        formatShiftTimes(shiftData?.shiftTime, shiftData?.shiftEndTime)[0],
+      );
+
+      onClose();
+      history.push("/?refresh=true");
+    } catch (error) {
+      console.error("Error removing user from shift:", error);
+    }
+  };
+
+  const RenderButton = () => {
+    if (currentUser?.role === "ADMIN") {
+      return (
+        <Button mr={8} mb={3} bg="#BF0A30" color="white" onClick={onOpen}>
+          Delete Shift
+        </Button>
+      );
+    }
+
+    if (userAssignedShift) {
+      return (
+        <Button
+          mr={8}
+          mb={3}
+          onClick={() => {
+            removeUserFromShift();
+          }}
+          bg="#BF0A30"
+          color="white"
+          minW="150px"
+        >
+          Cancel
+        </Button>
+      );
+    }
+
+    return (
+      <Button
+        mr={8}
+        mb={3}
+        onClick={() => {
+          addUserToShift();
+        }}
+        bg="#28214C"
+        color="white"
+        minW="150px"
+      >
+        Sign up
+      </Button>
+    );
   };
 
   return (
@@ -171,7 +268,7 @@ const ShiftDetails = ({ shiftId }: any) => {
         flexDirection="column"
         padding={15}
         marginRight={10}
-        minH="50%"
+        minH="45%"
         border="1px solid black"
         borderRadius={15}
       >
@@ -196,20 +293,26 @@ const ShiftDetails = ({ shiftId }: any) => {
             objectFit="cover"
             borderRadius="md"
           />
-          <Flex flexDirection="column" gap={5} mt={10}>
+          <Flex flexDirection="column" mt={10}>
             <Flex flexDirection="column">
+              <Text fontWeight={600} fontSize={18}>
+                Location
+              </Text>
+              <Text fontSize={18} mb={2}>
+                {shiftData?.location}
+              </Text>
               {shiftData?.requestType === "KITCHEN" && (
                 <>
                   <Text fontWeight={600} fontSize={18}>
                     Meal
                   </Text>
-                  <Text fontSize={18}>
+                  <Text fontSize={18} mb={2}>
                     {shiftData ? titleCase(shiftData?.meal) : ""}
                   </Text>
                   <Text fontWeight={600} fontSize={18}>
                     Cooking Method
                   </Text>
-                  <Text fontSize={18}>
+                  <Text fontSize={18} mb={2}>
                     {shiftData ? titleCase(shiftData?.cookingMethod) : ""}
                   </Text>
                 </>
@@ -217,17 +320,15 @@ const ShiftDetails = ({ shiftId }: any) => {
             </Flex>
           </Flex>
         </Flex>
-        <Flex flexDirection="column" mb={3}>
-          <Text fontWeight={600} fontSize={18}>
-            Location
-          </Text>
-          <Text fontSize={18}>{shiftData?.location}</Text>
-        </Flex>
+
         <Flex justifyContent="space-between" alignItems="end">
           <Flex flexDirection="column">
-            <Text fontWeight={600} fontSize={18} mb={2}>
-              Volunteers
-            </Text>
+            <Flex gap={2}>
+              <Text fontWeight={600} fontSize={18} mb={2}>
+                Volunteers ({volunteerNames.length} /{" "}
+                {shiftData?.numberOfVolunteers})
+              </Text>
+            </Flex>
             <Flex gap={2} mb={3}>
               {volunteerNames.map((name, index) => (
                 <Badge key={index} bg="#DACFFB" color="#230282">
@@ -236,21 +337,7 @@ const ShiftDetails = ({ shiftId }: any) => {
               ))}
             </Flex>
           </Flex>
-          {currentUser?.role === "ADMIN" ? (
-            <Button mr={8} mb={3} bg="#BF0A30" color="white" onClick={onOpen}>
-              Delete Shift
-            </Button>
-          ) : (
-            <Button
-              mr={8}
-              mb={3}
-              onClick={() => {
-                addUserToShift();
-              }}
-            >
-              Sign up
-            </Button>
-          )}
+          <RenderButton />
         </Flex>
       </Flex>
 

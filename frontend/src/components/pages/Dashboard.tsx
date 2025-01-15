@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Flex, Box, Heading } from "@chakra-ui/react";
+import { useLocation, useHistory } from "react-router-dom";
 import AUTHENTICATED_USER_KEY from "../../constants/AuthConstants";
 import CustomizedCalendar from "./Calendar/CustomizedCalendar";
 import Shifts from "./Shifts";
@@ -13,6 +14,9 @@ const Dashboard = (): React.ReactElement => {
     role: "",
   });
 
+  const history = useHistory();
+  const location = useLocation(); // Hook to detect URL changes
+
   useEffect(() => {
     const userData = localStorage.getItem(AUTHENTICATED_USER_KEY);
 
@@ -22,8 +26,20 @@ const Dashboard = (): React.ReactElement => {
     }
   }, []);
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const shiftId = urlParams.has("shiftId") ? urlParams.get("shiftId") : null;
+  useEffect(() => {
+    // This will trigger every time the URL changes
+    const urlParams = new URLSearchParams(location.search);
+    const shiftId = urlParams.get("shiftId");
+    // Perform any additional logic here if needed
+  }, [location]);
+
+  const urlParams = new URLSearchParams(location.search);
+  const shiftId = urlParams.get("shiftId");
+  const refresh = urlParams.get("refresh");
+
+  useEffect(() => {
+    history.push("/");
+  }, [refresh]);
 
   return (
     <Flex direction="column" h="100vh">
@@ -34,7 +50,8 @@ const Dashboard = (): React.ReactElement => {
       />
       <Flex flex="1">
         <Box pt={10} pl={8} border="1px" borderColor="gray.100">
-          <Shifts />
+          {/* Shifts will re-render when location changes */}
+          <Shifts key={refresh} />
         </Box>
 
         <Box flex="1" pt={10} pl={6} border="1px" borderColor="gray.100">

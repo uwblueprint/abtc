@@ -15,14 +15,14 @@ import {
 } from "../../../types/ServiceRequestTypes";
 import { titleCase } from "../../../utils/FormatUtils";
 
-const CreateShiftKitchen: CreateShiftFormStepComponentType = ({
+const CreateShiftDelivery: CreateShiftFormStepComponentType = ({
   back,
   onSubmit,
   updateFields,
   data,
 }: CreateShiftFormStepProps): React.ReactElement => {
-  const { location, description, meal, cookingMethod } = data;
-  const isButtonDisabled = !location || !meal || !cookingMethod;
+  const { location, description, pickUpLocation, dropOffLocation } = data;
+  const isButtonDisabled = !location || !pickUpLocation || !dropOffLocation;
 
   useEffect(() => {
     updateFields({
@@ -53,30 +53,24 @@ const CreateShiftKitchen: CreateShiftFormStepComponentType = ({
           />
         </FormControl>
         <FormControl mt={6} isRequired>
-          <FormLabel>Meal</FormLabel>
+          <FormLabel>Pick Up Location</FormLabel>
           <Input
-            placeholder="Enter meal name"
-            value={meal ?? ""}
+            placeholder="Enter pick up location"
+            value={pickUpLocation ?? ""}
             onChange={(event) => {
-              updateFields({ meal: event.target.value });
+              updateFields({ pickUpLocation: event.target.value });
             }}
           />
         </FormControl>
         <FormControl mt={6} isRequired>
-          <FormLabel>Cooking Method</FormLabel>
-          <Select
-            value={cookingMethod ? `${titleCase(cookingMethod)}` : ""}
+          <FormLabel>Drop Off Location</FormLabel>
+          <Input
+            placeholder="Enter drop off location"
+            value={dropOffLocation ?? ""}
             onChange={(event) => {
-              const method = event.target.value.toUpperCase();
-              updateFields({
-                cookingMethod: method as CookingMethod,
-              });
+              updateFields({ dropOffLocation: event.target.value });
             }}
-          >
-            {Object.values(CookingMethod).map((method, index) => (
-              <option key={index}>{titleCase(method)}</option>
-            ))}
-          </Select>
+          />
         </FormControl>
       </ModalBody>
       <ModalFooter mt={4} mb={4} justifyContent="space-between">
@@ -105,4 +99,4 @@ const CreateShiftKitchen: CreateShiftFormStepComponentType = ({
   );
 };
 
-export default CreateShiftKitchen;
+export default CreateShiftDelivery;

@@ -46,6 +46,8 @@ const NavBar: React.FC<NavBarProps> = ({ firstName, lastName, userRole }) => {
   // State for modal visibility
   const [isModalOpen, setModalOpen] = useState(false);
 
+  const [numUnchecked, setNumUnchecked] = useState(0);
+
   const handleModalOpen = () => setModalOpen(true);
   const handleModalClose = () => setModalOpen(false);
 
@@ -174,16 +176,34 @@ const NavBar: React.FC<NavBarProps> = ({ firstName, lastName, userRole }) => {
         )}
 
         <Spacer />
-        {/* <ChakraLink
-          as={ReactRouterLink}
-          to="/notifications"
-          color="#444750"
-          fontWeight="500"
-          _hover={{ color: "black", textDecoration: "none" }}
-          paddingRight={4}
+        <Flex
+          onClick={() => {
+            setModalOpen(!isModalOpen);
+          }}
+          position="relative"
         >
-          <Icon as={PiBell} boxSize={6} />
-        </ChakraLink> */}
+          <Icon as={PiBell} boxSize={7} mr={2} />
+          {numUnchecked > 0 && (
+            <Box
+              position="absolute"
+              top="-5px"
+              left="-8px"
+              backgroundColor="red.500"
+              color="white"
+              borderRadius="full"
+              width="20px"
+              height="20px"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              fontSize="12px"
+              fontWeight="bold"
+            >
+              {numUnchecked}
+            </Box>
+          )}
+        </Flex>
+
         <Box>
           <Popover trigger="hover" placement="bottom-end">
             <PopoverTrigger>
@@ -248,7 +268,12 @@ const NavBar: React.FC<NavBarProps> = ({ firstName, lastName, userRole }) => {
 
         {/* About Modal */}
       </Flex>
-      {/* <NotificationModal isVisible onClose={handleModalClose} /> */}
+      <NotificationModal
+        isVisible={isModalOpen}
+        onClose={handleModalClose}
+        numUnchecked={numUnchecked}
+        setNumUnchecked={setNumUnchecked}
+      />
     </Flex>
   );
 };

@@ -12,6 +12,7 @@ import entityRouter from "./rest/entityRoutes";
 import simpleEntityRouter from "./rest/simpleEntityRoutes";
 import userRouter from "./rest/userRoutes";
 import serviceRequestRouter from "./rest/serviceRequestRoutes";
+import notificationRouter from "./rest/notificationRoutes"
 import platformSignupRouter from "./rest/signupRequestRoutes";
 
 const CORS_ALLOW_LIST = [
@@ -41,6 +42,7 @@ app.use("/users", userRouter);
 app.use("/platformSignups", platformSignupRouter);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/serviceRequests", serviceRequestRouter);
+app.use("/notification", notificationRouter)
 
 mongo.connect();
 prisma.$connect();
