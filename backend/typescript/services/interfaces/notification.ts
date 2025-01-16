@@ -9,6 +9,8 @@ interface INotification {
    */
   getNotificationsById(assigneeId: string): Promise<notification[]>;
 
+  getAdminNotifications(): Promise<notification[]>
+
 
   /**
    * Add a notification

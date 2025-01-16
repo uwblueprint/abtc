@@ -36,9 +36,15 @@ interface NavBarProps {
   firstName: string;
   lastName: string;
   userRole: string;
+  id: string;
 }
 
-const NavBar: React.FC<NavBarProps> = ({ firstName, lastName, userRole }) => {
+const NavBar: React.FC<NavBarProps> = ({
+  firstName,
+  lastName,
+  userRole,
+  id,
+}) => {
   const location = useLocation();
   const toast = useToast();
   const isAdmin = userRole === "ADMIN";
@@ -273,6 +279,8 @@ const NavBar: React.FC<NavBarProps> = ({ firstName, lastName, userRole }) => {
         onClose={handleModalClose}
         numUnchecked={numUnchecked}
         setNumUnchecked={setNumUnchecked}
+        userId={id}
+        role={userRole}
       />
     </Flex>
   );

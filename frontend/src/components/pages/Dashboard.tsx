@@ -47,6 +47,7 @@ const Dashboard = (): React.ReactElement => {
         firstName={userInfo.firstName}
         lastName={userInfo.lastName}
         userRole={userInfo.role}
+        id={userInfo.id}
       />
       <Flex flex="1">
         <Box pt={10} pl={8} border="1px" borderColor="gray.100">

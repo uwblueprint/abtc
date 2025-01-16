@@ -65,12 +65,16 @@ model platformSignUp {
 model notification {
   id                      String  @id @default(auto()) @map("_id") @db.ObjectId
   assigneeId              String
-  requesterId               String
+  requesterId             String
   notificationTitle       String?
   notificationDescription String?
-  date                    String
+  date                    String?
   checked                 Boolean?
   type                    NotificationType
+  shiftId                 String?
+  firstName               String?
+  lastName                String?
+  adminView               Boolean
 }
 
 enum Role {

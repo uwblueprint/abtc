@@ -168,13 +168,7 @@ const ShiftDetails = ({ shiftId }: any) => {
         currentUser.id,
         shiftData?.id,
       );
-      await NotificationAPIClient.post({
-        assigneeId: currentUser.id,
-        requesterId: currentUser.id,
-        notificationDescription: "Shift description",
-        notificationTitle: "Notification Title",
-        type: NotificationType.INVITE,
-      });
+
       onClose();
       history.push("/?refresh=true");
     } catch (error) {
@@ -191,7 +185,17 @@ const ShiftDetails = ({ shiftId }: any) => {
         `${currentUser?.firstName} ${currentUser?.lastName}`,
         formatShiftTimes(shiftData?.shiftTime, shiftData?.shiftEndTime)[0],
       );
-
+      await NotificationAPIClient.post({
+        assigneeId: currentUser.id,
+        requesterId: currentUser.id,
+        notificationDescription: `${currentUser.fiFstName} ${currentUser.lastName} has withdrawn from a shift.`,
+        notificationTitle: "Cancelled Shift",
+        type: NotificationType.CANCELLED,
+        shiftId: shiftData?.id,
+        firstName: currentUser.firstName,
+        lastName: currentUser.lastName,
+        adminView: true,
+      });
       onClose();
       history.push("/?refresh=true");
     } catch (error) {

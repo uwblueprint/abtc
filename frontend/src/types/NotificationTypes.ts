@@ -13,4 +13,8 @@ export type Notification = {
   date?: string | null;
   checked?: boolean | null;
   type: NotificationType;
+  shiftId: string | null;
+  firstName: string | null;
+  lastName: string | null;
+  adminView: boolean | null;
 };

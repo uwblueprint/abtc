@@ -32,12 +32,31 @@ const getById = async ({
   }
 };
 
+const getAdminNotifications = async (): Promise<Notification[]> => {
+  const bearerToken = `Bearer ${getLocalStorageObjProperty(
+    AUTHENTICATED_USER_KEY,
+    "accessToken",
+  )}`;
+  try {
+    const { data } = await baseAPIClient.get(`/notification/admin`, {
+      headers: { Authorization: bearerToken },
+    });
+    return data;
+  } catch (error: any) {
+    return [error];
+  }
+};
+
 const post = async ({
   assigneeId,
   notificationTitle,
   notificationDescription,
   requesterId,
   type,
+  shiftId,
+  firstName,
+  lastName,
+  adminView,
 }: Notification): Promise<Notification | null> => {
   const bearerToken = `Bearer ${getLocalStorageObjProperty(
     AUTHENTICATED_USER_KEY,
@@ -53,6 +72,10 @@ const post = async ({
         notificationDescription,
         requesterId,
         type,
+        shiftId,
+        firstName,
+        lastName,
+        adminView,
       },
       { headers: { Authorization: bearerToken } },
     );
@@ -86,4 +109,5 @@ export default {
   getById,
   post,
   updateChecked,
+  getAdminNotifications,
 };

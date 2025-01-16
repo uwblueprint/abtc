@@ -138,6 +138,7 @@ const AccountDirectory = (): React.ReactElement => {
         firstName={currentUser.firstName}
         lastName={currentUser.lastName}
         userRole={currentUser.role}
+        id={currentUser.id}
       />
       <Flex direction="column" ml={10} mr={20}>
         <Heading as="h1" size="lg" mt="30px" mb="15px">

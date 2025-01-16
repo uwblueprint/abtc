@@ -30,6 +30,17 @@ notificationRouter.get("/assignee/:id",isAuthorizedByRole(new Set(["ADMIN", "VOL
   }
 });
 
+notificationRouter.get("/admin",isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])), async (req, res) => {
+  const assigneeId = req.params.id;
+  try {
+    const serviceRequests =
+      await notificationService.getAdminNotifications();
+    res.status(200).json(serviceRequests);
+  } catch (error: unknown) {
+    res.status(500).json({ error: getErrorMessage(error) });
+  }
+});
+
 notificationRouter.get("/update/:id",isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])), async (req, res) => {
   const notificationId = req.params.id;
   try {
