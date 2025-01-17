@@ -11,6 +11,8 @@ import {
   setLocalStorageObjProperty,
 } from "../utils/LocalStorageUtils";
 import { SignupRequest } from "../types/SignupFormTypes";
+import NotificationAPIClient from "./NotificationAPIClient";
+import { NotificationType } from "../types/NotificationTypes";
 
 const login = async (
   email: string,
@@ -89,6 +91,17 @@ export const register = async ({
       { withCredentials: true },
     );
     localStorage.setItem(AUTHENTICATED_USER_KEY, JSON.stringify(data));
+    NotificationAPIClient.post({
+      assigneeId: "",
+      adminView: true,
+      firstName,
+      lastName,
+      shiftId: "",
+      requesterId: "",
+      notificationTitle: "Platform Request",
+      notificationDescription: `${firstName} ${lastName} has requested access to the platform`,
+      type: NotificationType.PLATFORM,
+    });
     return data;
   } catch (error) {
     return null;

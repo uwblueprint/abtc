@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import moment from "moment";
-
 import {
   Button,
   ModalBody,
@@ -35,6 +34,7 @@ import {
 import { titleCase } from "../../../utils/FormatUtils";
 import EARLIEST_SHIFT_TIME from "../../../constants/ServiceRequestConstants";
 import { validateEmail } from "../../../utils/ValidationUtils";
+import UserAPIClient from "../../../APIClients/UserAPIClient";
 
 const CreateShiftMain: CreateShiftFormStepComponentType = ({
   onSubmit,
@@ -55,21 +55,22 @@ const CreateShiftMain: CreateShiftFormStepComponentType = ({
   const { shiftTimeError, shiftEndTimeError } = errors;
   const toast = useToast();
 
-  const formatDate = (date: Date) => {
-    return moment(date).format("YYYY-MM-DD");
-  };
-  const formatTime = (date: Date) => {
-    return moment(date).format("HH:mm");
-  };
+  const [emailUserMapping, setEmailUserMapping] = useState<
+    Record<string, string>
+  >({});
+
+  const formatDate = (date: Date) => moment(date).format("YYYY-MM-DD");
+  const formatTime = (date: Date) => moment(date).format("HH:mm");
+
   const createDateFromTimeAndDate = (timeStr: string, dateStr: string) => {
     const date = moment(dateStr);
     const time = timeStr.split(":");
     return new Date(
-      date.year(), // year
-      date.month(), // month
-      date.date(), // day
-      parseInt(time[0], 10), // hour
-      parseInt(time[1], 10), // minute
+      date.year(),
+      date.month(),
+      date.date(),
+      parseInt(time[0], 10),
+      parseInt(time[1], 10),
     );
   };
 
@@ -79,6 +80,31 @@ const CreateShiftMain: CreateShiftFormStepComponentType = ({
     });
   }, []);
 
+  useEffect(() => {
+    const fetchUserNames = async () => {
+      const mapping: Record<string, string> = {};
+      if (inviteEmails) {
+        await Promise.all(
+          inviteEmails.map(async (email) => {
+            try {
+              const user = await UserAPIClient.getUserByEmail(email);
+              mapping[email] = user
+                ? `${user.firstName} ${user.lastName}`
+                : email;
+            } catch (error) {
+              console.error(`Error fetching user for email ${email}:`, error);
+              mapping[email] = email; // Fallback to email on error
+            }
+          }),
+        );
+        setEmailUserMapping(mapping);
+      }
+    };
+    if (inviteEmails && inviteEmails.length > 0) {
+      fetchUserNames();
+    }
+  }, [inviteEmails]);
+
   const updateShiftTimeErrorFields = (startTime: Date, endTime: Date) => {
     const showError = startTime >= endTime;
     updateErrorFields({
@@ -86,43 +112,40 @@ const CreateShiftMain: CreateShiftFormStepComponentType = ({
       shiftEndTimeError: showError ? "End time should be after start time" : "",
     });
   };
+
   const handleShiftDateChange = (value: string) => {
     const newStartTime = createDateFromTimeAndDate(EARLIEST_SHIFT_TIME, value);
-    updateFields({
-      shiftTime: newStartTime.toISOString(),
-    });
+    updateFields({ shiftTime: newStartTime.toISOString() });
+
     if (shiftEndTime) {
       const endTime = new Date(shiftEndTime);
       const newEndTime = new Date(
-        newStartTime.getFullYear(), // year
-        newStartTime.getMonth(), // month
-        newStartTime.getDate(), // day
-        endTime.getHours(), // hour
-        endTime.getMinutes(), // minute
+        newStartTime.getFullYear(),
+        newStartTime.getMonth(),
+        newStartTime.getDate(),
+        endTime.getHours(),
+        endTime.getMinutes(),
       );
-      updateFields({
-        shiftEndTime: newEndTime.toISOString(),
-      });
+      updateFields({ shiftEndTime: newEndTime.toISOString() });
       updateShiftTimeErrorFields(newStartTime, newEndTime);
     }
   };
+
   const handleShiftTimeChange = (value: string) => {
     if (shiftTime) {
       const startTime = createDateFromTimeAndDate(value, shiftTime);
-      updateFields({
-        shiftTime: startTime.toISOString(),
-      });
+      updateFields({ shiftTime: startTime.toISOString() });
+
       if (shiftEndTime) {
         updateShiftTimeErrorFields(startTime, new Date(shiftEndTime));
       }
     }
   };
+
   const handleShiftEndTimeChange = (value: string) => {
     if (shiftTime) {
       const endTime = createDateFromTimeAndDate(value, shiftTime);
-      updateFields({
-        shiftEndTime: endTime.toISOString(),
-      });
+      updateFields({ shiftEndTime: endTime.toISOString() });
       updateShiftTimeErrorFields(new Date(shiftTime), endTime);
     }
   };
@@ -139,15 +162,15 @@ const CreateShiftMain: CreateShiftFormStepComponentType = ({
           duration: 5000,
           isClosable: true,
         });
-        return; // Stop execution if email is invalid
+        return;
       }
-      const updatedEmails = [...(inviteEmails || []), currentEmail.trim()];
+      const updatedEmails = [...(inviteEmails ?? []), currentEmail.trim()];
       updateFields({ inviteEmails: updatedEmails, currentEmail: "" });
     }
   };
 
   const handleRemoveEmail = (index: number) => {
-    const updatedEmails = (inviteEmails || []).filter((_, i) => i !== index);
+    const updatedEmails = inviteEmails?.filter((_, i) => i !== index);
     updateFields({ inviteEmails: updatedEmails });
   };
 
@@ -167,9 +190,9 @@ const CreateShiftMain: CreateShiftFormStepComponentType = ({
           <Input
             placeholder="Enter shift title"
             value={requestName}
-            onChange={(event) => {
-              updateFields({ requestName: event.target.value });
-            }}
+            onChange={(event) =>
+              updateFields({ requestName: event.target.value })
+            }
           />
         </FormControl>
         <Flex columnGap={3}>
@@ -178,7 +201,7 @@ const CreateShiftMain: CreateShiftFormStepComponentType = ({
               <FormLabel>Date</FormLabel>
               <Input
                 type="date"
-                value={formatDate(new Date(shiftTime!))}
+                value={shiftTime ? formatDate(new Date(shiftTime)) : ""}
                 onChange={(event) => handleShiftDateChange(event.target.value)}
               />
             </FormControl>
@@ -216,21 +239,6 @@ const CreateShiftMain: CreateShiftFormStepComponentType = ({
             </FormControl>
           </Box>
         </Flex>
-        <FormControl mt={6} width="50%">
-          <FormLabel>Repeat</FormLabel>
-          <Select
-            value={frequency ? titleCase(frequency) : ""}
-            onChange={(event) => {
-              updateFields({
-                frequency: event.target.value.toUpperCase() as Frequency,
-              });
-            }}
-          >
-            {Object.values(Frequency).map((value, index) => (
-              <option key={index}>{titleCase(value)}</option>
-            ))}
-          </Select>
-        </FormControl>
         <FormControl mt={6}>
           <FormLabel>Invite Others</FormLabel>
           <InputGroup>
@@ -259,7 +267,7 @@ const CreateShiftMain: CreateShiftFormStepComponentType = ({
               {inviteEmails.map((email, index) => (
                 <WrapItem key={index}>
                   <Tag size="md" colorScheme="gray" borderRadius="full">
-                    <TagLabel>{email}</TagLabel>
+                    <TagLabel>{emailUserMapping[email] || email}</TagLabel>
                     <TagCloseButton onClick={() => handleRemoveEmail(index)} />
                   </Tag>
                 </WrapItem>
@@ -271,17 +279,13 @@ const CreateShiftMain: CreateShiftFormStepComponentType = ({
           <Box flex="1">
             <FormControl mt={6} isRequired>
               <FormLabel>Volunteers Required</FormLabel>
-
               <NumberInput
                 defaultValue={1}
                 max={10}
                 min={1}
-                onChange={(valueString, valueAsNumber) => {
-                  console.log(valueAsNumber);
-                  updateFields({
-                    numberOfVolunteers: valueAsNumber,
-                  });
-                }}
+                onChange={(valueString, valueAsNumber) =>
+                  updateFields({ numberOfVolunteers: valueAsNumber })
+                }
               >
                 <NumberInputField />
                 <NumberInputStepper>
@@ -296,12 +300,13 @@ const CreateShiftMain: CreateShiftFormStepComponentType = ({
               <FormLabel>Shift Type</FormLabel>
               <Select
                 value={requestType ? `${titleCase(requestType)} Shift` : ""}
-                onChange={(event) => {
-                  const type = event.target.value.split(" ")[0].toUpperCase();
+                onChange={(event) =>
                   updateFields({
-                    requestType: type as ServiceRequestType,
-                  });
-                }}
+                    requestType: event.target.value
+                      .split(" ")[0]
+                      .toUpperCase() as ServiceRequestType,
+                  })
+                }
               >
                 {Object.values(ServiceRequestType).map((type, index) => (
                   <option key={index}>{titleCase(type)} Shift</option>

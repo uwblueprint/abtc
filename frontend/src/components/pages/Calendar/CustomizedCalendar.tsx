@@ -194,6 +194,7 @@ export default function CustomizedCalendar() {
           >
             <option value="kitchen">Kitchen</option>
             <option value="site">Site</option>
+            <option value="delivery">Delivery</option>
           </Select>
           <Select
             onChange={onSelectViewChange}

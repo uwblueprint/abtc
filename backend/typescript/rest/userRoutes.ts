@@ -70,12 +70,13 @@ userRouter.get("/",isAuthorizedByRole(new Set(["ADMIN", "VOLUNTEER"])), async (r
 
   if (email) {
     if (typeof email !== "string") {
-      res
-        .status(400)
-        .json({ error: "email query parameter must be a string." });
+      res.status(400).json({ error: "email query parameter must be a string." });
     } else {
       try {
-        const user = await userService.getUserByEmail(email);
+        // Replace spaces with '+'
+        const sanitizedEmail = email.replace(/\s+/g, "+");
+
+        const user = await userService.getUserByEmail(sanitizedEmail);
         res.status(200).json(user);
       } catch (error: unknown) {
         res.status(500).json({ error: getErrorMessage(error) });
@@ -100,6 +101,7 @@ userRouter.post("/", createUserDtoValidator,isAuthorizedByRole(new Set(["ADMIN",
     });
 
     // await authService.sendEmailVerificationLink(req.body.email);
+    
 
     res.status(201).json(newUser);
   } catch (error: unknown) {

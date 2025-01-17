@@ -46,7 +46,7 @@ const Shifts = (): React.ReactElement => {
         month: "long",
         day: "numeric",
       });
-
+      console.log(date, today);
       if (date.getTime() === today.getTime()) {
         dateStr = "Today";
       }
@@ -137,10 +137,14 @@ const Shifts = (): React.ReactElement => {
             return (
               <Box key={`date_${index}`} mb="20px">
                 <Text fontSize="lg" fontWeight="semibold" mb="10px">
-                  {dateShifts.date.substring(
-                    0,
-                    dateShifts.date.length - YEAR_SIZE,
-                  )}
+                  {dateShifts.date === "Today" && "Today"}
+                  {dateShifts.date === "Tomorrow" && "Tomorrow"}
+                  {dateShifts.date !== "Today" &&
+                    dateShifts.date !== "Tomorrow" &&
+                    dateShifts.date.substring(
+                      0,
+                      dateShifts.date.length - YEAR_SIZE,
+                    )}
                 </Text>
                 {dateShifts.shifts.map((shift: ServiceRequest, idx: number) => {
                   return <ShiftCard key={`shift_${idx}`} shift={shift} />;

@@ -26,6 +26,7 @@ const NotificationPanel = ({
         try {
           let data = [];
           if (role === "ADMIN") {
+            console.log("what");
             data = await NotificationAPIClient.getAdminNotifications();
           } else {
             data = await NotificationAPIClient.getById({
@@ -57,7 +58,7 @@ const NotificationPanel = ({
     setNumUnchecked(numUnchecked - 1);
     onClose();
     if (notification.type === "PLATFORM") {
-      history.push("/platformSignupRequests");
+      history.push("/platform-signup-requests");
     } else {
       history.push(`/dashboard?shiftId=${notification.shiftId}`);
     }
@@ -109,7 +110,7 @@ const NotificationPanel = ({
                 <Text flexDirection="column">
                   {notification.notificationDescription}
                 </Text>
-                <Text fontSize="xs" color="gray.500">
+                <Text fontSize="xs" color="gray.500" mt={1}>
                   {String(notification?.date).slice(0, 10)}
                 </Text>
               </Box>

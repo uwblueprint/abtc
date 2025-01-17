@@ -59,7 +59,7 @@ const Dashboard = (): React.ReactElement => {
           {shiftId ? (
             <ShiftDetails shiftId={shiftId} />
           ) : (
-            <CustomizedCalendar />
+            <CustomizedCalendar key={refresh} />
           )}
         </Box>
       </Flex>

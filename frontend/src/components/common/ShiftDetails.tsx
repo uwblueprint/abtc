@@ -186,7 +186,7 @@ const ShiftDetails = ({ shiftId }: any) => {
         formatShiftTimes(shiftData?.shiftTime, shiftData?.shiftEndTime)[0],
       );
       await NotificationAPIClient.post({
-        assigneeId: currentUser.id,
+        assigneeId: "",
         requesterId: currentUser.id,
         notificationDescription: `${currentUser.fiFstName} ${currentUser.lastName} has withdrawn from a shift.`,
         notificationTitle: "Cancelled Shift",

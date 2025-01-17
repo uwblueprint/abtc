@@ -25,16 +25,21 @@ async getNotificationsById(assigneeId: string): Promise<notification[]> {
       return [];
     }
 
-    // Filter notifications with valid dates within the last two weeks
-    const filteredNotifications = notifications.filter((notification) => {
-      if (!notification.date) {
-        // If the date is null or undefined, skip this notification
-        return false;
-      }
+    // Filter and sort notifications with valid dates within the last two weeks
+    const filteredNotifications = notifications
+      .filter((notification) => {
+        if (!notification.date) {
+          // If the date is null or undefined, skip this notification
+          return false;
+        }
 
-      const notificationDate = new Date(notification.date);
-      return notificationDate >= twoWeeksAgo;
-    });
+        const notificationDate = new Date(notification.date);
+        return notificationDate >= twoWeeksAgo;
+      })
+      .sort((a, b) => {
+        // Sort in reverse chronological order
+        return new Date(b.date!).getTime() - new Date(a.date!).getTime();
+      });
 
     return filteredNotifications;
   } catch (error) {
@@ -42,6 +47,7 @@ async getNotificationsById(assigneeId: string): Promise<notification[]> {
     throw new Error("Error retrieving notifications.");
   }
 }
+
 
 async getAdminNotifications(): Promise<notification[]> {
   try {
@@ -58,16 +64,21 @@ async getAdminNotifications(): Promise<notification[]> {
       return [];
     }
 
-    // Filter notifications with valid dates within the last two weeks
-    const filteredNotifications = notifications.filter((notification) => {
-      if (!notification.date) {
-        // If the date is null or undefined, skip this notification
-        return false;
-      }
+    // Filter and sort notifications with valid dates within the last two weeks
+    const filteredNotifications = notifications
+      .filter((notification) => {
+        if (!notification.date) {
+          // If the date is null or undefined, skip this notification
+          return false;
+        }
 
-      const notificationDate = new Date(notification.date);
-      return notificationDate >= twoWeeksAgo;
-    });
+        const notificationDate = new Date(notification.date);
+        return notificationDate >= twoWeeksAgo;
+      })
+      .sort((a, b) => {
+        // Sort in reverse chronological order
+        return new Date(b.date!).getTime() - new Date(a.date!).getTime();
+      });
 
     return filteredNotifications;
   } catch (error) {
@@ -75,6 +86,8 @@ async getAdminNotifications(): Promise<notification[]> {
     throw new Error("Error retrieving admin view notifications.");
   }
 }
+
+
   
 
   async postNotification(inputNotification: any): Promise<notification> {
@@ -83,23 +96,23 @@ async getAdminNotifications(): Promise<notification[]> {
     try {
       const { assigneeId } = inputNotification;
 
-      if (!assigneeId) {
-        throw new Error("No requester ID.");
-      }
+    //   if (!assigneeId) {
+    //     throw new Error("No requester ID.");
+    //   }
 
-      const userExists = await prisma.user.findUnique({
-        where: {
-          id: assigneeId,
-        },
-      });
+    //   const userExists = await prisma.user.findUnique({
+    //     where: {
+    //       id: assigneeId,
+    //     },
+    //   });
 
-      if (!userExists) {
-        throw new Error("Only existing users can create notification.");
-      } else if (
-        userExists.isAccepted != "ACCEPTED"
-      ) {
-        throw new Error("Only admins can create notifications.");
-      }
+    //   if (!userExists) {
+    //     throw new Error("Only existing users can create notification.");
+    //   } else if (
+    //     userExists.isAccepted != "ACCEPTED"
+    //   ) {
+    //     throw new Error("Only admins can create notifications.");
+    //   }
 
       const requestData: Prisma.notificationCreateInput = {
         ...inputNotification,
