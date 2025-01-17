@@ -141,6 +141,13 @@ export default function CustomizedCalendar() {
               color: "#00701F", // dark green
             },
           };
+        case ServiceRequestType.DELIVERY:
+          return {
+            style: {
+              backgroundColor: "#FFDAB9", // pale green
+              color: "#CC5500", // dark green
+            },
+          };
         default:
           return {
             style: {
