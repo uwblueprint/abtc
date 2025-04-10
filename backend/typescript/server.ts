@@ -20,6 +20,8 @@ const CORS_ALLOW_LIST = [
   "https://uw-blueprint-starter-code.firebaseapp.com",
   "https://uw-blueprint-starter-code.web.app",
   /^https:\/\/uw-blueprint-starter-code--pr.*\.web\.app$/,
+  "https://frontend-287300418140.us-central1.run.app",
+  "https://frontend-287300418140.us-central1.run.app/"
 ];
 
 const CORS_OPTIONS: cors.CorsOptions = {
