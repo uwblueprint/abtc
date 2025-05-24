@@ -30,12 +30,12 @@ model user {
 }
 
 model serviceRequest {
-  id                 String             @id @default(auto()) @map("_id") @db.ObjectId
+  id                 String                   @id @default(auto()) @map("_id") @db.ObjectId
   requestName        String
-  requesterId        String             @db.ObjectId
-  requester          user               @relation(name: "requester", fields: [requesterId], references: [id]) // Admin requester
-  assigneeIds        String[]           @db.ObjectId
-  assignees          user[]             @relation(name: "assignee", fields: [assigneeIds], references: [id]) // Volunteers
+  requesterId        String                   @db.ObjectId
+  requester          user                     @relation(name: "requester", fields: [requesterId], references: [id]) // Admin requester
+  assigneeIds        String[]                 @db.ObjectId
+  assignees          user[]                   @relation(name: "assignee", fields: [assigneeIds], references: [id]) // Volunteers
   location           String
   shiftTime          DateTime?
   shiftEndTime       DateTime?
@@ -50,6 +50,15 @@ model serviceRequest {
   pickUpLocation     String?
   dropOffLocation    String?
   numberOfVolunteers Int?
+
+  // realtime counters
+  impressions        Int                      @default(0)
+  accepts            Int                      @default(0)
+  completes          Int                      @default(0)
+  cancels            Int                      @default(0)
+
+  // event log relation
+  events             ServiceRequestEvent[]
 }
 
 model platformSignUp {
@@ -63,7 +72,7 @@ model platformSignUp {
 }
 
 model notification {
-  id                      String  @id @default(auto()) @map("_id") @db.ObjectId
+  id                      String           @id @default(auto()) @map("_id") @db.ObjectId
   assigneeId              String
   requesterId             String
   notificationTitle       String?
@@ -75,6 +84,17 @@ model notification {
   firstName               String?
   lastName                String?
   adminView               Boolean
+}
+
+model ServiceRequestEvent {
+  id               String                   @id @default(auto()) @map("_id") @db.ObjectId
+  serviceRequestId String                   @db.ObjectId
+  serviceRequest   serviceRequest           @relation(fields: [serviceRequestId], references: [id])
+  volunteerId      String?                  @db.ObjectId
+  volunteer        user?                    @relation(fields: [volunteerId], references: [id])
+  eventType        ServiceRequestEventType
+  timestamp        DateTime                 @default(now())
+  metadata         Json?
 }
 
 enum Role {
@@ -114,4 +134,11 @@ enum NotificationType {
   INVITE
   CANCELLED
   PLATFORM
+}
+
+enum ServiceRequestEventType {
+  IMPRESSION
+  ACCEPTED
+  COMPLETED
+  CANCELLED
 }
