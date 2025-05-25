@@ -81,8 +81,8 @@ const NavBar: React.FC<NavBarProps> = ({
           paddingBottom={1}
           borderRadius={8}
         >
-          <Flex align="center">
-            <Icon as={GoHome} boxSize={5} mr={3} />
+          <Flex align="center" color="#4c464a">
+            <Icon as={GoHome} boxSize={5} mr={3} color="#4c464a"/>
             Home
           </Flex>
         </ChakraLink>
@@ -109,7 +109,7 @@ const NavBar: React.FC<NavBarProps> = ({
                 paddingBottom={1}
                 borderRadius={8}
               >
-                <Flex align="center">
+                <Flex align="center" color="#4c464a">
                   <Icon as={BsPerson} boxSize={5} mr={2} /> Manage Accounts
                   <Icon as={RxChevronDown} boxSize={6} ml={2} />
                 </Flex>
@@ -188,7 +188,7 @@ const NavBar: React.FC<NavBarProps> = ({
           }}
           position="relative"
         >
-          <Icon as={PiBell} boxSize={7} mr={2} />
+          <Icon as={PiBell} boxSize={7} mr={2} color="#4c464a"/>
           {numUnchecked > 0 && (
             <Box
               position="absolute"

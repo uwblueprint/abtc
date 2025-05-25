@@ -320,7 +320,7 @@ const PlatformSignupRequests = (): React.ReactElement => {
         >
           <Table variant="simple">
             <Thead>
-              <Tr>
+              <Tr backgroundColor="#4c464a">
                 <Th>
                   <Checkbox
                     size="md"
@@ -373,7 +373,7 @@ const PlatformSignupRequests = (): React.ReactElement => {
                 <Th />
                 <Th />
               </Tr>
-              <Tr>
+              <Tr backgroundColor="#f4efe9">
                 <Th />
                 <Th> Name </Th>
                 <Th> Email </Th>
@@ -383,7 +383,7 @@ const PlatformSignupRequests = (): React.ReactElement => {
               </Tr>
             </Thead>
 
-            <Tbody>
+            <Tbody backgroundColor="#f4efe9">
               {currentItems.map((user, index) => (
                 <Tr key={user.id}>
                   <Td>

@@ -130,22 +130,22 @@ export default function CustomizedCalendar() {
         case ServiceRequestType.KITCHEN:
           return {
             style: {
-              backgroundColor: "#E1EEFA", // pale blue
-              color: "#004E97", // dark blue
+              backgroundColor: "#06402B", // pale blue
+              color: "white", // dark blue
             },
           };
         case ServiceRequestType.SITE:
           return {
             style: {
-              backgroundColor: "#E1F4E6", // pale green
-              color: "#00701F", // dark green
+              backgroundColor: "#192841", // pale green
+              color: "white", // dark green
             },
           };
         case ServiceRequestType.DELIVERY:
           return {
             style: {
-              backgroundColor: "#FFDAB9", // pale green
-              color: "#CC5500", // dark green
+              backgroundColor: "#30106B", // pale green
+              color: "white", // dark green
             },
           };
         default:
@@ -165,12 +165,11 @@ export default function CustomizedCalendar() {
       <Flex
         ml={view === Views.WEEK ? "50px" : "0"}
         mb={3}
-        mt={2}
         justifyContent="space-between"
         alignItems="center"
       >
-        <Box display="flex" alignItems="center" gap={3} pt={2} pb={2}>
-          <Text fontSize="xl" fontWeight="bold">
+        <Box display="flex" alignItems="center" gap={3} pb={2}>
+          <Text fontSize="4xl" fontWeight="bold" color="white">
             {dateText}
           </Text>
           <Box>
@@ -179,6 +178,7 @@ export default function CustomizedCalendar() {
               size="sm"
               icon={<Icon as={FaChevronLeft} />}
               variant="ghost"
+              color="white"
               onClick={onPrevClick}
             />
             <IconButton
@@ -186,6 +186,7 @@ export default function CustomizedCalendar() {
               size="sm"
               icon={<Icon as={FaChevronRight} />}
               variant="ghost"
+              color="white"
               onClick={onNextClick}
             />
           </Box>
@@ -193,6 +194,7 @@ export default function CustomizedCalendar() {
         <Box display="flex" flexGrow={0.1} gap={3}>
           <Select
             placeholder="Filter by"
+            color="white"
             onChange={onSelectRequestTypeChange}
             value={selectedRequestType}
             size="sm"
@@ -205,6 +207,7 @@ export default function CustomizedCalendar() {
           </Select>
           <Select
             onChange={onSelectViewChange}
+            color="white"
             value={view}
             size="sm"
             borderRadius={20}
@@ -215,7 +218,7 @@ export default function CustomizedCalendar() {
           </Select>
         </Box>
       </Flex>
-      <Box flex={1} width="100%" overflow="auto" position="relative">
+      <Box flex={1} width="100%" overflow="auto" position="relative" backgroundColor="white" borderRadius="5px">
         <Calendar
           events={
             selectedRequestType === ""

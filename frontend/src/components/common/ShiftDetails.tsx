@@ -262,30 +262,40 @@ const ShiftDetails = ({ shiftId }: any) => {
         borderRadius={8}
       >
         <Flex flexDirection="row" alignItems="center" marginBottom={10}>
-          <Icon as={TbCircleChevronLeft} boxSize="35px" marginRight={2} />
-          <Heading as="h1" fontSize={25}>
+          <Icon as={TbCircleChevronLeft} boxSize="35px" color="white" marginRight={2} />
+          <Heading as="h1" fontSize={25} color="white">
             {shiftData?.requestName}
           </Heading>
         </Flex>
       </ChakraLink>
       <Flex
-        flexDirection="column"
-        padding={15}
-        marginRight={10}
+        direction="column"
+        p={4}               // 16px padding all around
+        mr={10}
         minH="45%"
         border="1px solid black"
-        borderRadius={15}
+        borderRadius="15px"
+        bg="white"
+        overflow="hidden"   // make sure child bg is clipped to radius
       >
-        <Heading as="h1" size="lg" mb="5px">
-          {`${shiftData ? titleCase(shiftData?.requestType) : ""} Shift`}
-        </Heading>
-        <Flex color="#969696" fontSize={18} mb="10px">
-          <Text marginRight={2} fontWeight={600}>
-            {day}
-          </Text>
-          <Text>{time}</Text>
+        <Flex
+          direction="column"
+          bg="gray.50"
+          p={4}
+          mt={-4}           // pull up by 16px
+          mx={-4}           // pull left/right by 16px
+          borderTopRadius="15px"
+          backgroundColor="#f4efe9"
+        >
+          <Heading as="h1" size="lg" mb="5px">
+            {`${shiftData ? titleCase(shiftData?.requestType) : ""} Shift`}
+          </Heading>
+          <Flex color="#969696" fontSize={18} >
+            <Text mr={2} fontWeight={600}>{day}</Text>
+            <Text>{time}</Text>
+          </Flex>
         </Flex>
-        <Text fontWeight={600} fontSize={18}>
+        <Text fontWeight={600} fontSize={18} mt={2}>
           Details
         </Text>
         <Text fontSize={18}>{shiftData?.description}</Text>

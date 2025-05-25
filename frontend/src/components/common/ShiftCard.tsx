@@ -55,10 +55,9 @@ const ShiftCard: React.FC<ShiftCardProps> = ({ shift }) => {
       width="full"
       my="5"
       p="5"
-      border="0.5px"
-      borderStyle="solid"
-      borderColor="#0B0B0B"
       borderRadius="lg"
+      backgroundColor="white"
+      boxShadow="md"
       onClick={() => {
         history.push(`/dashboard?shiftId=${id}`);
       }}

@@ -155,7 +155,7 @@ const AccountDirectory = (): React.ReactElement => {
             <Table variant="simple">
               <Thead>
                 <Tr>
-                  <Th>
+                  <Th backgroundColor="#4c464a">
                     {" "}
                     <Input
                       placeholder="Search for a user"
@@ -163,6 +163,7 @@ const AccountDirectory = (): React.ReactElement => {
                       onChange={handleSearch}
                       value={searchFilter}
                       borderRadius="md"
+                      backgroundColor="white"
                     />
                   </Th>
                   <Th />
