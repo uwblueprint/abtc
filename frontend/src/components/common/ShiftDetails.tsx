@@ -262,8 +262,8 @@ const ShiftDetails = ({ shiftId }: any) => {
         borderRadius={8}
       >
         <Flex flexDirection="row" alignItems="center" marginBottom={10}>
-          <Icon as={TbCircleChevronLeft} boxSize="35px" color="white" marginRight={2} />
-          <Heading as="h1" fontSize={25} color="white">
+          <Icon as={TbCircleChevronLeft} boxSize="45px" color="white" marginRight={2} />
+          <Heading as="h1" fontSize={45} color="white">
             {shiftData?.requestName}
           </Heading>
         </Flex>
@@ -285,7 +285,7 @@ const ShiftDetails = ({ shiftId }: any) => {
           mt={-4}           // pull up by 16px
           mx={-4}           // pull left/right by 16px
           borderTopRadius="15px"
-          backgroundColor="#f4efe9"
+          backgroundColor="white"
         >
           <Heading as="h1" size="lg" mb="5px">
             {`${shiftData ? titleCase(shiftData?.requestType) : ""} Shift`}
@@ -293,13 +293,40 @@ const ShiftDetails = ({ shiftId }: any) => {
           <Flex color="#969696" fontSize={18} >
             <Text mr={2} fontWeight={600}>{day}</Text>
             <Text>{time}</Text>
-          </Flex>
         </Flex>
+        </Flex>
+        
         <Text fontWeight={600} fontSize={18} mt={2}>
           Details
         </Text>
         <Text fontSize={18}>{shiftData?.description}</Text>
         <Flex justifyContent="space-between" marginRight="30%">
+          <Flex flexDirection="column" mt={10}>
+              <Flex flexDirection="column">
+                <Text fontWeight={600} fontSize={18}>
+                  Location
+                </Text>
+                <Text fontSize={18} mb={2}>
+                  {shiftData?.location}
+                </Text>
+                {shiftData?.requestType === "KITCHEN" && (
+                  <>
+                    <Text fontWeight={600} fontSize={18}>
+                      Meal
+                    </Text>
+                    <Text fontSize={18} mb={2}>
+                      {shiftData ? titleCase(shiftData?.meal) : ""}
+                    </Text>
+                    <Text fontWeight={600} fontSize={18}>
+                      Cooking Method
+                    </Text>
+                    <Text fontSize={18} mb={2}>
+                      {shiftData ? titleCase(shiftData?.cookingMethod) : ""}
+                    </Text>
+                  </>
+                )}
+              </Flex>
+          </Flex>
           <Image
             src={photo}
             alt={shiftData?.requestType}
@@ -307,32 +334,7 @@ const ShiftDetails = ({ shiftId }: any) => {
             objectFit="cover"
             borderRadius="md"
           />
-          <Flex flexDirection="column" mt={10}>
-            <Flex flexDirection="column">
-              <Text fontWeight={600} fontSize={18}>
-                Location
-              </Text>
-              <Text fontSize={18} mb={2}>
-                {shiftData?.location}
-              </Text>
-              {shiftData?.requestType === "KITCHEN" && (
-                <>
-                  <Text fontWeight={600} fontSize={18}>
-                    Meal
-                  </Text>
-                  <Text fontSize={18} mb={2}>
-                    {shiftData ? titleCase(shiftData?.meal) : ""}
-                  </Text>
-                  <Text fontWeight={600} fontSize={18}>
-                    Cooking Method
-                  </Text>
-                  <Text fontSize={18} mb={2}>
-                    {shiftData ? titleCase(shiftData?.cookingMethod) : ""}
-                  </Text>
-                </>
-              )}
-            </Flex>
-          </Flex>
+          
         </Flex>
 
         <Flex justifyContent="space-between" alignItems="end">

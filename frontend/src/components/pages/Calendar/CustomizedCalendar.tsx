@@ -137,7 +137,7 @@ export default function CustomizedCalendar() {
         case ServiceRequestType.SITE:
           return {
             style: {
-              backgroundColor: "#192841", // pale green
+              backgroundColor: "#FF4D00", // pale green
               color: "white", // dark green
             },
           };

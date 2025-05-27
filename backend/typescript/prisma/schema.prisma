@@ -27,6 +27,7 @@ model user {
   assignedServiceRequestIds String[]         @db.ObjectId // For volunteers
   assignedServiceRequests   serviceRequest[] @relation(name: "assignee", fields: [assignedServiceRequestIds], references: [id])
   requestedServiceRequests  serviceRequest[] @relation(name: "requester") // For admins
+  volunteerEvents           ServiceRequestEvent[]     @relation(name: "VolunteerEvents")
 }
 
 model serviceRequest {
@@ -91,7 +92,7 @@ model ServiceRequestEvent {
   serviceRequestId String                   @db.ObjectId
   serviceRequest   serviceRequest           @relation(fields: [serviceRequestId], references: [id])
   volunteerId      String?                  @db.ObjectId
-  volunteer        user?                    @relation(fields: [volunteerId], references: [id])
+  volunteer        user?                    @relation(name: "VolunteerEvents", fields: [volunteerId], references: [id])
   eventType        ServiceRequestEventType
   timestamp        DateTime                 @default(now())
   metadata         Json?

@@ -299,14 +299,14 @@ const PlatformSignupRequests = (): React.ReactElement => {
   };
 
   return (
-    <Flex direction="column" h="100vh">
+    <Flex direction="column" h="100vh" backgroundColor="#f4efe9">
       <NavBar
         firstName={currentUser.firstName}
         lastName={currentUser.lastName}
         userRole={currentUser.role}
         id={currentUser.id}
       />
-      <Flex direction="column" ml={10} mr={20}>
+      <Flex direction="column" ml={10} mr={20} >
         <Heading as="h1" size="lg" mt="30px" mb="15px">
           Platform Requests
         </Heading>
@@ -318,7 +318,7 @@ const PlatformSignupRequests = (): React.ReactElement => {
           borderColor="gray.200"
           borderRadius="20"
         >
-          <Table variant="simple">
+          <Table variant="simple" boxShadow="md">
             <Thead>
               <Tr backgroundColor="#4c464a">
                 <Th>
@@ -335,6 +335,7 @@ const PlatformSignupRequests = (): React.ReactElement => {
                     icon={<Icon as={FaCheck} />}
                     variant="ghost"
                     onClick={handleApproveClick}
+                    color="white"
                   />
                   <IconButton
                     aria-label="Reject"
@@ -342,16 +343,19 @@ const PlatformSignupRequests = (): React.ReactElement => {
                     icon={<Icon as={FaXmark} />}
                     variant="ghost"
                     onClick={handleRejectClick}
+                    color="white"
                   />
                   <IconButton
                     aria-label="Filter"
                     size="sm"
+                    color="white"
                     icon={<Icon as={FaRegClock} />}
                     onClick={handleFilterClick}
                     variant={isFilterActive ? "solid" : "ghost"}
                     ml={1}
                   />
                   <IconButton
+                    color="white"
                     aria-label="Refresh"
                     size="sm"
                     icon={<Icon as={FaArrowsRotate} />}
@@ -359,31 +363,38 @@ const PlatformSignupRequests = (): React.ReactElement => {
                     onClick={handleRefreshClick}
                     ml={1}
                   />
-                  <Input
-                    placeholder="Search for a user"
-                    size="sm"
-                    onChange={handleSearch}
-                    value={searchFilter}
-                    borderRadius="md"
-                    ml="4"
-                  />
+              
                 </Th>
                 <Th />
-                <Th minWidth="350px" />
                 <Th />
                 <Th />
+                <Th>
+                  <Input
+                      placeholder="Search for a user"
+                      size="sm"
+                      onChange={handleSearch}
+                      value={searchFilter}
+                      borderRadius="md"
+                    
+                      mt="1"
+                      color="black"
+                      backgroundColor="white"
+                    />
+                </Th>
+                
               </Tr>
-              <Tr backgroundColor="#f4efe9">
+              <Tr backgroundColor="white">
                 <Th />
                 <Th> Name </Th>
                 <Th> Email </Th>
-                <Th> Note </Th>
-                <Th> Status </Th>
                 <Th> Date Requested </Th>
+              
+                <Th> Status </Th>
+                <Th> Note </Th>
               </Tr>
             </Thead>
 
-            <Tbody backgroundColor="#f4efe9">
+            <Tbody backgroundColor="white">
               {currentItems.map((user, index) => (
                 <Tr key={user.id}>
                   <Td>
@@ -403,6 +414,22 @@ const PlatformSignupRequests = (): React.ReactElement => {
                     {user.firstName} {user.lastName}
                   </Td>
                   <Td>{user.email}</Td>
+                  <Td>
+                    {user.createdAt
+                      ? new Date(user.createdAt).toLocaleDateString()
+                      : ""}
+                  </Td>
+                  
+                  <Td marginTop={4}>
+                    <Badge
+                      bg={getBadgeBg(user.status)}
+                      color={getBadgeColor(user.status)}
+                      px="6"
+                      textTransform="unset"
+                    >
+                      {user.status}
+                    </Badge>
+                  </Td>
                   <Td minWidth="400px">
                     <Flex
                       flexDirection="row"
@@ -420,7 +447,7 @@ const PlatformSignupRequests = (): React.ReactElement => {
                           handleNoteChange(user.id, e.target.value)
                         }
                         borderRadius="md"
-                        maxWidth="300px"
+                        maxWidth="500px"
                         variant="filled"
                       />
                       {noteUpdated[user.id] && (
@@ -435,21 +462,6 @@ const PlatformSignupRequests = (): React.ReactElement => {
                         />
                       )}
                     </Flex>
-                  </Td>
-                  <Td marginTop={4}>
-                    <Badge
-                      bg={getBadgeBg(user.status)}
-                      color={getBadgeColor(user.status)}
-                      px="6"
-                      textTransform="unset"
-                    >
-                      {user.status}
-                    </Badge>
-                  </Td>
-                  <Td>
-                    {user.createdAt
-                      ? new Date(user.createdAt).toLocaleDateString()
-                      : ""}
                   </Td>
                 </Tr>
               ))}
