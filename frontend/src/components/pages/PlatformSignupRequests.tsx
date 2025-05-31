@@ -320,7 +320,7 @@ const PlatformSignupRequests = (): React.ReactElement => {
         >
           <Table variant="simple" boxShadow="md">
             <Thead>
-              <Tr backgroundColor="#4c464a">
+              <Tr backgroundColor="#3b2f3d">
                 <Th>
                   <Checkbox
                     size="md"
@@ -383,7 +383,7 @@ const PlatformSignupRequests = (): React.ReactElement => {
                 </Th>
                 
               </Tr>
-              <Tr backgroundColor="white">
+              <Tr backgroundColor="#f6f6f6">
                 <Th />
                 <Th> Name </Th>
                 <Th> Email </Th>

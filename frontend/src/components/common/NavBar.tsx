@@ -28,7 +28,7 @@ import { GoHome } from "react-icons/go";
 import { LuNavigation } from "react-icons/lu";
 import { FiPhone } from "react-icons/fi";
 import { HiLogout } from "react-icons/hi";
-import abtc_logo from "../../images/abtc_logo.png";
+import abtc_logo from "../../images/abtc_logo_2.png";
 import { logout } from "../../utils/logout";
 import NotificationModal from "./NotificationModal";
 
@@ -59,7 +59,7 @@ const NavBar: React.FC<NavBarProps> = ({
 
   return (
     <Flex flexDirection="column" justifyContent="end">
-      <Flex bg="white" p={4} alignItems="center">
+      <Flex bg="white" p={4} alignItems="center" backgroundColor="#3b2f3d">
         <Box ml={4}>
           <Image
             src={abtc_logo}
@@ -81,8 +81,8 @@ const NavBar: React.FC<NavBarProps> = ({
           paddingBottom={1}
           borderRadius={8}
         >
-          <Flex align="center" color="#4c464a">
-            <Icon as={GoHome} boxSize={5} mr={3} color="#4c464a"/>
+          <Flex align="center" color="white">
+            <Icon as={GoHome} boxSize={5} mr={3} color="white"/>
             Home
           </Flex>
         </ChakraLink>
@@ -109,7 +109,7 @@ const NavBar: React.FC<NavBarProps> = ({
                 paddingBottom={1}
                 borderRadius={8}
               >
-                <Flex align="center" color="#4c464a">
+                <Flex align="center" color="white">
                   <Icon as={BsPerson} boxSize={5} mr={2} /> Manage Accounts
                   <Icon as={RxChevronDown} boxSize={6} ml={2} />
                 </Flex>
@@ -188,7 +188,7 @@ const NavBar: React.FC<NavBarProps> = ({
           }}
           position="relative"
         >
-          <Icon as={PiBell} boxSize={7} mr={2} color="#4c464a"/>
+          <Icon as={PiBell} boxSize={7} mr={2} color="white"/>
           {numUnchecked > 0 && (
             <Box
               position="absolute"

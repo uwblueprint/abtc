@@ -116,9 +116,7 @@ const Shifts = (): React.ReactElement => {
       <Box
         p="10"
         width="400px"
-        borderRight="0.5px"
-        borderRightStyle="solid"
-        borderRightColor="#0B0B0B"
+        
         overflowY="scroll"
         height="100%"
       >
@@ -127,7 +125,7 @@ const Shifts = (): React.ReactElement => {
             <CreateShift />
           </Box>
         )}
-        <Heading as="h1" size="lg" mb="30px">
+        <Heading as="h1" size="lg" mb="30px" color="#909090">
           {authenticatedUser?.role === "ADMIN"
             ? "Upcoming Shifts"
             : "Your Shifts"}

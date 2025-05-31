@@ -178,7 +178,7 @@ const CreateShift = (): React.ReactElement => {
 
   return (
     <>
-      <Button ref={btnRef} onClick={onOpen} backgroundColor="#4c464a" color="white">
+      <Button ref={btnRef} onClick={onOpen} backgroundColor="#3b2f3d" color="white">
         Create New Shift
       </Button>
       {!!stepExists && !!errorsExists && (

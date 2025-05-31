@@ -11,3 +11,12 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.rbc-time-header .rbc-row:first-child .rbc-header {
+  background-color: #f6f6f6;
+}
+
+/* === Month view header === */
+.rbc-month-view .rbc-header {
+  background-color: #f6f6f6;
+}

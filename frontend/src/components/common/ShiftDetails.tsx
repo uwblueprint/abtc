@@ -249,11 +249,22 @@ const ShiftDetails = ({ shiftId }: any) => {
     <Flex
       flexDirection="column"
       justifyContent="start"
-      height="100%"
-      width="65%"
+      width="40%"
       marginLeft={17}
+      position="absolute"
+      zIndex={1400}
+      bg="rgba(247, 241, 241, 0.6 )"
+      boxShadow="0 8px 32px 0 rgba(31, 32, 34, 0.37)"
+      backdropFilter="blur(4px)"
+      sx={{
+        WebkitBackdropFilter: "blur(4px)"
+      }}
+      borderRadius="10px"
+      border="1px solid rgba(255, 255, 255, 0.18)"
+      top="35%"
+      left="35%"
     >
-      <ChakraLink
+      {/* <ChakraLink
         as={ReactRouterLink}
         to="/dashboard"
         color="#444750"
@@ -261,21 +272,15 @@ const ShiftDetails = ({ shiftId }: any) => {
         _hover={{ color: "black", textDecoration: "none" }}
         borderRadius={8}
       >
-        <Flex flexDirection="row" alignItems="center" marginBottom={10}>
-          <Icon as={TbCircleChevronLeft} boxSize="45px" color="white" marginRight={2} />
-          <Heading as="h1" fontSize={45} color="white">
-            {shiftData?.requestName}
-          </Heading>
-        </Flex>
-      </ChakraLink>
+       
+      </ChakraLink> */}
       <Flex
         direction="column"
         p={4}               // 16px padding all around
         mr={10}
         minH="45%"
-        border="1px solid black"
-        borderRadius="15px"
-        bg="white"
+      
+      
         overflow="hidden"   // make sure child bg is clipped to radius
       >
         <Flex
@@ -285,10 +290,10 @@ const ShiftDetails = ({ shiftId }: any) => {
           mt={-4}           // pull up by 16px
           mx={-4}           // pull left/right by 16px
           borderTopRadius="15px"
-          backgroundColor="white"
+          backgroundColor="transparent"
         >
           <Heading as="h1" size="lg" mb="5px">
-            {`${shiftData ? titleCase(shiftData?.requestType) : ""} Shift`}
+            {`${shiftData ? titleCase(shiftData?.requestName) : ""} Shift`}
           </Heading>
           <Flex color="#969696" fontSize={18} >
             <Text mr={2} fontWeight={600}>{day}</Text>
@@ -327,13 +332,7 @@ const ShiftDetails = ({ shiftId }: any) => {
                 )}
               </Flex>
           </Flex>
-          <Image
-            src={photo}
-            alt={shiftData?.requestType}
-            boxSize={{ base: "100px", md: "200px", lg: "300px" }}
-            objectFit="cover"
-            borderRadius="md"
-          />
+         
           
         </Flex>
 
