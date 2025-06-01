@@ -299,7 +299,7 @@ const PlatformSignupRequests = (): React.ReactElement => {
   };
 
   return (
-    <Flex direction="column" h="100vh" backgroundColor="#f4efe9">
+    <Flex direction="column" h="100vh" backgroundColor="white">
       <NavBar
         firstName={currentUser.firstName}
         lastName={currentUser.lastName}
@@ -307,10 +307,18 @@ const PlatformSignupRequests = (): React.ReactElement => {
         id={currentUser.id}
       />
       <Flex direction="column" ml={10} mr={20} >
-        <Heading as="h1" size="lg" mt="30px" mb="15px">
-          Platform Requests
-        </Heading>
-
+        <Flex justifyContent="space-between">
+          <Heading as="h1" size="lg" mt="30px" mb="15px">
+            Platform Requests
+          </Heading>
+          <Flex>
+          <IconButton aria-label="Approve" size="sm" icon={<Icon as={FaCheck} />} variant="ghost" onClick={handleApproveClick} color="black" />
+           <IconButton aria-label="Reject" size="sm" icon={<Icon as={FaXmark} />} variant="ghost" onClick={handleRejectClick} color="black" /> 
+           <IconButton aria-label="Filter" size="sm" color="black" icon={<Icon as={FaRegClock} />} onClick={handleFilterClick} variant={isFilterActive ? "solid" : "ghost"} ml={1} />
+           <IconButton color="black" aria-label="Refresh" size="sm" icon={<Icon as={FaArrowsRotate} />} variant="ghost" onClick={handleRefreshClick} ml={1} /><IconButton aria-label="Approve" size="sm" icon={<Icon as={FaCheck} />} variant="ghost" onClick={handleApproveClick} color="white" /> <IconButton aria-label="Reject" size="sm" icon={<Icon as={FaXmark} />} variant="ghost" onClick={handleRejectClick} color="white" /> <IconButton aria-label="Filter" size="sm" color="white" icon={<Icon as={FaRegClock} />} onClick={handleFilterClick} variant={isFilterActive ? "solid" : "ghost"} ml={1} /> <IconButton color="white" aria-label="Refresh" size="sm" icon={<Icon as={FaArrowsRotate} />} variant="ghost" onClick={handleRefreshClick} ml={1} />
+           <Input placeholder="Search for a user" size="sm" onChange={handleSearch} value={searchFilter} borderRadius="md" mt="1" color="black" backgroundColor="white" />
+          </Flex>
+        </Flex>
         <TableContainer
           mt="5"
           mb="10"
@@ -320,71 +328,11 @@ const PlatformSignupRequests = (): React.ReactElement => {
         >
           <Table variant="simple" boxShadow="md">
             <Thead>
-              <Tr backgroundColor="#3b2f3d">
-                <Th>
-                  <Checkbox
-                    size="md"
-                    isChecked={selectAll}
-                    onChange={handleSelectAllChange}
-                  />
-                </Th>
-                <Th>
-                  <IconButton
-                    aria-label="Approve"
-                    size="sm"
-                    icon={<Icon as={FaCheck} />}
-                    variant="ghost"
-                    onClick={handleApproveClick}
-                    color="white"
-                  />
-                  <IconButton
-                    aria-label="Reject"
-                    size="sm"
-                    icon={<Icon as={FaXmark} />}
-                    variant="ghost"
-                    onClick={handleRejectClick}
-                    color="white"
-                  />
-                  <IconButton
-                    aria-label="Filter"
-                    size="sm"
-                    color="white"
-                    icon={<Icon as={FaRegClock} />}
-                    onClick={handleFilterClick}
-                    variant={isFilterActive ? "solid" : "ghost"}
-                    ml={1}
-                  />
-                  <IconButton
-                    color="white"
-                    aria-label="Refresh"
-                    size="sm"
-                    icon={<Icon as={FaArrowsRotate} />}
-                    variant="ghost"
-                    onClick={handleRefreshClick}
-                    ml={1}
-                  />
               
-                </Th>
-                <Th />
-                <Th />
-                <Th />
-                <Th>
-                  <Input
-                      placeholder="Search for a user"
-                      size="sm"
-                      onChange={handleSearch}
-                      value={searchFilter}
-                      borderRadius="md"
-                    
-                      mt="1"
-                      color="black"
-                      backgroundColor="white"
-                    />
-                </Th>
-                
-              </Tr>
               <Tr backgroundColor="#f6f6f6">
-                <Th />
+                <Th>
+                  <Checkbox size="md" isChecked={selectAll} onChange={handleSelectAllChange} />
+                </Th>
                 <Th> Name </Th>
                 <Th> Email </Th>
                 <Th> Date Requested </Th>
